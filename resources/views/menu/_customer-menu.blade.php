@@ -57,10 +57,14 @@
 //                            }
 //                            ?>
                             <li>
-                                <a class="d-flex align-items-center link-dark"  href="#">
+                                <a class="d-flex align-items-center link-dark"  href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
                                     <span class="h3 mb-0"><i class="far fa-share-square text-muted mr-3"></i></span>
                                     Log Out
                                 </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </li>
                         </ul>
                     </div>
