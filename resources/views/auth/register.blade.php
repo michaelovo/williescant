@@ -1,4 +1,4 @@
-@extends('layouts.app',['page_title' => 'Register'])
+@extends('layouts.app')
 
 @section('content')
 
@@ -81,7 +81,9 @@
                                         @error('email')
                                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
+                                        </span>
 @enderror
+                                    </div>S
                                 <div class="form-group mb-4">
                                     <label class="required-label" for="type">Join as a:</label>
                                     <select class="custom-select" id="type" name="type" required>
