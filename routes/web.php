@@ -19,4 +19,5 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home/dashboard/customer', 'HomeController@index')->name('home')->middleware('auth','verified');
+Route::get('/williescant/home/dashboard/customer', 'HomeController@index')->name('home')->middleware('auth','verified');
+Route::get('/williescant/user/profile/{uuid}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');

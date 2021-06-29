@@ -40,22 +40,15 @@
                         <ul class="list-unstyled mb-0">
                             <li class="mb-4">
                                 <a class="d-flex align-items-center link-dark"
-                                   href="#">
+                                   href="{{ route('profile', Auth::user()->uuid) }}">
                                     <span class="h3 mb-0"><i class="far fa-user-circle text-muted mr-3"></i></span> View
                                     Profile
                                 </a>
                             </li>
-<!--                            --><?php
-//                            if($_SESSION['type'] == 'supplier' && $_SESSION['viewing_as'] == 'customer') {
-//                                echo '
-//                                    <li class="mb-4">
-//                                        <a class="d-flex align-items-center link-dark" href='.$root_path."/shop/helpers/switch.php".'
-//                                            <span class="h3 mb-0"><i class="fa fa-cog text-muted mr-3"></i></span> Switch to supplier
-//                                        </a>
-//                                    </li>
-//                                    ';
-//                            }
-//                            ?>
+                            <li class="mb-4">
+                                       <a class="d-flex align-items-center link-dark" href="#">
+                                       <span class="h3 mb-0"><i class="fa fa-cog text-muted mr-3"></i></span> Switch to supplier
+                                        </a>
                             <li>
                                 <a class="d-flex align-items-center link-dark"  href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

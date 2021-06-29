@@ -47,7 +47,7 @@ class LoginController extends Controller
     public function authenticated(Request $request, $user)
     {
         if($user->type == 3) {
-            return redirect('/home/dashboard/customer');
+            return redirect('/williescant/home/dashboard/customer');
         } elseif ($user->type == 2) {
             return redirect('/home/dashboard/shop');
         }

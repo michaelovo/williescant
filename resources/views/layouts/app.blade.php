@@ -24,9 +24,9 @@
 </head>
 <body>
     <div id="app">
-        @if(Auth::check() && Auth::user()->type == 3)
+        @if(Auth::check() && Auth::user()->type == 3 && Auth::user()->email_verified_at != null)
             @include('menu._customer-menu')
-        @elseif(Auth::check() && Auth::user()->type == 2)
+        @elseif(Auth::check() && Auth::user()->type == 2 && Auth::user()->email_verified_at != null)
 
         @else
             @include('menu._menu')
