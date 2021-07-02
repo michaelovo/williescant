@@ -29,7 +29,7 @@
                 <img class="u-avatar--xs img-fluid rounded-circle mr-2"
                      src="{{asset('storage/images/avatars/img1.jpg')}}" alt="User Profile">
                 <span class="text-dark d-none d-sm-inline-block">
-                    Hello {{Auth::user()->first_name}} <small class="fa fa-angle-down text-muted ml-1"></small>
+                    Hello {{Auth::user()->username}} <small class="fa fa-angle-down text-muted ml-1"></small>
                 </span>
             </a>
 
@@ -40,7 +40,7 @@
                         <ul class="list-unstyled mb-0">
                             <li class="mb-4">
                                 <a class="d-flex align-items-center link-dark"
-                                   href="{{ route('profile', Auth::user()->uuid) }}">
+                                   href="/williescant/user/profile/{{Auth::user()->id}}">
                                     <span class="h3 mb-0"><i class="far fa-user-circle text-muted mr-3"></i></span> View
                                     Profile
                                 </a>

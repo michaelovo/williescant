@@ -20,4 +20,6 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]);
 
 Route::get('/williescant/home/dashboard/customer', 'HomeController@index')->name('home')->middleware('auth','verified');
-Route::get('/williescant/user/profile/{uuid}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
+Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
+Route::post('/williescant/profile/update/{id}', 'ProfileController@update')->name('update')->middleware('auth', 'verified');
+Route::post('/williescant/profile/update-password', 'ProfileController@changePassword')->name('update-password')->middleware('auth', 'verified');

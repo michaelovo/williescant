@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('website')->default('NULL');
             $table->string('avatar')->default('NULL');
             $table->string('business_name')->default('NULL');
+            $table->string('address')->default('NULL');
             $table->tinyInteger('active')->default(1);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
