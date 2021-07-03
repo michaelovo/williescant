@@ -83,7 +83,7 @@
                                         <strong>{{ $message }}</strong>
                                         </span>
 @enderror
-                                    </div>S
+                                    </div>
                                 <div class="form-group mb-4">
                                     <label class="required-label" for="type">Join as a:</label>
                                     <select class="custom-select" id="type" name="type" required>
