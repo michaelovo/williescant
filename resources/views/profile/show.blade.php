@@ -5,7 +5,9 @@
 @section('content')
     <main class="u-main" role="main">
         <!-- Sidebar -->
-    @include('include.sidebar._sidebar')
+        @if(Auth::user()->type == 2)
+            @include('include.sidebar._sidebar')
+        @endif
     <!-- End Sidebar -->
 
         <div class="u-content">

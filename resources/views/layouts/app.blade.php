@@ -23,7 +23,7 @@
 </head>
 <body>
     <div id="app">
-        @if(Auth::check() && Auth::user()->type == 3 && Auth::user()->email_verified_at != null)
+        @if(Auth::check())
             @include('menu._user-menu')
         @else
             @include('menu._menu')

@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
 Auth::routes(['verify' => true]);
 
-Route::get('/williescant/home', 'HomeController@index')->name('index');
+// Home Route - logged out / unregistered users
+Route::get('/', 'IndexController@index')->name('home');
+
+//Home Route - Logged in customer
+Route::get('/williescant/home/dashboard', 'HomeController@index')->name('index')->middleware('auth','verified');
+
+// Profile Route
 Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
 Route::post('/williescant/profile/update/{id}', 'ProfileController@update')->name('update')->middleware('auth', 'verified');
 Route::post('/williescant/profile/update-password', 'ProfileController@changePassword')->name('update-password')->middleware('auth', 'verified');
+
+// Customer Order Route
+Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('orders')->middleware('auth', 'verified');

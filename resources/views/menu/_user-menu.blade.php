@@ -19,7 +19,7 @@
         <!-- End Shopping Cart -->
 
         <!-- Orders -->
-        <a href="#" class="link-muted nav-link">Orders</a>
+        <a href="{{ route('orders') }}" class="link-muted nav-link">Orders</a>
         <!-- End Orders -->
 
         <!-- User Profile -->
