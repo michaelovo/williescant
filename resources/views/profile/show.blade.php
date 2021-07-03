@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app', [
+    'page' => 'Profile'
+])
 
 @section('content')
     <main class="u-main" role="main">

@@ -24,7 +24,7 @@
 
         <!-- User Profile -->
         <div class="dropdown ml-2 mr-2">
-            <a class="link-muted d-flex align-items-center" href="#" role="button" id="dropdownMenuLink"
+            <a class="link-muted d-flex align-items-center" href="{{ route('index') }}" role="button" id="dropdownMenuLink"
                aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" >
                 <img class="u-avatar--xs img-fluid rounded-circle mr-2"
                      src="{{asset('storage/images/avatars/img1.jpg')}}" alt="User Profile">

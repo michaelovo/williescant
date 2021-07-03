@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Auth::routes(['verify' => true]);
 
-Route::get('/williescant/home/dashboard/customer', 'HomeController@index')->name('home')->middleware('auth','verified');
+Route::get('/williescant/home', 'HomeController@index')->name('index');
 Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
 Route::post('/williescant/profile/update/{id}', 'ProfileController@update')->name('update')->middleware('auth', 'verified');
 Route::post('/williescant/profile/update-password', 'ProfileController@changePassword')->name('update-password')->middleware('auth', 'verified');

@@ -7,11 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{$page}} | {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <script src="{{asset('js/app.js')}}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -26,8 +25,6 @@
     <div id="app">
         @if(Auth::check() && Auth::user()->type == 3 && Auth::user()->email_verified_at != null)
             @include('menu._user-menu')
-        @elseif(Auth::check() && Auth::user()->type == 2 && Auth::user()->email_verified_at != null)
-
         @else
             @include('menu._menu')
         @endif

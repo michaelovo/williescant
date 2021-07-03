@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page_title' => 'Verify Email'])
+@extends('layouts.app', ['page' => 'Verify Email'])
 
 @section('content')
 <div class="container">
