@@ -28,3 +28,7 @@ Route::post('/williescant/profile/update-password', 'ProfileController@changePas
 
 // Customer Order Route
 Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('orders')->middleware('auth', 'verified');
+
+// Supplier
+Route::get('/williescant/supplier/dashboard', 'ProductController@index')->name('shop')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');

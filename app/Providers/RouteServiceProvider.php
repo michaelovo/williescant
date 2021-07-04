@@ -22,6 +22,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/williescant/home/dashboard';
+    public const DASHBOARD = '/williescant/supplier/dashboard';
 
 
     /**

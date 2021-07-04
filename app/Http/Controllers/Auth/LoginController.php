@@ -49,7 +49,7 @@ class LoginController extends Controller
         if($user->type == 3) {
             return redirect('/williescant/home/dashboard/customer');
         } elseif ($user->type == 2) {
-            return redirect('/home/dashboard/shop');
+            return redirect('/williescant/supplier/dashboard');
         }
     }
 }

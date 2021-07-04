@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -13,7 +15,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::join('ready_sales', 'product_id', 'products.id')
+            ->where('products.supplier_id', Auth::user()->id)
+            ->get();
+
+        return view('supplier.shop', compact('products'));
+    }
+
+    public function search(Request $request)
+    {
+        $products = Product::where('name', 'LIKE', '%'.$request->search.'%')->get();
+        return view('supplier.shop', compact('products'));
     }
 
     /**

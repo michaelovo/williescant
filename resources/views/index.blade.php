@@ -1,6 +1,7 @@
 @extends('layouts.app', ['page' => 'Home'])
 
 @section('content')
+    @include('menu._menu')
     <main class="u-main pl-0" role="main">
         <div class="u-content">
             <div class="u-body">
