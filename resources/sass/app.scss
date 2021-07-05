@@ -3,7 +3,6 @@
 
 // Variables
 @import 'variables';
-@import 'theme';
 
 
 // Bootstrap
@@ -12,3 +11,4 @@
 //fontawesome
 @import 'node_modules/font-awesome/scss/font-awesome';
 
+@import "theme";

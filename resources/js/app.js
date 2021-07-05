@@ -5,8 +5,19 @@
  */
 
 require('./bootstrap');
+require('chartjs');
+require('datatables');
+require('jquery');
+require('jquery-migrate');
+require('jquery-mousewheel');
+require('select2');
 require('./update');
 require('./editproduct');
+require('./custom-select');
+require('./dashboard-page-scripts.js');
+require('./font-controller.js');
+require('./main.js');
+require('./sidebar-nav');
 
 window.Vue = require('vue');
 
@@ -17,6 +28,7 @@ window.Vue = require('vue');
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
+
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
