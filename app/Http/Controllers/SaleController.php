@@ -14,6 +14,7 @@ class SaleController extends Controller
      */
     public function index()
     {
+        $all_sales = "SELECT * FROM sales WHERE supplier_id='$supplier_id'";
         $sales = Sale::all();
 
         return view('supplier.sale', compact('sales'));

@@ -8,7 +8,8 @@ class IndexController extends Controller
 {
     //
     public function index() {
-        return view('index');
+        $curr_page = '';
+        return view('index', compact('curr_page'));
     }
 
     public function customerOrders() {

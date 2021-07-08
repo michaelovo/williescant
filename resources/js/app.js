@@ -11,6 +11,8 @@ require('jquery');
 require('jquery-migrate');
 require('jquery-mousewheel');
 require('select2');
+require('malihu-custom-scrollbar-plugin');
+require('@popperjs/core');
 require('./update');
 require('./editproduct');
 require('./custom-select');

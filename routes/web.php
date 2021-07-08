@@ -19,7 +19,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'IndexController@index')->name('home');
 
 //Home Route - Logged in customer
-Route::get('/williescant/home/dashboard', 'HomeController@index')->name('index')->middleware('auth','verified');
+Route::get('/supplier/home', 'ReadySaleController@supplierStore')->name('index')->middleware('auth','verified');
 
 // Profile Route
 Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');

@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{$page}} | {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $page_title }}</title>
 
     <!-- Scripts -->
     <script src="{{asset('js/app.js')}}"></script>
@@ -17,20 +17,13 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/fontawesome.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <main class="">
             @yield('content')
-        </main>
-    </div>
-    <footer class="u-footer text-center text-muted text-muted">
-        <p class="h5 mb-0 ml-auto">
-            &copy; <?php echo date("Y");?><a class="link-muted" href="https://williescant.co.ke" target="_blank">WilieScant Company</a>. All Rights Reserved.
-        </p>
-    </footer>
+            <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 </body>
 </html>
