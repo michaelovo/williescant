@@ -33,3 +33,7 @@ Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('o
 Route::get('/williescant/supplier/dashboard', 'ProductController@index')->name('shop')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/sales', 'SaleController@index')->name('sales')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/shop', 'ProductController@index')->name('supplier-shop')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/purchases', 'PurchaseController@index')->name('purchase')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->middleware('auth', 'verified');
+

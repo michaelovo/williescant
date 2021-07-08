@@ -1,9 +1,9 @@
-$page_title = "Profile - WillieScant"
+@extends('layouts.app', ["page_title" => "Profile - WillieScant"])
 
     <!-- Header (Topbar) -->
+@section('content')
 @include('menu.supplier_nav')
     <!-- End Header (Topbar) -->
-
     <main class="u-main" role="main">
         <!-- Sidebar -->
 @include('menu.sidebar')
@@ -36,27 +36,27 @@ $page_title = "Profile - WillieScant"
                                 <hr class="mb-4 mt-3">
                                 <div class="products-body">
                                     @if($products != null)
-                                @foreach($products as $product)
-                                    <div class="product-card">
-                                        <img src="{{asset('/storage/image/uploads/{{$product->image}}')}}">
-                                        <div class="product-info">
-                                            <div class="product-name"><b>$product->name</b></div>
-                                            <div class="product-price">KSH $product->selling_price</div>
-                                            <div class="product-quantity">Quantity $product->prepared_quantity</div>
-                                            @if ($product->description != null)
-                                                <div class="product-description">Description: {{$product->description}}</div>
-                                            @endif
-                                        </div>
-                                        <div class="add-to-cart">
-                                            <a data-toggle="modal" href="#" onclick="editPreparedProduct('{{$product->id}}','{{$product->ready_sale_id}}')">
-                                                <button class="btn btn-sm btn-block btn-primary">EDIT</button>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                               @else
-                                    <div>You have not prepared products yet.</div>
-                                            @endif
+                                        @foreach($products as $product)
+                                            <div class="product-card">
+                                                <img src="{{asset('/storage/image/uploads/'.$product->image)}}">
+                                                <div class="product-info">
+                                                    <div class="product-name"><b>{{$product->name}}</b></div>
+                                                    <div class="product-price">KSH {{$product->selling_price}}</div>
+                                                    <div class="product-quantity">Quantity {{$product->prepared_quantity}}</div>
+                                                    @if ($product->description != null)
+                                                        <div class="product-description">Description: {{$product->description}}</div>
+                                                    @endif
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    <a data-toggle="modal" href="#" onclick="editPreparedProduct('{{$product->id}}','{{$product->ready_sale_id}}')">
+                                                        <button class="btn btn-sm btn-block btn-primary">EDIT</button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div>You have not prepared products yet.</div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -178,3 +178,4 @@ $page_title = "Profile - WillieScant"
         $("#editPreparedProductModal").modal("show");
     }
 </script>
+@endsection

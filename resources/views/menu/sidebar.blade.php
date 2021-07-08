@@ -20,7 +20,7 @@
 
                 <!-- Shop -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link @if($curr_page=='shop')active @else '' @endif" href="supplier/shop.php">
+                    <a class="u-sidebar-nav-menu__link @if($curr_page=='shop')active @else '' @endif" href="{{route('supplier-shop')}}">
                         <i class="fas fa-store-alt u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Shop</span>
                     </a>
@@ -29,7 +29,7 @@
 
                 <!-- Purchases -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link @if($curr_page=='orders')active @else '' @endif" href="/supplier/orders">
+                    <a class="u-sidebar-nav-menu__link @if($curr_page=='orders')active @else '' @endif" href="">
                         <i class="fas fa-shopping-cart u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Orders</span>
                     </a>
@@ -38,7 +38,7 @@
 
                 <!-- Purchases -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link @if($curr_page=='purchases')active @else '' @endif" href="/supplier/purchases">
+                    <a class="u-sidebar-nav-menu__link @if($curr_page=='purchases')active @else '' @endif" href="{{route('purchase')}}">
                         <i class="far fa-money-bill-alt u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Purchases</span>
                     </a>
@@ -56,7 +56,7 @@
 
                 <!-- Purchases -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link @if($curr_page=='kra')active @else '' @endif" href="/supplier/kra">
+                    <a class="u-sidebar-nav-menu__link @if($curr_page=='kra')active @else '' @endif" href="{{route('kra')}}">
                         <i class="fas fa-calculator u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">KRA</span>
                     </a>

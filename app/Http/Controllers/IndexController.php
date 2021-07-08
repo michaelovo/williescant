@@ -15,4 +15,11 @@ class IndexController extends Controller
     public function customerOrders() {
         return view('customer.order');
     }
+
+    public function kra() {
+        $curr_page = 'kra';
+        $purchases = [];
+        $sales = [];
+        return view('supplier.kra', compact('curr_page', 'purchases', 'sales'));
+    }
 }

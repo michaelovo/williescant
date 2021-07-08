@@ -15,18 +15,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $prepared = "
-    SELECT p.id, p.name, p.description, p.quantity as product_quantity,
-    p.image, r.id as ready_sale_id, r.selling_price, r.quantity as prepared_quantity
-    FROM products p
-    INNER JOIN ready_sale r
-    ON p.id=r.product_id
-    WHERE p.supplier_id='$supplier_id'";
-        $products = Product::join('ready_sales', 'product_id', 'products.id')
+        $curr_page = 'shop';
+        $products = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
             ->where('products.supplier_id', Auth::user()->id)
-            ->get();
-
-        return view('supplier.shop', compact('products'));
+            ->get([
+                'products.name',
+                'products.description',
+                'products.quantity as product_quantity',
+                'products.image',
+                'ready_sales.id as ready_sale_id',
+                'ready_sales.selling_price',
+                'ready_sales.quantity as prepared_quantity'
+            ]);
+        return view('supplier.shop', compact('products', 'curr_page'));
     }
 
     public function search(Request $request)

@@ -13,7 +13,10 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
+        $curr_page = 'purchases';
+        $purchases = [];
+//        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
+        return view('supplier.purchases', compact('curr_page', 'purchases'));
     }
 
     /**

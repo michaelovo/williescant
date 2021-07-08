@@ -1,16 +1,13 @@
+@extends('layouts.app', ["page_title" => "Purchases - WillieScant"])
 
-$page_title = "Purchases - WillieScant";
-
-
+@section('content')
     <!-- Header (Topbar) -->
-@include('menu.supplier_nav')
+    @include('menu.supplier_nav')
     <!-- End Header (Topbar) -->
-
     <main class="u-main" role="main">
         <!-- Sidebar -->
-@include('menu.sidebar')
+        @include('menu.sidebar')
         <!-- End Sidebar -->
-
         <div class="u-content">
             <div class="u-body">
                 <div class="row">
@@ -30,7 +27,6 @@ $page_title = "Purchases - WillieScant";
                             </li>
                         </ul>
                         <!-- End Tabs Nav -->
-
                         <!-- Tabs Content -->
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="purchases_tab" role="tabpanel">
@@ -58,7 +54,7 @@ $page_title = "Purchases - WillieScant";
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                @foreach($purchases $key => $purchase)
+                                                @foreach($purchases as $key => $purchase)
                                                     <tr>
                                                     <td>{{$key + 1}}</td>
                                                     <td>{{$purchase->supplier_name}}</td>
@@ -74,14 +70,13 @@ $page_title = "Purchases - WillieScant";
                                                         </a>
                                                     </td>
                                                     </tr>
-                                                    @endif
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="tab-pane fade" id="sales_tab" role="tabpanel">
                                 <div class="card">
                                     <div class="card-body">
@@ -135,7 +130,6 @@ $page_title = "Purchases - WillieScant";
                     </div>
                 </div>
             </div>
-
             <!-- Footer -->
             <footer class="u-footer text-center text-muted text-muted">
                 <p class="h5 mb-0 ml-auto">
@@ -479,3 +473,4 @@ function exportSales(){
     window.location.href = '/willie-online-new/supplier/kra/export_sales.php/';
 }
 </script>
+@endsection

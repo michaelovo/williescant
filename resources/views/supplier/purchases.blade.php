@@ -1,16 +1,13 @@
+@extends('layouts.app', ["page_title" => "Purchases - WillieScant"])
 
-$page_title = "Purchases - WillieScant";
-
-
+@section('content')
     <!-- Header (Topbar) -->
-@include('menu.supplier_nav')
+    @include('menu.supplier_nav')
         <!-- End Header (Topbar) -->
-
-        <main class="u-main" role="main">
+    <main class="u-main" role="main">
             <!-- Sidebar -->
-@include('menu.sidebar')
+        @include('menu.sidebar')
             <!-- End Sidebar -->
-
             <div class="u-content">
                 <div class="u-body">
                     <div class="row">
@@ -490,10 +487,6 @@ $page_title = "Purchases - WillieScant";
     </div>
     <!-- End Add Purchase Modal -->
 
-</body>
-<?php
-include '../templates/body.blade.php';
-?>
 
 <script>
 
@@ -825,3 +818,4 @@ function deleteItem(e, formset, item_id, receipt_id) {
     }
 }
 </script>
+@endsection
