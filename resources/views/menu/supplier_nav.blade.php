@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <ul class="list-unstyled mb-0">
                             <li class="mb-4">
-                                <a class="d-flex align-items-center link-dark" href="/profile">
+                                <a class="d-flex align-items-center link-dark" href="{{route('profile', Auth::user()->id)}}">
                                     <span class="h3 mb-0"><i class="far fa-user-circle text-muted mr-3"></i></span> View
                                     Profile
                                 </a>

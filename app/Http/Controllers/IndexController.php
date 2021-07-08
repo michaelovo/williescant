@@ -22,4 +22,10 @@ class IndexController extends Controller
         $sales = [];
         return view('supplier.kra', compact('curr_page', 'purchases', 'sales'));
     }
+
+    public function home(){
+        $curr_page  = 'store';
+        $sales = [];
+        return view('supplier.index', compact('curr_page', 'sales'));
+    }
 }

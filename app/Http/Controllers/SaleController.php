@@ -14,10 +14,11 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $all_sales = "SELECT * FROM sales WHERE supplier_id='$supplier_id'";
+//        $all_sales = "SELECT * FROM sales WHERE supplier_id='$supplier_id'";
+        $curr_page = 'sales';
         $sales = Sale::all();
 
-        return view('supplier.sale', compact('sales'));
+        return view('supplier.sales', compact('sales', 'curr_page'));
     }
 
     /**

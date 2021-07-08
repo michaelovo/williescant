@@ -1,12 +1,12 @@
+@extends('layouts.app', ["page_title" => "Sales - WillieScant"])
 
-$page_title = "Sales - WillieScant";
-
-@include('menu.supplier_nav')
+@section('content')
+    @include('menu.supplier_nav')
     <!-- End Header (Topbar) -->
 
     <main class="u-main" role="main">
         <!-- Sidebar -->
-@include('menu.sidebar')
+        @include('menu.sidebar')
         <!-- End Sidebar -->
 
         <div class="u-content">
@@ -745,3 +745,4 @@ function deleteItem(e, formset, item_id, receipt_id) {
     }
 }
 </script>
+@endsection

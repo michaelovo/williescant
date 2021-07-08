@@ -40,7 +40,7 @@
                         <ul class="list-unstyled mb-0">
                             <li class="mb-4">
                                 <a class="d-flex align-items-center link-dark"
-                                    href="/shop/profile.php">
+                                    href="{{route('profile', Auth::user()->id)}}">
                                     <span class="h3 mb-0"><i class="far fa-user-circle text-muted mr-3"></i></span> View
                                     Profile
                                 </a>

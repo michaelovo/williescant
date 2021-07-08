@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-    'page' => 'Profile'
+    'page_title' => 'Profile'
 ])
 
 @section('content')
