@@ -52,9 +52,9 @@ class LoginController extends Controller
     public function authenticated(Request $request, $user)
     {
         if($user->type == 3) {
-            return redirect('/williescant/home/dashboard/customer');
+            return redirect('IndexController@index');
         } elseif ($user->type == 2) {
-            return redirect('/williescant/supplier/dashboard');
+            return redirect('/williescant/supplier/home');
         }
     }
 }

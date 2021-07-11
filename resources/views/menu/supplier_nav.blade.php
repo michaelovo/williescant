@@ -1,6 +1,6 @@
 <header class="u-header">
     <div class="u-header-left">
-        <a class="u-header-logo" href="/index">
+        <a class="u-header-logo" href="/">
             <img src="{{asset('/storage/images/main/LOGO.png')}}" alt="WillieScant" width="50px" height="55px">
         </a>
     </div>
@@ -37,9 +37,14 @@
                                 </a>
                             </li>
                             <li class="mb-4">
-                                <a class="d-flex align-items-center link-dark" href="/switch">
-                                    <span class="h3 mb-0"><i class="fa fa-cog text-muted mr-3"></i></span> Switch to customer
+                                <a class="d-flex align-items-center link-dark"  href="{{ route('switch') }}" onclick="event.preventDefault();
+                                                     document.getElementById('switch-form').submit();">
+                                    <span class="h3 mb-0"><i class="fa fa-cog text-muted mr-3"></i></span>
+                                    Switch to Customer
                                 </a>
+                                <form id="switch-form" action="{{ route('switch') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </li>
                             <li>
                                 <a class="d-flex align-items-center link-dark"  href="{{ route('logout') }}" onclick="event.preventDefault();

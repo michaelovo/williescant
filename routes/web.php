@@ -19,7 +19,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'IndexController@index')->name('home');
 
 //Home Route - Logged in customer
-Route::get('/supplier/home', 'ReadySaleController@supplierStore')->name('index')->middleware('auth','verified');
+Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth','verified');
 
 // Profile Route
 Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
@@ -36,3 +36,4 @@ Route::get('/williescant/supplier/shop', 'ProductController@index')->name('suppl
 Route::get('/williescant/supplier/purchases', 'PurchaseController@index')->name('purchase')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier-home')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth','verified');

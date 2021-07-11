@@ -1,6 +1,6 @@
 <header class="u-header">
     <div class="u-header-left">
-        <a class="u-header-logo"href="/index">
+        <a class="u-header-logo"href="/">
         <img src="{{asset('storage/images/main/LOGO.png')}}" alt="WillieScant" width="50px" height="55px">
         </a>
     </div>

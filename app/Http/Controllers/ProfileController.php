@@ -13,13 +13,24 @@ class ProfileController extends Controller
     //
     public function show($id) {
         $profile = User::where('id', $id)->get()->first();
-        if($profile->type == 2) {
-            return view('supplier.profile', compact('profile'));
-        } else if ($profile->type == 3) {
-            return view('profile.show', compact('profile'));
-        }
+        $curr_page = 'profile';
+            return view('supplier.profile', compact('profile', 'curr_page'));
     }
 
+    public function updateAvatar(Request $request){
+//        public function
+        $profile = User::where('id', Auth::user()->id)->update(['avatar' => $request->avatar]);
+    }
+
+    public function switch() {
+        $user = User::find(Auth::user()->id);
+        if($user->type == 2) {
+            $user->update(['type' => 3]);
+        } elseif ($user->type == 3) {
+            $user->update(['type' => 2]);
+        }
+        return redirect()->route('home');
+    }
 
     // Update user profile
     public function update(Request $request, $id) {

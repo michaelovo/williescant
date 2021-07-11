@@ -4,7 +4,7 @@
 	<!-- Header (Topbar) -->
 	@if(Auth::check() && Auth::user()->type == 2)
 		@include('menu.supplier_nav')
-	@elseif (Auth::check() && Auth::user()->type == 3) {
+	@elseif (Auth::check() && Auth::user()->type == 3)
 		@include('menu.customer_nav')
 	@else
 		@include('menu.logged_out_nav')

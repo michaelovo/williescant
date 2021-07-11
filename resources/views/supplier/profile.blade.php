@@ -1,10 +1,16 @@
 @extends('layouts.app', ["page_title" => "Profile - WillieScant"])
 
 @section('content')
-    @include('menu.supplier_nav')
+    @if(Auth::user()->type == 2)
+        @include('menu.supplier_nav')
+    @elseif(Auth::user()->type == 3)
+        @include('menu.customer_nav')
+    @endif
     <!-- Header (Topbar) -->
     <main class="u-main" role="main">
-        @include('menu.sidebar')
+        @if(Auth::user()->type == 2)
+            @include('include.sidebar._sidebar')
+        @endif
     <div class="u-content">
         <div class="u-body">
             <h1 class="h2 font-weight-semibold mb-3">Your Profile</h1>
