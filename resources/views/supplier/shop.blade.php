@@ -1,4 +1,4 @@
-@extends('layouts.app', ["page_title" => "Profile - WillieScant"])
+@extends('layouts.app', ["page_title" => "Shop - WillieScant"])
 
     <!-- Header (Topbar) -->
 @section('content')

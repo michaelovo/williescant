@@ -152,19 +152,29 @@
                     </button>
                 </div>
                 <form method="get" id="change_password_form" >
+                    @csrf
                 <div class=" modal-body">
                     <!-- Errors -->
-                    <div id="modal-errors" class="alert alert-danger fade show d-none" role="alert">
-                        <i class="fa fa-minus-circle alert-icon mr-3"></i>
-                        <span>Error: Failed to change your password. Try again later</span>
-                    </div>
-                    <div id="modal-general-errors" class="alert alert-soft-danger d-none fade show" role="alert">
+                    <div  id="modal-errors" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
                         <i class="fa fa-minus-circle alert-icon mr-3"></i>
                         <span class="small">Correct one or more errors below</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div id="modal-success" class="alert alert-soft-success d-none fade show" role="alert">
+                    <div id="modal-general-errors" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+                        <i class="fa fa-minus-circle alert-icon mr-3"></i>
+                        <span>Error: Failed to change your password. Try again later</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="modal-success" class="alert alert-success alert-dismissible fade show d-none" role="alert">
                         <i class="fa fa-check-circle alert-icon mr-3"></i>
                         <span class="small">Successfully changed your password</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <!-- End Errors -->
                     <div class="form-row">
@@ -194,7 +204,7 @@
                         <div class="col-md-12">
                             <div class="form-group mb-4">
                                 <label for="confirmPassword">Confirm New password</label>
-                                <input id="confirmPassword" class="form-control" name="confirmPassword" type="password"
+                                <input id="confirmPassword" class="form-control" name="newPassword_confirmation" type="password"
                                        placeholder="Re-enter your new password" required>
                                 <div class="invalid-feedback">
                                     New password and confirmation do not match
@@ -217,11 +227,17 @@
     <!-- Custom Javascript -->
     <script type="text/javascript">
         $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
             $("#change_password_form").submit(function (e) {
                 e.preventDefault();
                 old_password = $("#password").val();
                 new_password = $("#newPassword").val();
                 confirm_password = $("#confirmPassword").val();
+                console.log(old_password,new_password)
 
                 errors = $("#modal-errors");
                 general_errors = $("#modal-general-errors");
@@ -240,35 +256,34 @@
                 }
                 $.ajax({
                     type: 'POST',
-                    url: "/supplier/helpers/update_password.php",
+                    url: "/williescant/profile/update-password",
                     data: {
-                        'password': old_password,
-                        'new_password': new_password,
-                        'confirm_password': confirm_password
+                        old_password: old_password,
+                        new_password: new_password,
+                        'newPassword_confirmation': confirm_password
                     },
                     statusCode: {
                         401: function(response) {
                             window.location.href = '/auth/logout.php';
                         }
                     },
-                    success: function (result) {
-                        res = JSON.parse(result);
-                        if (res['success']) {
+                    success: function (data) {
+                        if (data.success) {
                             $("#modal-success").removeClass("d-none");
                             $("#newPassword").removeClass('is-invalid');
                             $("#confirmPassword").removeClass('is-invalid');
                             $("#password").removeClass('is-invalid');
-                        } else if (res['error']) {
+                        } else if (data.error) {
                             $("#modal-error").removeClass("d-none");
                         } else {
-                            if (!res['old_password_valid']) {
+                            if (!data.old_password_valid) {
                                 $("#modal-general-errors").removeClass("d-none");
                                 $("#password").addClass("is-invalid");
                             } else {
                                 $("#modal-general-errors").addClass("d-none");
                                 $("#password").removeClass("is-invalid");
                             }
-                            if (!res['new_password_valid']) {
+                            if (!data.new_password_valid) {
                                 $("#modal-general-errors").removeClass("d-none");
                                 $("#newPassword").addClass("is-invalid");
                                 $("#confirmPassword").addClass("is-invalid");

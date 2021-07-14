@@ -37,6 +37,12 @@
                                 </a>
                             </li>
                             <li class="mb-4">
+                                <a class="d-flex align-items-center link-dark" href="{{route('supplier-home')}}">
+                                    <span class="h3 mb-0"><i class="far fa-user-circle text-muted mr-3"></i></span> View
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="mb-4">
                                 <a class="d-flex align-items-center link-dark"  href="{{ route('switch') }}" onclick="event.preventDefault();
                                                      document.getElementById('switch-form').submit();">
                                     <span class="h3 mb-0"><i class="fa fa-cog text-muted mr-3"></i></span>

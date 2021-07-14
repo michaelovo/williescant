@@ -21,7 +21,7 @@
                     <ul id="shop" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
                         <!-- Display -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="/supplier/shop.php">
+                            <a class="u-sidebar-nav-menu__link " href="{{route('supplier-shop')}}">
                                 <i class="fas fa-store-alt u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Display</span>
                             </a>
@@ -30,7 +30,7 @@
 
                         <!-- Store -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="/supplier/index.php ">
+                            <a class="u-sidebar-nav-menu__link " href="{{route('supplier-home')}} ">
                                 <i class="fas fa-warehouse u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Store</span>
                             </a>

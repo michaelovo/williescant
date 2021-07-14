@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -27,7 +29,7 @@ class ProductController extends Controller
                 'ready_sales.selling_price',
                 'ready_sales.quantity as prepared_quantity'
             ]);
-        return view('supplier.shop', compact('products', 'curr_page'));
+        return view('supplier.shop', compact('products', 'curr_page', 'categories'));
     }
 
     public function search(Request $request)
@@ -61,7 +63,41 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required',
+            'brand' => 'required',
+            'quantity' => 'required',
+            'unit_description' => 'required',
+            'unit_price' => 'required',
+            'sku' => 'required',
+            'color' => 'required',
+            'image' => 'required',
+            'available'> 'required',
+            'size' => 'required'
+        ]);
+
+        if($validator->errors()) {
+            return response()->json($validator->errors());
+        } else {
+            $product = new Product();
+
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->brand = $request->brand;
+            $product->quantity = $request->quantity;
+            $product->unit_description = $request->unit_description;
+            $product->unit_price = $request->unit_price;
+            $product->color = $request->sku;
+            $product->image = $request->image;
+            $product->available = $request->available;
+            $product->size = $request->size;
+            $product->sku = $request->sku;
+
+            $product->save();
+
+            return response()->json(['message' => 'saved']);
+        }
     }
 
     /**

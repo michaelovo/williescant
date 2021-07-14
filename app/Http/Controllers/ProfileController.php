@@ -53,7 +53,7 @@ class ProfileController extends Controller
         $profile->email = $request->email;
         $profile->update();
 
-        return redirect()->route('profile', $id);
+        return response()->json();
     }
 
 //    update password
@@ -61,21 +61,38 @@ class ProfileController extends Controller
     {
         //Check if the Current Password matches with what is in the database.
         if(!(Hash::check($request->get('current_password'), Auth::user()->password))) {
-            return back()->with('error', 'Your current password does not match with what you provided');
+            $data = ['error'=> 'Your current password does not match with what you provided'];
         }
         // Compare the Current Password and New Password using[strcmp function]
         if(strcmp($request->get('current_password'), $request->get('new_password')) == 0) {
-            return back()->with('error', 'Your current password cannot be same with the new password');
+            $data = ['error', 'Your current password cannot be same with the new password'];
         }
         //Validate the Password.
         $request->validate([
-            'current_password' => 'required',
+            'password' => 'required',
             'new_password'     => 'required|string|min:8|different:password|confirmed'
         ]);
         // Save the New Password.
         $user = Auth::user();
         $user->password = bcrypt($request->get('new_password'));
         $user->save();
-        return back()->with('message', 'Password changed successfully');
+
+        return response()->json($data);
+    }
+
+    public function updatePassword(Request $request) {
+
+        $validator = Validator::make($request->all(),[
+            'old_password' => 'required',
+            'new_password' => 'required|string|min:8|different:password|confirmed'
+        ]);
+
+        if ($validator->errors()){
+            return response()->json($validator->errors());
+        } else {
+            $user = User::find(Auth::user()->id);
+            $user->update(['password' => bcrypt($request->new_password)]);
+            return response()->json(['message' => 'Password updated successfully']);
+        }
     }
 }
