@@ -97,7 +97,7 @@ class ProductController extends Controller
 
             $product->save();
 
-            return response()->json(['message' => 'saved']);
+            return redirect()->back();
 //        }
     }
 

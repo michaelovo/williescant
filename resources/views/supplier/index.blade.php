@@ -43,6 +43,26 @@
                             </thead>
 
                             <tbody>
+
+                            @foreach($products as $product)
+                                <tr>
+                                    <td>{{$product->id}}</td>
+                                    <td>{{$product->name}}</td>
+                                    <td>{{$product->code}}</td>
+                                    <td>{{$product->state}}</td>
+                                    <td>{{$product->quantity}}</td>
+                                    <td>{{$product->unit_price}}</td>
+                                    @if($product->available == 1)
+                                        <td class="badge rounded-pill bg-success px-2 text-white">YES</td>
+                                    @else
+                                        <td class="badge rounded-pill bg-danger px-2 text-white">NO</td>
+                                    @endif
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary mr-2">edit</a>
+                                        <a href="#" class="btn btn-sm btn-danger">x</a>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                             </tbody>
                         </table>
@@ -350,7 +370,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="mb-3" id="add-product-form" method="POST">
+            <form class="mb-3" id="" method="POST" action="{{ route('add-product') }}" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
                     <div class="form-row mb-2">
                         <div class="col-md-6">
@@ -599,17 +620,16 @@
                     }
                 },
                 success: function (result) {
-                    console.log(result)
-                    // res = JSON.parse(result);
-                    // if (res['success']) {
-                    //     $("#modal-success").removeClass('d-none');
-                    //     $("#add-product-form")[0].reset();
-                    //     setTimeout(() => {
-                    //         window.location.reload();
-                    //     }, 1000);
-                    // } else {
-                    //     $("#modal-errors").removeClass('d-none');
-                    // }
+                    console.log(result.message)
+                    if (result.message == "saved") {
+                        $("#modal-success").removeClass('d-none');
+                        $("#add-product-form")[0].reset();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $("#modal-errors").removeClass('d-none');
+                    }
                 },
                 error: function (res) {
                     $("#modal-errors").removeClass('d-none');

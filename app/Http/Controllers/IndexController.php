@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ProductCategory;
+use App\Product;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -27,8 +28,17 @@ class IndexController extends Controller
 
     public function home(){
         $curr_page  = 'store';
-        $sales = [];
-        return view('supplier.index', compact('curr_page', 'sales'));
+
+        $products = Product::join('product_categories', 'product_categories.id', 'products.category_id')
+            ->get(['products.id as id',
+                'products.name as name',
+                'product_categories.name as code',
+                'products.state as state',
+                'products.quantity as quantity',
+                'products.unit_price as unit_price',
+                'products.available as available']);
+        return view('supplier.index', compact('curr_page', 'products'));
+//        return $products;
     }
 
     public function returnController() {
