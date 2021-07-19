@@ -13,10 +13,16 @@
         <div class="u-body">
             <div class="d-flex justify-content-between mb-3">
                 <h1 class="h2 font-weight-semibold">Inventory</h1>
-                <button class="btn btn-sm btn-outline-primary" data-toggle="modal" href="#addProductModal">
-                    <i class="fa fa-plus mr-2"></i>
-                    Add Product
-                </button>
+                <div class="controls">
+                    <button class="btn btn-sm btn-outline-primary" data-toggle="modal" href="#" onclick="addProduct()">
+                        <i class="fa fa-plus"></i>
+                        Add Product
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" href="#" onclick="openImportPurchaseModal()">
+                        <i class="fas fa-file-import"></i>
+                        Import Product
+                    </button>
+                </div>
             </div>
 
             <div class="card mb-4">
@@ -27,67 +33,17 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Product Name</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">State</th>
                                 <th scope="col">Quantity</th>
-                                <th scope="col">Buying Price</th>
+                                <th scope="col">Unit Price</th>
                                 <th scope="col">Available</th>
-                                <th scope="col">SKU</th>
                                 <th class="text-center" scope="col">Actions</th>
                             </tr>
                             </thead>
 
                             <tbody>
-                            @foreach($sales as $key => $sale)
-                                            <tr>
-                                            <td>{{$key + 1}}</td>
-                                            <td>{{$sale->name}}</td>
-                                            <td>{{$sale->quantity}}</td>
-                                            <td>{{$sale->unit_price}}</td>
-                                            <td>
-                                                @if($sale->available)
-                                                    <div class="badge badge-soft-danger">No</div>
-                                                @else
-                                                    <div class="badge badge-soft-success">Yes</div>
-                                                @endif
-                                            </td>
-                                            <td>{{$sale->sku}}</td>
-                                            <td class="text-center">
-                                                <a id="actions1Invoker" class="link-muted" href="#!" aria-haspopup="true"
-                                                    aria-expanded="false" data-toggle="dropdown">
-                                                    <i class="fa fa-sliders-h"></i>
-                                                </a>
-
-                                                <div class="dropdown-menu dropdown-menu-right dropdown"
-                                                    style="width: 150px;" aria-labelledby="actions1Invoker">
-                                                    <ul class="list-unstyled mb-0">
-                                                        <li>
-                                                            <a class="d-flex align-items-center link-muted py-2 px-3"
-                                                                data-toggle="modal" href="#" onclick="details('{{$sale->id}}')">
-                                                                <i class="fa fa-eye mr-3"></i>Details
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="d-flex align-items-center link-muted py-2 px-3"
-                                                                data-toggle="modal" href="#" onclick="prepareProduct('{{$sale->id}}')">
-                                                                <i class="fa fa-cog mr-3"></i>Prepare
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="d-flex align-items-center link-muted py-2 px-3"
-                                                                data-toggle="modal" href="#" onclick="editProduct('{{$sale->id}}')">
-                                                                <i class="fa fa-edit mr-3"></i>Edit
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="d-flex align-items-center text-danger link-muted py-2 px-3"
-                                                                href="#!" onclick="deleteProduct('{{$sale->id}}')">
-                                                                <i class="fa fa-trash mr-3"></i>Delete
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            </tr>
-                            @endforeach
+                            </tbody>
                             </tbody>
                         </table>
                     </div>
@@ -98,8 +54,8 @@
         <!-- Footer -->
         <footer class="u-footer text-center text-muted text-muted">
             <p class="h5 mb-0 ml-auto">
-                &copy; <?php echo date("Y");?> <a class="link-muted" href="https://williescant.co.ke"
-                                                  target="_blank">WilieScant
+                &copy; 2021 <a class="link-muted" href="https://williescant.co.ke"
+                               target="_blank">Willie Scant
                     Company</a>. All
                 Rights Reserved.
             </p>
@@ -464,9 +420,6 @@
                                 <label for="add-category" class="required-label">Category</label>
                                 <select class="form-control" name="category_id" id="add-category" required>
                                     <option value="" disabled selected>Select a category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->name}}</option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -490,7 +443,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-2">
                                 <label for="add-image" class="required-label">Image</label>
-                                <input id="add-image" class="form-control" name="images" type="file" multiple required>
+                                <input id="add-image" class="form-control" name="images" type="file" multuple required>
 
                                 <div class="form-row" id="add-image-preview__container">
                                     <div class="card form-group col-md-6 mt-2 d-none">
@@ -599,67 +552,190 @@
     </div>
 </div>
 <!-- End Import Purchase Modal -->
-
+</html>
 <script>
-    $("#add-product-form").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData($("#add-product-form")[0]);
-        $("#modal-success").addClass("d-none");
-        $("#modal-errors").addClass("d-none");
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('add-product') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                res = JSON.parse(result);
-                if (res['success']) {
-                    $("#modal-success").removeClass('d-none');
-                    $("#add-product-form")[0].reset();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    $("#modal-errors").removeClass('d-none');
+    oldImageCount = 1;
+    $(document).ready(function() {
+        $("#edit-image").attr("oldImgCount", oldImageCount);
+        $("#add-image").change(function(e) {
+            var target = e.target;
+            var imagePreviewContainer = $("#add-image-preview__container");
+            imagesPreview(e.target, imagePreviewContainer, "add");
+        });
+
+        $("#edit-image").change(function(e) {
+            var target = e.target;
+            var imagePreviewContainer = $("#edit-image-preview__container");
+            imagesPreview(e.target, imagePreviewContainer, "edit");
+        });
+
+        $("#add-product-form").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData($("#add-product-form")[0]);
+            for(let entry of formData.entries()){
+                if (entry[0] == 'images') {
+                    formData.delete(entry[0]);
                 }
             }
+            var images = document.getElementById('add-image').files;
+            // console.log(images)
+            var filesLength = images.length;
+            for (var i = 0; i < filesLength; i++) {
+                if (images[i]['isvalid'] !== false) {
+                    formData.append('images[]', images[i]);
+                }
+            }
+            $("#modal-success").addClass("d-none");
+            $("#modal-errors").addClass("d-none");
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('add-product') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                statusCode: {
+                    401: function(response) {
+                        window.location.href = '/auth/logout.php';
+                    }
+                },
+                success: function (result) {
+                    console.log(result)
+                    // res = JSON.parse(result);
+                    // if (res['success']) {
+                    //     $("#modal-success").removeClass('d-none');
+                    //     $("#add-product-form")[0].reset();
+                    //     setTimeout(() => {
+                    //         window.location.reload();
+                    //     }, 1000);
+                    // } else {
+                    //     $("#modal-errors").removeClass('d-none');
+                    // }
+                },
+                error: function (res) {
+                    $("#modal-errors").removeClass('d-none');
+                }
+            });
         });
-    })
 
+        $("#edit-product-form").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData($("#edit-product-form")[0]);
+            for(let entry of formData.entries()){
+                if (entry[0] == 'images') {
+                    formData.delete(entry[0]);
+                }
+            }
+            var images = document.getElementById('edit-image').files;
+            // console.log(images)
+            var filesLength = images.length;
+            for (var i = 0; i < filesLength; i++) {
+                if (images[i]['isvalid'] !== false) {
+                    formData.append('images[]', images[i]);
+                }
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/supplier/includes/edit_product.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                statusCode: {
+                    401: function(response) {
+                        window.location.href = '/auth/logout.php';
+                    }
+                },
+                success: function (result) {
+                    console.log(result);
+                    res = JSON.parse(result);
+                    if (res['success']) {
+                        $("#modal-edit-success").removeClass('d-none');
+                        $("#edit-product-form")[0].reset();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $("#modal-edit-errors").find('span').text(res['error']);
+                        $("#modal-edit-errors").removeClass('d-none');
+                    }
+                }
+            });
+        });
+
+        $("#prepare-product-form").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData($("#prepare-product-form")[0]);
+            $("#modal-prepare-success").addClass("d-none");
+            $("#modal-prepare-errors").addClass("d-none");
+            $.ajax({
+                type: 'POST',
+                url: "/supplier/includes/prepare_product.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                statusCode: {
+                    401: function(response) {
+                        window.location.href = '/auth/logout.php';
+                    }
+                },
+                success: function (result) {
+                    res = JSON.parse(result);
+                    if (res['success']) {
+                        $("#modal-prepare-success").removeClass('d-none');
+                        $("#prepare-product-form")[0].reset();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else if(res['error']) {
+                        $("#modal-prepare-success").addClass("d-none");
+                        $("#modal-prepare-errors").find("span").text(res['error']);
+                        $("#modal-prepare-errors").removeClass('d-none');
+                    } else {
+                        $("#modal-prepare-errors").find("span").text('Server Error. Failed to prepare product.');
+                        $("#modal-prepare-errors").removeClass('d-none');
+                    }
+                }
+            });
+        });
+    });
     // Show product details modal
     function details(product_id) {
         $("#modal-details-errors").addClass('d-none');
         $.ajax({
             type: 'GET',
-            url: `/willie-online-new/supplier/includes/get_product.php/?id=${product_id}`,
+            url: `/supplier/includes/get_product.php/?id=${product_id}`,
             processData: false,
             contentType: false,
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
             success: function (result) {
                 res = JSON.parse(result);
                 if (res['success']) {
                     product = res['data'];
-                    $("#product-details-img").attr('src', `../upload/${product['image']}`);
+                    $("#product-details-img").attr('src', `../upload/${product['images'][0]['image']}`);
                     $("#product-details-header").html(`
-                        ${product['name']}
-                        ${product['available'] ?
+                    ${product['name']}
+                    ${parseInt(product['available']) ?
                         '<span class="badge badge-soft-success ml-2">Available</span>' :
                         '<span class="badge badge-soft-danger ml-2">Not Available</span>'
                     }`);
                     $("#product-details-main").html(`
-                        <td>${product['quantity']}</td>
-                        <td>KSh ${product['unit_price']}</td>
-                        <td>${product['unit_description']}</td>
-                    `);
+                    <td>${product['brand'] ? product['brand'] : 'N/A'}</td>
+                    <td>${product['color'] ? product['color'] : 'N/A'}</td>
+                    <td>${product['size'] ? product['size'] : 'N/A'}</td>
+                    <td>${product['unit_description'] ? product['unit_description'] : 'N/A'}</td>
+                `);
 
                     $("#product-details-extra").html(`
-                        ${product['sku'] ? `<h5>SKU <b>${product['sku']}</b></h5>` : ''}
-                        ${product['color'] ? `<h5>Color <b>${product['color']}</b></h5>` : ''}
-                        ${product['brand'] ? `<h5>Brand <b>${product['brand']}</b></h5>` : ''}
-                        ${product['description'] ?
+                    <h5>SKU: <b>${product['sku']}</b></h5>
+                    <h5>Name: <b>${product['name']}</b></h5>
+                    <h5>Quantity in store: <b>${product['quantity']}</b></h5>
+                    ${product['description'] ?
                         `<h5 class="h4">Description: <p class="card-text">
-                                ${product['description']}</p></h5>` : ''}
-                    `);
+                            ${product['description']}</p></h5>` : 'N/A'}
+                `);
                 } else {
                     $("#modal-details-errors").removeClass('d-none');
                 }
@@ -668,73 +744,19 @@
         $("#detailsModal").modal("show");
     }
 
-
-    $("#edit-product-form").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData($("#edit-product-form")[0]);
-        $("#modal-edit-success").addClass("d-none");
-        $("#modal-edit-errors").addClass("d-none");
-        $.ajax({
-            type: 'POST',
-            url: "/willie-online-new/supplier/includes/edit_product.php",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                res = JSON.parse(result);
-                if (res['success']) {
-                    $("#modal-edit-success").removeClass('d-none');
-                    $("#edit-product-form")[0].reset();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    $("#modal-edit-errors").removeClass('d-none');
-                }
-            }
-        });
-    });
-
-
-    $("#prepare-product-form").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData($("#prepare-product-form")[0]);
-        $("#modal-prepare-success").addClass("d-none");
-        $("#modal-prepare-errors").addClass("d-none");
-        $.ajax({
-            type: 'POST',
-            url: "/willie-online-new/supplier/includes/prepare_product.php",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                res = JSON.parse(result);
-                if (res['success']) {
-                    $("#modal-prepare-success").removeClass('d-none');
-                    $("#prepare-product-form")[0].reset();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else if(res['error']) {
-                    $("#modal-prepare-success").addClass("d-none");
-                    $("#modal-prepare-errors").find("span").text(res['error']);
-                    $("#modal-prepare-errors").removeClass('d-none');
-                } else {
-                    $("#modal-prepare-errors").find("span").text('Server Error. Failed to prepare product.');
-                    $("#modal-prepare-errors").removeClass('d-none');
-                }
-            }
-        });
-    });
-
-
     function editProduct(product_id) {
         $.ajax({
             type: 'GET',
-            url: `/willie-online-new/supplier/includes/get_product.php/?id=${product_id}`,
+            url: `/supplier/includes/get_product.php/?id=${product_id}`,
             processData: false,
             contentType: false,
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
             success: function (result) {
+                // console.log(result);
                 res = JSON.parse(result);
                 if (res['success']) {
                     product = res['data'];
@@ -745,39 +767,88 @@
                     $("#edit-product-form").find("#quantity").val(product['quantity']);
                     $("#edit-product-form").find("#unit_description").val(product['unit_description']);
                     $("#edit-product-form").find("#unit_price").val(product['unit_price']);
-                    $("#edit-product-form").find("#sku").val(product['size']);
-                    // $("#edit-product-form").find("#image").val(`../../upload/${product['image']}`);
-                    if(product['available']) {
-                        $("#edit-product-form").find("#available").attr('checked', 'true');
+                    $("#edit-product-form").find("#size").val(product['size']);
+                    $("#edit-product-form").find("#color").val(product['color']);
+                    $("#edit-product-form").find("#sku").val(product['sku']);
+                    if(product['images']) {
+                        // console.log(product['images']);
+                        var previewContainer = $("#edit-image-preview__container__old");
+                        previewContainer.html('');
+                        oldImageCount = product['images'].length;
+                        for(var image of product['images']) {
+                            previewContainer.append(
+                                `
+                            <div class="card form-group col-md-5 mr-1 mt-2">
+                                <img alt="${image['image']}" src="../upload/${image['image']}" id="edit-image-preview__item" height="75" width="100%">
+                                <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image['id']}, ${product['id']})" image_name="${image['image']}" type="button">
+                                    Remove
+                                </button>
+                            </div>
+                        `);
+                        }
                     } else {
-                        $("#edit-product-form").find("#available").attr('checked', '');
+                        $("#edit-product-form").find("#edit-img-card").addClass('d-none');
+                    }
+                    if(parseInt(product['available'])) {
+                        $("#edit-product-form").find("#available").attr('checked', 'true');
                     }
 
+                    $("#modal-edit-success").addClass("d-none");
+                    $("#modal-edit-errors").addClass("d-none");
+                    $("#modal-edit-errors").find('span').text('');
+                    $("#editModal").modal("show");
+
                 } else {
-                    $("#modal-edit-errors").removeClass('d-none');
+                    alert('Failed to fetch product details. Try again later');
                 }
             }
         });
-        $("#editModal").modal("show");
-
     }
 
     function prepareProduct(product_id) {
-        $("#modal-prepare-success").addClass("d-none");
-        $("#modal-prepare-errors").addClass("d-none");
-        $("#prepare-product-form")[0].reset();
-        $("#prepare-product-form").find("#product_id").val(product_id);
-        $("#prepareModal").modal("show");
+        $.ajax({
+            type: 'POST',
+            url: "/supplier/includes/prepare_product.php",
+            data: {'product_id': product_id, 'is_prepared': 1},
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
+            success: function (result) {
+                res = JSON.parse(result);
+                if (res['success']) {
+                    if(res['exists']) {
+                        alert('Product is already prepared. Proceed to edit ready product at the shop tab');
+                    } else {
+                        $("#modal-prepare-success").addClass("d-none");
+                        $("#modal-prepare-errors").addClass("d-none");
+                        $("#prepare-product-form")[0].reset();
+                        $("#prepare-product-form").find("#product_id").val(product_id);
+                        $("#prepareModal").modal("show");
+                    }
+                } else if(res['error']){
+                    alert(res['error'])
+                    // $("#modal-prepare-errors").removeClass('d-none');
+                } else {
+                    alert('Error: Failed to retrieve product at this time. Try again later');
+                }
+            }
+        });
     }
 
     function deleteProduct(product_id) {
         if(confirm("Warning: This product will be deleted permanently")) {
             $.ajax({
                 type: 'POST',
-                url: "/willie-online-new/supplier/includes/delete_product.php",
+                url: "/supplier/includes/delete_product.php",
                 data: {'id': product_id},
+                statusCode: {
+                    401: function(response) {
+                        window.location.href = '/auth/logout.php';
+                    }
+                },
                 success: function (result) {
-                    console.log(result);
                     res = JSON.parse(result);
                     if (res['success']) {
                         setTimeout(() => {
@@ -786,6 +857,161 @@
                     } else {
                         // $("#modal-prepare-errors").removeClass('d-none');
                     }
+                }
+            });
+        }
+    }
+
+    function openImportPurchaseModal() {
+        $.ajax({
+            type: 'GET',
+            url: "/supplier/includes/import_purchases.php",
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
+            success: function (result) {
+                res = JSON.parse(result);
+                if (res['success']) {
+                    $("#items-table-body").html(res['markup']);
+                    $("#items-table").DataTable();
+                    $("#importProductModal").modal("show");
+                } else {
+                    alert("Error: Failed to fetch receipt items. Try again later");
+                    // console.log("fail");
+                    // $("#modal-prepare-errors").removeClass('d-none');
+                }
+            },
+            error: function(res) {
+                alert("Error: Failed to fetch purchased items. Try again later");
+            }
+        });
+    }
+
+    function importPurchase(item_id) {
+        $.ajax({
+            type: 'POST',
+            url: "/supplier/includes/import_purchases.php",
+            data: {'item_id': item_id},
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
+            success: function (result) {
+                res = JSON.parse(result);
+                if (res['success']) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    alert("Error: Failed to import purchased item. Try again later");
+                }
+            },
+            error: function(res) {
+                alert("Error: Failed to import purchased item. Try again later");
+            }
+        });
+    }
+
+    function deleteImage(image, image_id, product_id) {
+        var imageName = $(image).attr("image_name")
+        if(oldImageCount <= 1) {
+            alert("Failed: Save atleast one other product image to delete this image. A product cannot have zero images")
+        } else {
+            // Delete image from database
+            if(confirm("This image will be deleted permanently")) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/supplier/includes/edit_product.php",
+                    data: {
+                        'id': product_id,
+                        'delete_image': true,
+                        'image_id': image_id,
+                        'image_name': imageName
+                    },
+                    statusCode: {
+                        401: function(response) {
+                            window.location.href = '/auth/logout.php';
+                        }
+                    },
+                    success: function (result) {
+                        res = JSON.parse(result);
+                        if (res['success']) {
+                            oldImageCount -= 1;
+                            $("#edit-image").attr("oldImgCount", oldImageCount);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 500);
+                        } else {
+                            alert(res['error']);
+                        }
+                    },
+                    error: function(res) {
+                        alert("Error: Failed to delete image. Try again later");
+                    }
+                });
+            }
+        }
+    }
+
+    // Load add product modal
+    function addProduct(){
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('get-category') }}",
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },
+            success: function (result) {
+                // res = JSON.parse(result);
+                if (result.length != 0) {
+                    var categories = result;
+                    var addCategoryContainer = $("#add-category");
+
+                    for(var category of categories) {
+                        addCategoryContainer.append(`
+                        <option value="${category.id}">${category.name}</option>
+                    `);
+                    }
+                    $("#addProductModal").modal("show");
+                } else if(res['error']) {
+                    alert(res['error']);
+                }
+            },
+            error: function(res) {
+                alert("Error: Failed to retrieve product categories. Try again later");
+            }
+        });
+    }
+
+    // Re-submit product for approval
+    function reSubmitProduct(product_id) {
+        if(confirm("This product will be re-submitted for approval")) {
+            $.ajax({
+                type: 'POST',
+                url: "/supplier/includes/re_submit.php",
+                data: {'id': product_id},
+                statusCode: {
+                    401: function(response) {
+                        window.location.href = '/auth/logout.php';
+                    }
+                },
+                success: function (result) {
+                    res = JSON.parse(result);
+                    if (res['success']) {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else if(res['error']) {
+                        alert(res['error']);
+                    }
+                },
+                error: function(res) {
+                    alert("Error: Failed to re-submit product. Try again later");
                 }
             });
         }

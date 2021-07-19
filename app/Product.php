@@ -19,5 +19,16 @@ class Product extends Model
         'unit_description',
         'sku','size',
         'available',
-        'image'];
+        'image'
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($product) {
+            $product->supplier_id = \Auth::user()->id;
+            $product->sku = 'kta-xxx';
+        });
+    }
 }

@@ -39,3 +39,4 @@ Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier
 Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth','verified');
 
 Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');

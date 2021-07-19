@@ -28,7 +28,11 @@ class IndexController extends Controller
     public function home(){
         $curr_page  = 'store';
         $sales = [];
+        return view('supplier.index', compact('curr_page', 'sales'));
+    }
+
+    public function returnController() {
         $categories = ProductCategory::select(['id', 'name'])->get();
-        return view('supplier.index', compact('curr_page', 'sales', 'categories'));
+        return response()->json($categories);
     }
 }
