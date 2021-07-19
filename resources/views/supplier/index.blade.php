@@ -58,7 +58,7 @@
                                         <td class="badge rounded-pill bg-danger px-2 text-white">NO</td>
                                     @endif
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary mr-2">edit</a>
+                                        <a id="edit" class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#editModal" data-id="{{$product->id}}">edit</a>
                                         <a href="#" class="btn btn-sm btn-danger">x</a>
                                     </td>
                                 </tr>
@@ -161,7 +161,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="mb-3" action="/" id="edit-product-form">
+            <form class="mb-3" action="" id="edit-product" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-row mb-2">
                         <div class="col-md-6">
@@ -261,7 +261,7 @@
                             </div>
                         </div>
                     </div>
-                    <input id="id" class="form-control" name="id" type="text" hidden required>
+{{--                    <input id="id" class="form-control" name="id" type="text" hidden required>--}}
                 </div>
 
                 <div class="modal-footer justify-content-between">
@@ -575,6 +575,30 @@
 <!-- End Import Purchase Modal -->
 </html>
 <script>
+    //edit product
+    $('body').on('click', '#edit', function (event) {
+
+        event.preventDefault();
+        var id = $(this).data('id');
+        console.log($('#edit-product').attr('action', '/williescant/supplier/update/'+id))
+        console.log(id)
+        $.get('{{ route('edit-product', $product->id) }}', function (data) {
+            console.log(data)
+            $('#name').val(data.name);
+            $('#description').val(data.description);
+            $('#brand').val(data.brand);
+            $('#quantity').val(data.quantity);
+            $('#unit_description').val(data.unit_description);
+            $('#unit_price').val(data.unit_price);
+            $('#size').val(data.size);
+            $('#color').val(data.color);
+            if(data.available == 1) {
+                $('#available').attr('checked', 'true')
+            }
+        })
+    });
+
+
     oldImageCount = 1;
     $(document).ready(function() {
         $("#edit-image").attr("oldImgCount", oldImageCount);

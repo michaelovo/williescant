@@ -120,7 +120,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        return response()->json($product);
     }
 
     /**
@@ -132,7 +133,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+
+        if($request->hasFile('images')) {
+            $imageArr = [];
+            foreach ($request->images as $file) {
+                // you can also use the original name
+                $image = time().'-'.$file->getClientOriginalName();
+                $imageArr[] = $image;
+                // Upload file to public path in images directory
+                $file->move(public_path('images'), $image);
+                // Database operation
+            }
+            $product->image = $imageArr;
+        }
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->brand = $request->brand;
+        $product->quantity = $request->quantity;
+        $product->unit_description = $request->unit_description;
+        $product->unit_price = $request->unit_price;
+        $product->size = $request->size;
+        $product->color = $request->color;
+
+        $product->update();
+
+        return redirect()->back();
     }
 
     /**
