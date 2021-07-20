@@ -28,7 +28,7 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover table_dt">
+                        <table id="products" class="table table-hover table_dt">
                             <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -45,7 +45,7 @@
                             <tbody>
 
                             @foreach($products as $product)
-                                <tr>
+                                <tr id="id-{{$product->id}}">
                                     <td>{{$product->id}}</td>
                                     <td>{{$product->name}}</td>
                                     <td>{{$product->code}}</td>
@@ -53,13 +53,16 @@
                                     <td>{{$product->quantity}}</td>
                                     <td>{{$product->unit_price}}</td>
                                     @if($product->available == 1)
-                                        <td class="badge rounded-pill bg-success px-2 text-white">YES</td>
+                                        <td class="badge rounded-pill bg-success px-2 text-white m-2">YES</td>
                                     @else
-                                        <td class="badge rounded-pill bg-danger px-2 text-white">NO</td>
+                                        <td class="badge rounded-pill bg-danger px-2 text-white m-2">NO</td>
                                     @endif
                                     <td>
-                                        <a id="edit" class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#editModal" data-id="{{$product->id}}">edit</a>
-                                        <a href="#" class="btn btn-sm btn-danger">x</a>
+                                        <div class="d-flex">
+                                        <a id="edit" class="btn btn-sm btn-primary text-white mr-2" data-toggle="modal" data-target="#editModal" data-id="{{$product->id}}"><span class="h3 mb-0"><i class="fas fa-pen-alt text-white"></i></a>
+                                            <button class="btn btn-danger" onclick="deleteConfirmation({{$product->id}})"><i class="fa fa-trash text-white"></i></button>
+                                        </div>
+{{--                                        <a id="{{"del-".$product->id}}" class="btn btn-sm btn-danger">x</a>--}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -574,7 +577,46 @@
 </div>
 <!-- End Import Purchase Modal -->
 </html>
+<script src="{{asset('./js/scripts.js')}}"></script>
 <script>
+    function deleteConfirmation(id) {
+        swal({
+            title: "Delete",
+            text: "THIS ACTION IS IRREVERSIBLE",
+            type: "warning",
+            showCancelButton: !0,
+            confirmButtonText: "DELETE!",
+            cancelButtonText: "CANCEL",
+            reverseButtons: !0
+        }).then(function (e) {
+
+            if (e.value === true) {
+                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/williescant/supplier/delete/" + id,
+                    data: {_token: CSRF_TOKEN},
+                    dataType: 'JSON',
+                    success: function (data) {
+
+                        if (data.message === true) {
+                            swal("Deleted successfully");
+                            $('#id-'+id).remove();
+                        } else {
+                            swal("Error!", data.message, "error");
+                        }
+                    }
+                });
+
+            } else {
+                e.dismiss;
+            }
+
+        }, function (dismiss) {
+            return false;
+        })
+    }
     //edit product
     $('body').on('click', '#edit', function (event) {
         event.preventDefault();
