@@ -280,7 +280,7 @@
                     <!-- End Errors -->
                     <div>
                         <span data-dismiss="modal" class="mr-2" style="font-weight: 600; cursor: pointer;">Cancel</span>
-                        <input type="submit" class="btn btn-primary pl-4 pr-4" value="Update Product" />
+                        <input id="editBtn" type="submit" class="btn btn-primary pl-4 pr-4" value="Update Product" />
                     </div>
                 </div>
             </form>
@@ -577,12 +577,16 @@
 <script>
     //edit product
     $('body').on('click', '#edit', function (event) {
-
         event.preventDefault();
         var id = $(this).data('id');
         console.log($('#edit-product').attr('action', '/williescant/supplier/update/'+id))
         console.log(id)
-        $.get('{{ route('edit-product', $product->id) }}', function (data) {
+        $.ajax({
+            type: 'GET',
+            url: `/williescant/supplier/edit/${id}`,
+            processData: false,
+            contentType: false,
+        }).done(function(data){
             console.log(data)
             $('#name').val(data.name);
             $('#description').val(data.description);
@@ -596,6 +600,20 @@
                 $('#available').attr('checked', 'true')
             }
         })
+        {{--$.get('{{ route('edit-product', $product->id) }}', function (data) {--}}
+        {{--    console.log(data)--}}
+        {{--    $('#name').val(data.name);--}}
+        {{--    $('#description').val(data.description);--}}
+        {{--    $('#brand').val(data.brand);--}}
+        {{--    $('#quantity').val(data.quantity);--}}
+        {{--    $('#unit_description').val(data.unit_description);--}}
+        {{--    $('#unit_price').val(data.unit_price);--}}
+        {{--    $('#size').val(data.size);--}}
+        {{--    $('#color').val(data.color);--}}
+        {{--    if(data.available == 1) {--}}
+        {{--        $('#available').attr('checked', 'true')--}}
+        {{--    }--}}
+        {{--})--}}
     });
 
 
