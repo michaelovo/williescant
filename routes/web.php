@@ -44,6 +44,7 @@ Route::get('/williescant/supplier/get-category', 'IndexController@returnControll
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
 
 //purchase
 Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');

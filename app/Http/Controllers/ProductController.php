@@ -34,17 +34,38 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $prepared = $prepared." AND p.name LIKE '%$search%' OR p.description LIKE '%$search%'";
-        $products = Product::where('name', 'LIKE', '%'.$request->search.'%')->get();
-        return view('supplier.shop', compact('products'));
-    }
+        // Get the search value from the request
+        $search = $request->input('search');
 
-    public function productStore() {
-        $sql = "SELECT id, name, quantity, unit_price, available, sku, date_created
-    FROM products
-    WHERE supplier_id = '$supplier_id'
-    ORDER BY date_created DESC";
+        // Search in the title and body columns from the posts table
+        $products = Product::query()
+            ->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the resluts compacted
+        return response()->json($products);
     }
+    // public function search(Request $request)
+    // {
+    //     $search = $request->pin;
+
+    //     $pin = Product::query()->where('pin', 'LIKE', '%{$search}%')->get();
+    //     return response()->json($pin);
+
+
+    //     // $prepared = $prepared . " AND p.name LIKE '%$search%' OR p.description LIKE '%$search%'";
+    //     // $products = Product::where('name', 'LIKE', '%' . $request->search . '%')->get();
+    //     // return view('supplier.shop', compact('products'));
+    // }
+
+    // public function productStore()
+    // {
+    //     $sql = "SELECT id, name, quantity, unit_price, available, sku, date_created
+    // FROM products
+    // WHERE supplier_id = '$supplier_id'
+    // ORDER BY date_created DESC";
+    // }
     /**
      * Show the form for creating a new resource.
      *
@@ -56,6 +77,12 @@ class ProductController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -63,13 +90,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-            $product = new Product();
+        $product = new Product();
 
-        if($request->hasFile('images')) {
+        if ($request->hasFile('images')) {
             $imageArr = [];
             foreach ($request->images as $file) {
                 // you can also use the original name
-                $image = time().'-'.$file->getClientOriginalName();
+                $image = time() . '-' . $file->getClientOriginalName();
                 $imageArr[] = $image;
                 // Upload file to public path in images directory
                 $file->move(public_path('images'), $image);
@@ -77,28 +104,28 @@ class ProductController extends Controller
             }
         }
 
-//            $path = $request->file('images')->store('uploads');
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->brand = $request->brand;
-            $product->quantity = $request->quantity;
-            $product->unit_description = $request->unit_description;
-            $product->unit_price = $request->unit_price;
-            $product->color = $request->color;
-            $product->image = json_encode($imageArr);
-            if($request->available == 'on'){
-                $product->available = 1;
-            } else {
-                $product->available = 0;
-            }
-            $product->size = $request->size;
-            $product->sku = $request->sku;
-            $product->category_id = $request->category_id;
+        //            $path = $request->file('images')->store('uploads');
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->brand = $request->brand;
+        $product->quantity = $request->quantity;
+        $product->unit_description = $request->unit_description;
+        $product->unit_price = $request->unit_price;
+        $product->color = $request->color;
+        $product->image = json_encode($imageArr);
+        if ($request->available == 'on') {
+            $product->available = 1;
+        } else {
+            $product->available = 0;
+        }
+        $product->size = $request->size;
+        $product->sku = $request->sku;
+        $product->category_id = $request->category_id;
 
-            $product->save();
+        $product->save();
 
-            return redirect()->back();
-//        }
+        return redirect()->back();
+        //        }
     }
 
     /**
@@ -135,11 +162,11 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        if($request->hasFile('images')) {
+        if ($request->hasFile('images')) {
             $imageArr = [];
             foreach ($request->images as $file) {
                 // you can also use the original name
-                $image = time().'-'.$file->getClientOriginalName();
+                $image = time() . '-' . $file->getClientOriginalName();
                 $imageArr[] = $image;
                 // Upload file to public path in images directory
                 $file->move(public_path('images'), $image);
