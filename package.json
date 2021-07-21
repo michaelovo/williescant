@@ -24,6 +24,13 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "font-awesome": "^4.7.0"
+        "@popperjs/core": "^2.9.2",
+        "chartjs": "^0.3.24",
+        "datatables": "^1.10.18",
+        "font-awesome": "^4.7.0",
+        "jquery-migrate": "^3.3.2",
+        "jquery-mousewheel": "^3.1.13",
+        "malihu-custom-scrollbar-plugin": "^3.1.5",
+        "select2": "^4.1.0-rc.0"
     }
 }

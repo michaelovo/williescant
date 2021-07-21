@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +17,43 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['verify' => true]);
 
 // Home Route - logged out / unregistered users
-Route::get('/', 'IndexController@index')->name('home');
+Route::get('/', 'IndexController@index')->name('home')->middleware('auth', 'verified');
 
 //Home Route - Logged in customer
-Route::get('/williescant/home/dashboard', 'HomeController@index')->name('index')->middleware('auth','verified');
+Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth', 'verified');
 
 // Profile Route
 Route::get('/williescant/user/profile/{id}', 'ProfileController@show')->name('profile')->middleware('auth', 'verified');
 Route::post('/williescant/profile/update/{id}', 'ProfileController@update')->name('update')->middleware('auth', 'verified');
-Route::post('/williescant/profile/update-password', 'ProfileController@changePassword')->name('update-password')->middleware('auth', 'verified');
+Route::post('/williescant/profile/update-password', 'ProfileController@updatePassword')->name('update-password')->middleware('auth', 'verified');
 
 // Customer Order Route
 Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('orders')->middleware('auth', 'verified');
+
+// Supplier
+Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/sales', 'SaleController@index')->name('sales')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/shop', 'ProductController@index')->name('supplier-shop')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/purchases', 'PurchaseController@index')->name('purchase')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier-home')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth', 'verified');
+
+Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
+
+//purchase
+Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');
+
+//Accountant
+Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@index')->name('get-accountants')->middleware('auth', 'verified');
+Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@search')->name('search-pin')->middleware('auth', 'verified');
+
+// Export
+Route::get('williescant/supplier/exports', 'KraController@index')->name('get-export')->middleware('auth', 'verified');
+Route::get('williescant/supplier/export-all', 'KraController@exportPurchase')->name('export-all')->middleware('auth', 'verified');
+Route::get('williescant/supplier/export-month', 'KraController@exportCurrentMonth')->name('export-month')->middleware('auth', 'verified');

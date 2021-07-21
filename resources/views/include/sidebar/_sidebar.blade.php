@@ -11,7 +11,7 @@
             <ul class="u-sidebar-nav-menu u-sidebar-nav-menu--top-level">
                 <!-- Inventory/Store -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#">
+                    <a class="u-sidebar-nav-menu__link" href="{{ route('sales') }}">
                         <i class="fas fa-warehouse u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Store</span>
                     </a>

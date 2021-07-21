@@ -23,6 +23,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home.index');
+        $curr_page = 'store';
+        return view('supplier.index', compact('curr_page'));
+    }
+
+    public function customerIndex(){
+        $curr_page = 'home';
+        return view('index', compact('curr_page'));
     }
 }

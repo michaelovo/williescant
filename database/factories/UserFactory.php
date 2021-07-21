@@ -26,3 +26,11 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
     ];
 });
+
+$factory->define(\App\ProductCategory::class, function ( Faker $faker) {
+    return [
+        'name' => $faker->words(2, true),
+        'prefix' => $faker->word(),
+        'active' => $faker->boolean(50),
+    ];
+});

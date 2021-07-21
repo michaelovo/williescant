@@ -38,6 +38,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function showLoginForm()
+    {
+        $curr_page = 'login';
+        return view('auth.login', compact('curr_page'));
+    }
 
     public function username()
     {
@@ -47,9 +52,9 @@ class LoginController extends Controller
     public function authenticated(Request $request, $user)
     {
         if($user->type == 3) {
-            return redirect('/williescant/home/dashboard/customer');
+            return redirect('IndexController@index');
         } elseif ($user->type == 2) {
-            return redirect('/home/dashboard/shop');
+            return redirect('/williescant/supplier/home');
         }
     }
 }

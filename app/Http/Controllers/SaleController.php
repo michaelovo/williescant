@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Sale;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
@@ -13,7 +14,11 @@ class SaleController extends Controller
      */
     public function index()
     {
-        //
+        //        $all_sales = "SELECT * FROM sales WHERE supplier_id='$supplier_id'";
+        $curr_page = 'sales';
+        $sales = Sale::all();
+
+        return view('supplier.sales', compact('sales', 'curr_page'));
     }
 
     /**
@@ -34,7 +39,39 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newSale = new Sale();
+
+        $request->validate([
+            'receipt_number' => 'required',
+            'pin' => 'required',
+            'etr' => 'required',
+            'supplier_id' => 'required',
+            'sub_total' => 'required',
+            'vat' => 'required',
+            'total_price' => 'required',
+            'total_items' => 'required',
+            'customer_name' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'status' => 'required',
+        ]);
+
+        $newSale->fill([
+            'receipt_number' => $request->receipt_number,
+            'pin' => $request->receipt_number,
+            'etr' => $request->receipt_number,
+            'supplier_id' => $request->receipt_number,
+            'sub_total' => $request->receipt_number,
+            'vat' => $request->receipt_number,
+            'total_price' => $request->receipt_number,
+            'total_items' => $request->receipt_number,
+            'customer_name' => $request->receipt_number,
+            'date' => $request->receipt_number,
+            'time' => $request->receipt_number,
+            'status' => $request->receipt_number,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -45,7 +82,9 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        //
+        $sale = Sale::find($id);
+
+        return response()->json($sale);
     }
 
     /**
@@ -56,7 +95,9 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $sale = Sale::find($id);
+
+        return response()->json($sale);
     }
 
     /**
@@ -68,7 +109,39 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $newSale = new Sale();
+
+        $request->validate([
+            'receipt_number' => 'required',
+            'pin' => 'required',
+            'etr' => 'required',
+            'supplier_id' => 'required',
+            'sub_total' => 'required',
+            'vat' => 'required',
+            'total_price' => 'required',
+            'total_items' => 'required',
+            'customer_name' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'status' => 'required',
+        ]);
+
+        $newSale->fill([
+            'receipt_number' => $request->receipt_number,
+            'pin' => $request->receipt_number,
+            'etr' => $request->receipt_number,
+            'supplier_id' => $request->receipt_number,
+            'sub_total' => $request->receipt_number,
+            'vat' => $request->receipt_number,
+            'total_price' => $request->receipt_number,
+            'total_items' => $request->receipt_number,
+            'customer_name' => $request->receipt_number,
+            'date' => $request->receipt_number,
+            'time' => $request->receipt_number,
+            'status' => $request->receipt_number,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -79,6 +152,8 @@ class SaleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $sale = Sale::where('id', $id)->delete();
+
+        return response()->json(['message' => 'deleted']);
     }
 }

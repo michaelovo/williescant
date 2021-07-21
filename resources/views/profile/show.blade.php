@@ -1,8 +1,13 @@
 @extends('layouts.app', [
-    'page' => 'Profile'
+    'page_title' => 'Profile'
 ])
 
 @section('content')
+    @if(Auth::user()->type == 2)
+        @include('menu.supplier_nav')
+    @elseif(Auth::user()->type == 3)
+        @include('menu.customer_nav')
+    @endif
     <main class="u-main" role="main">
         <!-- Sidebar -->
         @if(Auth::user()->type == 2)
