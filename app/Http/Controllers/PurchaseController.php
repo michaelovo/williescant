@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Purchase;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
@@ -15,7 +16,7 @@ class PurchaseController extends Controller
     {
         $curr_page = 'purchases';
         $purchases = [];
-//        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
+        //        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
         return view('supplier.purchases', compact('curr_page', 'purchases'));
     }
 
@@ -30,6 +31,19 @@ class PurchaseController extends Controller
     }
 
     /**
+     * Show tsearch results
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $search = $request->pin;
+
+        $pin = Purchase::query()->where('pin', 'LIKE', '%{$search}%')->get();
+        return response()->json($pin);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -37,7 +51,44 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newPurchase = new Purchase();
+
+        // validate request
+        $request->validate([
+            'receipt_number' => 'required',
+            'supplier_name' => 'required',
+            'total_items' => 'required',
+            'vat' => 'required',
+            'sub_total'  => 'required',
+            'etr' => 'required',
+            'phone' => 'required',
+            'location' => 'required',
+            'website' => 'required',
+            'email' => 'required',
+            'date' => 'required',
+            'time' => 'required', 'status' => 'required',
+            'pin'  => 'required',
+            'purchased_by' => 'required',
+        ]);
+
+        $purchase = new Purchase();
+
+        $purchase->fill([
+            'pin' => $request->pin,
+            'phone' => $request->pin,
+            'email' => $request->pin,
+            'website' => $request->pin,
+            'location' => $request->pin,
+            'receipt_number' => $request->pin,
+            'total_price' => $request->pin,
+            'vat' => $request->pin,
+            'sub_total' => $request->pin,
+            'date' => $request->pin,
+            'time' => $request->pin,
+            'total_items' => $request->pin
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -48,7 +99,9 @@ class PurchaseController extends Controller
      */
     public function show($id)
     {
-        //
+        $purchase = Purchase::find($id);
+
+        return response()->json($purchase);
     }
 
     /**
@@ -59,7 +112,9 @@ class PurchaseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $purchase = Purchase::find($id);
+
+        return response()->json($purchase);
     }
 
     /**
@@ -71,7 +126,44 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $newPurchase = Purchase::find($id);
+
+        // validate request
+        $request->validate([
+            'receipt_number' => 'required',
+            'supplier_name' => 'required',
+            'total_items' => 'required',
+            'vat' => 'required',
+            'sub_total'  => 'required',
+            'etr' => 'required',
+            'phone' => 'required',
+            'location' => 'required',
+            'website' => 'required',
+            'email' => 'required',
+            'date' => 'required',
+            'time' => 'required', 'status' => 'required',
+            'pin'  => 'required',
+            'purchased_by' => 'required',
+        ]);
+
+        $purchase = new Purchase();
+
+        $purchase->fill([
+            'pin' => $request->pin,
+            'phone' => $request->pin,
+            'email' => $request->pin,
+            'website' => $request->pin,
+            'location' => $request->pin,
+            'receipt_number' => $request->pin,
+            'total_price' => $request->pin,
+            'vat' => $request->pin,
+            'sub_total' => $request->pin,
+            'date' => $request->pin,
+            'time' => $request->pin,
+            'total_items' => $request->pin
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -82,6 +174,7 @@ class PurchaseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $purchase = Purchase::where('id', $id)->delete();
+        return redirect()->back();
     }
 }

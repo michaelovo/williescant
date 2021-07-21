@@ -9,10 +9,8 @@
         <nav class="u-sidebar-nav">
             <ul class="u-sidebar-nav-menu u-sidebar-nav-menu--top-level">
                 <!-- Shop  -->
-                <li class="u-sidebar-nav-menu__item
-                ">
-                    <a class="u-sidebar-nav-menu__link" href="#!"
-                       data-target="#shop">
+                <li class="u-sidebar-nav-menu__item">
+                    <a class="u-sidebar-nav-menu__link" href="#!"data-target="#shop">
                         <i class="far fa-gem u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Shop</span>
                         <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
@@ -53,7 +51,7 @@
                     <ul id="staff" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
                         <!-- Accountants -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="/supplier/staff/accountants">
+                            <a class="u-sidebar-nav-menu__link " href="{{ route('get-accountants')}}">
                                 <i class="fas fa-user-circle u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Accountants</span>
                             </a>
@@ -128,7 +126,7 @@
                     <ul id="receipts" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
                         <!-- Purchases -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="/supplier/purchases.php">
+                            <a class="u-sidebar-nav-menu__link " href="{{ route('get-purchase') }}">
                                 <i class="far fa-money-bill-alt u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Purchases</span>
                             </a>
