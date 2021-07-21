@@ -144,7 +144,7 @@
 
                         <!-- Exports -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="/supplier/kra.php">
+                            <a class="u-sidebar-nav-menu__link " href="{{route('get-export')}}">
                                 <i class="fas fa-calculator u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Exports</span>
                             </a>
