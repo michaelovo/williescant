@@ -45,9 +45,9 @@
                                         <a class="btn btn-sm btn-outline-secondary mr-2" href="{{route('export-all')}}">
                                             <i class="fas fa-file-export"></i> Export All
                                         </a>
-                                        <button class="btn btn-sm btn-outline-info" href="#" onclick="exportThisMonthPurchases()">
+                                        <a class="btn btn-sm btn-outline-info" href="{{ route('export-month')}}">
                                             <i class="fas fa-file-export"></i> Export <span class="currentMonthName"></span>
-                                        </button>                                        
+                                        </a>                                        
                                         <form class="form-inline mt-2" id="custom-purchase-export">
                                             <label for="purchase-export-start" class="mr-1">From: </label>
                                             <input class="form-control form-control-inline form-control-sm mr-3" type="date" id="purchase-export-start" name="start" required>

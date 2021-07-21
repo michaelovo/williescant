@@ -11,20 +11,23 @@ use Illuminate\Support\Facades\Validator;
 class ProfileController extends Controller
 {
     //
-    public function show($id) {
+    public function show($id)
+    {
         $profile = User::where('id', $id)->get()->first();
         $curr_page = 'profile';
-            return view('supplier.profile', compact('profile', 'curr_page'));
+        return view('supplier.profile', compact('profile', 'curr_page'));
     }
 
-    public function updateAvatar(Request $request){
-//        public function
+    public function updateAvatar(Request $request)
+    {
+        //        public function
         $profile = User::where('id', Auth::user()->id)->update(['avatar' => $request->avatar]);
     }
 
-    public function switch() {
+    public function switch()
+    {
         $user = User::find(Auth::user()->id);
-        if($user->type == 2) {
+        if ($user->type == 2) {
             $user->update(['type' => 3]);
         } elseif ($user->type == 3) {
             $user->update(['type' => 2]);
@@ -33,7 +36,8 @@ class ProfileController extends Controller
     }
 
     // Update user profile
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
@@ -56,15 +60,15 @@ class ProfileController extends Controller
         return response()->json();
     }
 
-//    update password
+    //    update password
     public function changePassword(Request $request)
     {
         //Check if the Current Password matches with what is in the database.
-        if(!(Hash::check($request->get('current_password'), Auth::user()->password))) {
-            $data = ['error'=> 'Your current password does not match with what you provided'];
+        if (!(Hash::check($request->get('current_password'), Auth::user()->password))) {
+            $data = ['error' => 'Your current password does not match with what you provided'];
         }
         // Compare the Current Password and New Password using[strcmp function]
-        if(strcmp($request->get('current_password'), $request->get('new_password')) == 0) {
+        if (strcmp($request->get('current_password'), $request->get('new_password')) == 0) {
             $data = ['error', 'Your current password cannot be same with the new password'];
         }
         //Validate the Password.
@@ -73,21 +77,22 @@ class ProfileController extends Controller
             'new_password'     => 'required|string|min:8|different:password|confirmed'
         ]);
         // Save the New Password.
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
         $user->password = bcrypt($request->get('new_password'));
         $user->save();
 
         return response()->json($data);
     }
 
-    public function updatePassword(Request $request) {
+    public function updatePassword(Request $request)
+    {
 
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required|string|min:8|different:password|confirmed'
         ]);
 
-        if ($validator->errors()){
+        if ($validator->errors()) {
             return response()->json($validator->errors());
         } else {
             $user = User::find(Auth::user()->id);

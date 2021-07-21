@@ -56,3 +56,4 @@ Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@sear
 // Export
 Route::get('williescant/supplier/exports', 'KraController@index')->name('get-export')->middleware('auth', 'verified');
 Route::get('williescant/supplier/export-all', 'KraController@exportPurchase')->name('export-all')->middleware('auth', 'verified');
+Route::get('williescant/supplier/export-month', 'KraController@exportCurrentMonth')->name('export-month')->middleware('auth', 'verified');
