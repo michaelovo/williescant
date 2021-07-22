@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Purchase;
+use App\ReceiptImage;
 use App\ReceiptItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\auth;
+use Illuminate\Support\Facades\Storage;
 
 class PurchaseController extends Controller
 {
@@ -33,6 +35,7 @@ class PurchaseController extends Controller
     {
         //
     }
+
 
     /**
      * Show tsearch results
@@ -72,6 +75,7 @@ class PurchaseController extends Controller
         } else {
             $purchase = new Purchase();
 
+
             // Receipt products
             $receipt_products = $request->receipt_products;
 
@@ -83,17 +87,6 @@ class PurchaseController extends Controller
             $purchase->location = $request->location;
             $purchase->website = $request->website;
 
-            // receipt details
-            // $purchase->receipt_number = $request->receipt_number;
-            // $purchase->total_price = $request->total_price;
-            // $purchase->vat = $request->vat;
-            // $purchase->sub_total = $request->sub_total;
-            // $purchase->etr = $request->etr;
-            // $purchase->date = $request->date;
-            // $purchase->time = $request->time;
-            // $purchase->status = $request->status;
-            // $purchase->total_items = count($receipt_products);
-            // $purchase->purchased_by = $request->purchased_by;
 
             $purchase->fill([
                 'receipt_number' => $request->receipt_number,
@@ -128,6 +121,22 @@ class PurchaseController extends Controller
                 ]);
                 $receipt_item->save();
             }
+
+            foreach ($request->receipts_images as $key => $file) {
+                // you can also use the original name
+                $name = $file->getClientOriginalName();
+                $path = $file->store('uploads');
+
+                $receipt_image = new ReceiptImage();
+                $receipt_image->fill([
+                    'purchase_id' => $receipt_id,
+                    'name' => $name,
+                    'path' => $path
+                ]);
+
+                $receipt_image->save();
+            }
+            // dd($name, $path);
             return redirect()->back()->withSuccess('Purchase Added!');
         }
     }

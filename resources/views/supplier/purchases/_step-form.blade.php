@@ -179,8 +179,12 @@
                             <div id="step-4" class="">
                                 <div class="form-row mb-2">
                                     <div class="col form-group mb-2">
+                                        <div class="alert alert-soft-info">Please upload full clear images of the receipt</div>
+                                            <input type="file" id="file-input" name="receipts_images[]" multiple />
 											<div class="form-group row">
-												<label class="col-form-label col-lg-3 col-sm-12">Please upload full clear images of the receipt</label>
+                                                <span class="text-danger">{{ $errors->first('image') }}</span>
+                                                <div id="thumb-output"></div>
+												{{-- <label class="col-form-label col-lg-3 col-sm-12">Please upload full clear images of the receipt</label>
 												<div class="col-lg-4 col-md-9 col-sm-12">
 													<div class="dropzone dropzone-default dropzone-primary" id="kt_dropzone_2">
 														<div class="dropzone-msg dz-message needsclick">
@@ -189,10 +193,10 @@
 														</div>
 													</div>
 												</div>
-											</div>
+											</div> --}}
                                     </div>
+                                    <div class="d-flex justify-content-end"><button class="btn btn-primary" type="submit">Submit</button></div>
                                 </div>
-                                <button class="btn btn-primary" type="submit">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -201,3 +205,14 @@
             </div>
         </div>
     </div>
+<style>
+    #thumb-output{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .thumb{
+    margin: 10px 5px 0 0;
+    width: 100px;
+    height: 100px;
+} 
+</style>
