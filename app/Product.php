@@ -18,7 +18,8 @@ class Product extends Model
         'unit_price',
         'quantity',
         'unit_description',
-        'sku', 'size',
+        'sku',
+        'size',
         'available',
         'image'
     ];

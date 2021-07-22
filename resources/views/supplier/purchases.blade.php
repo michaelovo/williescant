@@ -12,7 +12,16 @@
             <div class="u-body">
                 <div class="row">
                     <div class="col-md-12">
-
+@if(Session::has('success'))
+    <div class="alert alert-success">
+        {{Session::get('success')}}
+    </div>
+@endif
+@if(Session::has('fail'))
+    <div class="alert alert-danger">
+       {{Session::get('fail')}}
+    </div>
+@endif
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Purchase Receipts</h1>
                             <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#exampleModal">

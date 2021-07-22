@@ -26,18 +26,27 @@ class Purchase extends Model
         'purchased_by'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    protected $attributes = [
+        'etr' => 'null',
+        'phone' => 'null',
+        'location' => 'null',
+        'website' => 'null',
+        'email' => 'null',
+        'time' => 'null',
+        'pin' => 'null',
+    ];
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($purchase) {
-            $purchase->etr = 'null';
-            $purchase->phone = 'null';
-            $purchase->location = 'null';
-            $purchase->website = 'null';
-            $purchase->email = 'null';
-            $purchase->time = 'null';
-            $purchase->pin = 'null';
-        });
-    }
+    //     static::creating(function ($purchase) {
+    //         $purchase->etr = 'null';
+    //         $purchase->phone = 'null';
+    //         $purchase->location = 'null';
+    //         $purchase->website = 'null';
+    //         $purchase->email = 'null';
+    //         $purchase->time = 'null';
+    //         $purchase->pin = 'null';
+    //     });
+    // }
 }

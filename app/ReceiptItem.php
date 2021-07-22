@@ -13,6 +13,7 @@ class ReceiptItem extends Model
         'unit_price',
         'purchase_id',
     ];
+
     protected static function boot()
     {
         parent::boot();
