@@ -2,6 +2,7 @@
     "/js/accountant.js": "/js/accountant.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/js/dropzone.js": "/js/dropzone.js",
     "/js/purchases.js": "/js/purchases.js",
     "/js/scripts.js": "/js/scripts.js"
 }

@@ -15,8 +15,7 @@
 
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Purchase Receipts</h1>
-                            <button class="btn btn-sm btn-outline-primary" data-toggle="modal"
-                                    href="#" id="add-purchase-modal-btn">
+                            <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
                                 <i class="fa fa-plus mr-2"></i>
                                 Add Purchase
                             </button>
@@ -568,10 +567,133 @@
 
 
     <!-- Global Vendor -->
-
+    <link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
     <!-- Plugins -->
-
+@include('supplier.purchases._step-form')
 @include('supplier.purchases._add-new-purchase')
     <!-- Initialization  -->
-    <script src="{{asset('./js/purchases.js')}}"></script>
+    {{-- <script src="{{asset('./js/purchases.js')}}"></script> --}}
+
+<style>
+    body {
+    background-color: #eee
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0rem rgba(0, 123, 255, .25)
+}
+
+.btn-secondary:focus {
+    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
+}
+
+.close:focus {
+    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
+}
+
+.mt-200 {
+    margin-top: 200px
+}
+</style>
+<script>
+    $(document).ready(function(){
+
+$('#smartwizard').smartWizard({
+selected: 0,
+theme: 'dots',
+autoAdjustHeight:true,
+transitionEffect:'fade',
+showStepURLhash: false,
+
+});
+
+    var i = 0;
+       
+    $ ("#addForm").click(function(){
+        ++i;
+   
+        $ ("#receipt_item").append(`
+                                    <div class="form-row mb-2 receipt-item">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label class="required-label" for="product_name_1">Name</label>
+                                            <input id="product_name_1" class="form-control" name="receipt_products[${i}][product_name]" type="text"
+                                                   placeholder="Product Name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label for="product_description_1">Description</label>
+                                            <input id="product_description_1" class="form-control" name="receipt_products[${i}][product_desc]"
+                                                   type="text" placeholder="Product Description">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label class="required-label" for="product_quantity_1">Quantity</label>
+                                            <input id="product_quantity_1" class="form-control" name="receipt_products[${i}][product_qty]" type="number"
+                                                   placeholder="Product Qauntity" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2">
+                                            <label class="required-label" for="product_unit_price_1">Unit Price</label>
+                                            <input id="product_unit_price_1" class="form-control" name="receipt_products[${i}][unit_price]"
+                                                   step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-danger delForm text-small ">
+                                            DEL <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <hr/>
+                                    </div>
+                                </div>
+        `);
+                // $('.delForm').removeClass('d-none')
+    });
+   
+    $ (document).on('click', '.delForm', function(){  
+         console.log($(this).parents().parents()[0].remove());
+    });
+
+    // $('#add_image').on('onchange', function(){
+    //     const [file] =     $('#add_image').files
+    //     if(file){
+    //         $('#img_preview').src = URL.createObjectURL(file)
+    //     }
+    // })
+//     imgInp.onchange = evt => {
+//   const [file] = imgInp.files
+//   if (file) {
+//     blah.src = URL.createObjectURL(file)
+//   }
+// }
+        $('#kt_dropzone_2').dropzone({
+            url: "williesscant/supplier/add-product", // Set the url for your upload script location
+            paramName: "file", // The name that will be used to transfer the file
+            maxFiles: 10,
+            maxFilesize: 10, // MB
+            addRemoveLinks: true,
+            accept: function(file, done) {
+                if (file.name == "justinbieber.jpg") {
+                    done("Naha, you don't.");
+                } else {
+                    done();
+                }
+            }
+        });
+});
+</script>
 @endsection

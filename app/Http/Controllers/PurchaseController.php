@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Purchase;
+use App\ReceiptItem;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
@@ -57,37 +58,54 @@ class PurchaseController extends Controller
         $request->validate([
             'receipt_number' => 'required',
             'supplier_name' => 'required',
-            'total_items' => 'required',
+            'total_price' => 'required',
             'vat' => 'required',
-            'sub_total'  => 'required',
-            'etr' => 'required',
-            'phone' => 'required',
-            'location' => 'required',
-            'website' => 'required',
-            'email' => 'required',
+            'sub_total' => 'required',
             'date' => 'required',
-            'time' => 'required', 'status' => 'required',
-            'pin'  => 'required',
-            'purchased_by' => 'required',
+            'status' => 'required',
+            'purchased_by' => 'required'
         ]);
 
         $purchase = new Purchase();
 
-        $purchase->fill([
-            'pin' => $request->pin,
-            'phone' => $request->pin,
-            'email' => $request->pin,
-            'website' => $request->pin,
-            'location' => $request->pin,
-            'receipt_number' => $request->pin,
-            'total_price' => $request->pin,
-            'vat' => $request->pin,
-            'sub_total' => $request->pin,
-            'date' => $request->pin,
-            'time' => $request->pin,
-            'total_items' => $request->pin
-        ]);
+        // Receipt products
+        $receipt_products = $request->receipt_products;
 
+        // supplier details
+        $purchase->pin = $request->pin;
+        $purchase->supplier_name = $request->supplier_name;
+        $purchase->phone = $request->phone;
+        $purchase->email = $request->email;
+        $purchase->location = $request->location;
+        $purchase->website = $request->website;
+
+        // receipt details
+        $purchase->receipt_number = $request->receipt_number;
+        $purchase->total_price = $request->total_price;
+        $purchase->vat = $request->vat;
+        $purchase->sub_total = $request->sub_total;
+        $purchase->etr = $request->etr;
+        $purchase->date = $request->date;
+        $purchase->time = $request->time;
+        $purchase->status = $request->status;
+        $purchase->total_items = count($receipt_products);
+        $purchase->purchased_by = $request->purchased_by;
+
+
+        $purchase->save();
+
+        $receipt_item = new ReceiptItem();
+        $receipt_id = Purchase::where('receipt_number', $request->receipt_number)->latest()->get(['id']);
+        foreach ($receipt_products as $receipt_product) {
+            $receipt_item->fill([
+                'name' => $receipt_product->product_name,
+                'description' => $receipt_product->product_description,
+                'quantity' => $receipt_product->product_quantity,
+                'unit_price' => $receipt_product->unit_price,
+                'purchase_id' => $receipt_id,
+            ]);
+            $receipt_item->save();
+        }
         return redirect()->back();
     }
 
@@ -126,43 +144,27 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $newPurchase = Purchase::find($id);
+        $purchase = Purchase::find($id);
 
         // validate request
-        $request->validate([
-            'receipt_number' => 'required',
-            'supplier_name' => 'required',
-            'total_items' => 'required',
-            'vat' => 'required',
-            'sub_total'  => 'required',
-            'etr' => 'required',
-            'phone' => 'required',
-            'location' => 'required',
-            'website' => 'required',
-            'email' => 'required',
-            'date' => 'required',
-            'time' => 'required', 'status' => 'required',
-            'pin'  => 'required',
-            'purchased_by' => 'required',
-        ]);
-
-        $purchase = new Purchase();
-
         $purchase->fill([
+            'receipt_number' => $request->receipt_number,
+            'supplier_name' => $request->supplier_name,
+            'total_price' => $request->total_price,
+            'vat' => $request->vat,
+            'sub_total' => $request->sub_total,
+            'etr' => $request->etr,
+            'phone' => $request->phone,
+            'location' => $request->location,
+            'website' => $request->website,
+            'email' => $request->email,
+            'date' => $request->date,
+            'time' => $request->time,
+            'status' => $request->status,
             'pin' => $request->pin,
-            'phone' => $request->pin,
-            'email' => $request->pin,
-            'website' => $request->pin,
-            'location' => $request->pin,
-            'receipt_number' => $request->pin,
-            'total_price' => $request->pin,
-            'vat' => $request->pin,
-            'sub_total' => $request->pin,
-            'date' => $request->pin,
-            'time' => $request->pin,
-            'total_items' => $request->pin
+            'purchased_by' => $request->purchased_by
         ]);
-
+        $purchase->update();
         return redirect()->back();
     }
 

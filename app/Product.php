@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -17,7 +18,7 @@ class Product extends Model
         'unit_price',
         'quantity',
         'unit_description',
-        'sku','size',
+        'sku', 'size',
         'available',
         'image'
     ];
@@ -27,7 +28,7 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $product->supplier_id = \Auth::user()->id;
+            $product->supplier_id = Auth::user()->id;
             $product->sku = 'kta-xxx';
         });
     }
