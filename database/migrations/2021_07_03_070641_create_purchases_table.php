@@ -37,11 +37,7 @@ class CreatePurchasesTable extends Migration
             $table->string('status');
             $table->string('pin')
                 ->default(NULL);
-            $table->foreignUuid('purchased_by')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->string('purchased_by');
             $table->timestamps();
         });
     }

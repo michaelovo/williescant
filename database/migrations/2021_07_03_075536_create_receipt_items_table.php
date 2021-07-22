@@ -25,12 +25,6 @@ class CreateReceiptItemsTable extends Migration
                 ->on('purchases')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('sale_id')
-                ->references('id')
-                ->on('sales')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->integer('receipt_id');
             $table->string('receipt_type');
             $table->tinyInteger('used')
                 ->default(0);

@@ -48,6 +48,7 @@ Route::post('/williescant/supplier/search', 'ProductController@search')->name('s
 
 //purchase
 Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');
+Route::post('williescant/supplier/add-purchase', 'PurchaseController@store')->name('add-purchase')->middleware('auth', 'verified');
 
 //Accountant
 Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@index')->name('get-accountants')->middleware('auth', 'verified');
