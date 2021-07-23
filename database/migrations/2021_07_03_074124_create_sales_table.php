@@ -18,7 +18,7 @@ class CreateSalesTable extends Migration
             $table->string('receipt_number');
             $table->string('pin');
             $table->string('etr');
-            $table->foreignId('supplier_id');
+            $table->foreignUuid('supplier_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->double('sub_total');
             $table->double('vat');
             $table->double('total_price');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -16,7 +17,8 @@ class SaleController extends Controller
     {
         //        $all_sales = "SELECT * FROM sales WHERE supplier_id='$supplier_id'";
         $curr_page = 'sales';
-        $sales = Sale::all();
+
+        $sales = Sale::where('supplier_id', Auth::user()->id)->get();
 
         return view('supplier.sales', compact('sales', 'curr_page'));
     }
