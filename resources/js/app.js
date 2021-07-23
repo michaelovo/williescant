@@ -20,6 +20,7 @@ require('./dashboard-page-scripts.js');
 require('./font-controller.js');
 require('./main.js');
 require('./sidebar-nav');
+require('./dropzone');
 
 window.Vue = require('vue');
 

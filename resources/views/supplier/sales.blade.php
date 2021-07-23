@@ -8,15 +8,29 @@
         <!-- Sidebar -->
         @include('menu.sidebar')
         <!-- End Sidebar -->
-
         <div class="u-content">
             <div class="u-body">
                 <div class="row">
                     <div class="col-md-12">
-
+@if(Session::has('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{Session::get('success')}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
+@if(Session::has('fail'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{Session::get('fail')}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Sales Receipts</h1>
-                            <button class="btn btn-sm btn-outline-primary" data-toggle="modal" href="#addSaleModal">
+                            <button class="btn btn-sm btn-outline-primary" id="add-sale-modal-btn" data-toggle="modal" href="#">
                                 <i class="fa fa-plus mr-2"></i>
                                 Add Sale
                             </button>
@@ -30,6 +44,7 @@
                                                 <th>#</th>
                                                 <th>PIN</th>
                                                 <th>Receipt No</th>
+                                                <th>ETR</th>
                                                 <th>Item Count</th>
                                                 <th>Sub Total</th>
                                                 <th>Total Price</th>
@@ -39,17 +54,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($sales as $key => $sale)
+                                            @foreach ($sales as $sale)
                                                 <tr>
-                                                <td>$key + 1</td>
-                                                <td>$sale->pin</td>
-                                                <td>$sale->receipt_number</td>
-                                                <td>$sale->total_items</td>
-                                                <td>$sale->sub_total</td>
-                                                <td>$sale->total_price</td>
-                                                <td>$sale->vat</td>
-                                                <td>$sale->date</td>
-                                                <td class="text-center">
+                                                    <td>{{$sale->id}}</td>
+                                                    <td>{{$sale->pin}}</td>
+                                                    <td>{{$sale->receipt_number}}</td>
+                                                    <td>{{$sale->etr}}</td>
+                                                    <td>{{$sale->total_items}}</td>
+                                                    <td>{{$sale->sub_total}}</td>
+                                                    <td>{{$sale->total_price}}</td>
+                                                    <td>{{$sale->vat}}</td>
+                                                    <td>{{$sale->date}}</td>
+                                                    <td class="text-center">
                                                     <a id="actions3Invoker" class="link-muted" href="#!"
                                                         aria-haspopup="true" aria-expanded="false"
                                                         data-toggle="dropdown">
@@ -62,19 +78,19 @@
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                    href="#" onclick="saleDetails('{{$sale->id}}')">
+                                                                    href="#" onclick="saleDetails('.$sale['id'].')">
                                                                     <i class="fa fa-eye mr-2"></i> Details
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                    href="#" onclick="editSale('{{$sale->id}}')">
+                                                                    href="#" onclick="editSale('.$sale['id'].')">
                                                                     <i class="fa fa-edit mr-2"></i> Edit
                                                                 </a>
-                                                            </li>
+                                                            </li>                                                              
                                                             <li>
-                                                                <a href="#" onclick="deleteSale('{{$sale->id}}')"
+                                                                <a href="#" onclick="deleteSale('.$sale['id'].')"
                                                                     class="d-flex align-items-center link-muted text-danger py-2 px-3">
                                                                     <i class="fa fa-ban mr-2"></i> Delete
                                                                 </a>
@@ -96,8 +112,8 @@
             <!-- Footer -->
             <footer class="u-footer text-center text-muted text-muted">
                 <p class="h5 mb-0 ml-auto">
-                    &copy; <?php echo date("Y");?> <a class="link-muted" href="https://williescant.co.ke"
-                        target="_blank">WilieScant
+                    &copy; 2021 <a class="link-muted" href="https://williescant.co.ke"
+                        target="_blank">Willie Scant
                         Company</a>. All
                     Rights Reserved.
                 </p>
@@ -117,30 +133,31 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="mb-3" id="add-sale-form">
+                <form class="mb-3" id="add-sale-form" method="POST" action="{{route('add-sale')}}">
+                    @csrf
                     <div class="modal-body">
                     <!-- Supplier and Product details tabs -->
                     <ul class="nav nav-tabs mt-3 mb-3">
                         <li class="nav-item">
-                            <a href="#receipt_items" class="nav-link font-weight-bold active" role="tab"
+                            <a href="#receipt_items" id="add-receipt-items-tab" class="nav-link font-weight-bold active" role="tab"
                                 aria-selected="true" data-toggle="tab">Receipt Items</a>
-                        </li>
+                        </li>                      
                         <li class="nav-item">
-                            <a href="#receipt_details" class="nav-link font-weight-bold" role="tab"
+                            <a href="#receipt_details" id="add-receipt-details-tab" class="nav-link font-weight-bold" role="tab"
                                 aria-selected="true" data-toggle="tab">Receipt Details</a>
                         </li>
                     </ul>
                     <!-- Receipt item and details details tabs -->
 
                     <!-- Tabs Content -->
-                    <div class="tab-content">
+                    <div class="tab-content">                    
                         <!-- Receipt Items -->
                         <div class="tab-pane fade show active" id="receipt_items" role="tabpanel">
-                            <div class="form-row mb-2">
+                            <div class="form-row mb-2 receipt-item">
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_name_1">Name</label>
-                                        <input id="product_name_1" class="form-control" name="product_name_1" type="text"
+                                        <input id="product_name_1" class="form-control" name="receipt_items[0][product_name]" type="text"
                                             placeholder="Product Name" required>
                                     </div>
                                 </div>
@@ -148,7 +165,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="product_description_1">Description</label>
-                                        <input id="product_description_1" class="form-control" name="product_description_1"
+                                        <input id="product_description_1" class="form-control" name="receipt_items[0][product_description]"
                                             type="text" placeholder="Product Description">
                                     </div>
                                 </div>
@@ -156,7 +173,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_quantity_1">Quantity</label>
-                                        <input id="product_quantity_1" class="form-control" name="product_quantity_1" type="number"
+                                        <input id="product_quantity_1" class="form-control" name="receipt_items[0][product_quantity]" type="number"
                                             placeholder="Product Qauntity" required>
                                     </div>
                                 </div>
@@ -164,38 +181,51 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_unit_price_1">Unit Price</label>
-                                        <input id="product_unit_price_1" class="form-control" name="product_unit_price_1"
+                                        <input id="product_unit_price_1" class="form-control" name="receipt_items[0][product_unit_price]"
                                         step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" onclick="removeFormset(Event, this, false)" 
+                                        disabled class="btn btn-sm btn-danger remove-item-btn text-small d-none">
+                                    </button>                                  
                                 </div>
                                 <div class="col-md-12 mt-2">
                                     <hr/>
                                 </div>
                             </div>
-                            <button id="add-item-formset" type="button" class="btn btn-block btn-sm btn-secondary">Add another row</button>
+                            <button id="add-item-formset" type="button" class="btn btn-block btn-sm btn-secondary">Add another row</button>                                        
                         </div>
                         <!-- End Receipt Items -->
 
                         <!-- Receipt Details -->
                         <div class="tab-pane fade" id="receipt_details" role="tabpanel">
                             <div class="form-row mb-2">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group mb-2">
-                                        <label class="required-label" for="receipt_number">Receipt Number</label>
+                                        <label class="required-label" for="receipt_number">Receipt/Invoice Serial No</label>
                                         <input id="receipt_number" class="form-control" name="receipt_number"
-                                            type="text" placeholder="Enter Receipt Number" required>
+                                            type="text" placeholder="0059" required>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group mb-2">
-                                        <label class="required-label" for="pin">PIN</label>
+                                        <label class="required-label" for="etr_number">KRA/ETR Serial No</label>
+                                        <input id="etr_number" class="form-control" name="etr"
+                                            type="text" placeholder="KRA/ETR/10032006" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-2">
+                                        <label class="required-label" for="pin">Cutomer's KRA PIN</label>
                                         <input id="pin" class="form-control" name="pin" type="text"
-                                            placeholder="KRA PIN" required>
+                                            placeholder="P05135163Z" required>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="form-row mb-2">
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
@@ -211,7 +241,7 @@
                                     <input id="vat" class="form-control" name="vat" type="number"
                                     step="0.01" placeholder="Total incurred VAT" required>
                                 </div>
-                                </div>
+                                </div>                                
                             </div>
 
                             <div class="form-row mb-2">
@@ -236,7 +266,7 @@
                             <div class="form-row mb-2">
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
-                                        <label class="required-label" for="date">Date</label>
+                                        <label class="required-label" for="date">ETR Date</label>
                                         <input type="date" name="date" id="date" class="form-control" required>
                                     </div>
                                 </div>
@@ -268,14 +298,20 @@
                             <span class="small">Successfully added the sale</span>
                         </div>
                     </div>
-                    <!-- End Errors -->
+                    <!-- End Errors -->  
                     <div>
                         <span data-dismiss="modal" class="mr-2"
                             style="font-weight: 600; cursor: pointer;">Cancel</span>
-                        <input type="submit" class="btn btn-primary pl-4 pr-4" value="Add Sale" />
-                    </div>
+                        <button id="add-modal-prev" type="button" class="d-none btn btn-primary pl-3 pr-3">
+                            <i class="fa fa-angle-double-left"></i> Back
+                        </button>                             
+                        <button id="add-modal-next" type="button" class="btn btn-primary pl-3 pr-3">
+                            Next <i class="fa fa-angle-double-right"></i>
+                        </button>                               
+                        <input type="submit" id="add-sale-submit" class="d-none btn btn-primary pl-4 pr-4" value="Add Sale" />
+                    </div>                          
                 </div>
-            </form>
+            </form>                
             </div>
         </div>
     </div>
@@ -298,20 +334,20 @@
                     <!-- Supplier and Product details tabs -->
                     <ul class="nav nav-tabs mt-3 mb-3">
                         <li class="nav-item">
-                            <a href="#edit-receipt-items" class="nav-link font-weight-bold active" role="tab"
+                            <a href="#edit-receipt-items" id="edit-receipt-items-tab" class="nav-link font-weight-bold active" role="tab"
                                 aria-selected="true" data-toggle="tab">Receipt Items</a>
-                        </li>
+                        </li>                      
                         <li class="nav-item">
-                            <a href="#edit-receipt-details" class="nav-link font-weight-bold" role="tab"
+                            <a href="#edit-receipt-details" id="edit-receipt-details-tab" class="nav-link font-weight-bold" role="tab"
                                 aria-selected="true" data-toggle="tab">Receipt Details</a>
                         </li>
                     </ul>
                     <!-- Receipt item and details details tabs -->
 
                     <!-- Tabs Content -->
-                    <div class="tab-content">
+                    <div class="tab-content">                    
                         <!-- Receipt Items -->
-                        <div class="tab-pane fade show active" id="edit-receipt-items" role="tabpanel">
+                        <div class="tab-pane fade show active" id="edit-receipt-items" role="tabpanel">                             
                         </div>
                         <!-- End Receipt Items -->
 
@@ -337,14 +373,14 @@
                             <span class="small">Successfully updated the sale receipt</span>
                         </div>
                     </div>
-                    <!-- End Errors -->
+                    <!-- End Errors -->  
                     <div>
                         <span data-dismiss="modal" class="mr-2"
                             style="font-weight: 600; cursor: pointer;">Cancel</span>
-                        <input type="submit" class="btn btn-primary pl-4 pr-4" value="Add Sale" />
-                    </div>
+                        <input type="submit" class="btn btn-primary pl-4 pr-4" value="Update Sale" />
+                    </div>                          
                 </div>
-            </form>
+            </form>                
             </div>
         </div>
     </div>
@@ -374,14 +410,14 @@
                                     Receipt Items
                                 </a>
                             </li>
-                        </ul>
+                        </ul>                        
                         <!-- Supplier and Product details tabs -->
 
                         <!-- Tabs Content -->
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="receipt-details" role="tabpanel">
                                 <div class="row details-row" id="receipt-details-row">
-                                </div>
+                                </div>                                  
                             </div>
 
                             <div class="tab-pane fade" id="receipt-items" role="tabpanel">
@@ -399,8 +435,8 @@
                                         <tbody id="items-details-row">
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
+                                </div>                               
+                            </div>                  
                         </div>
                         <!-- End Tabs Content -->
                 </div>
@@ -413,22 +449,24 @@
         </div>
     </div>
     <!-- End View Sale Details Modal -->
-
-<script>
+    <script>
 
 var formsetCount = 1;
 var editFormsetCount = 1;
 var oldItemCount = 1;
+let d = new Date();
+d = d.toISOString().substring(0,10);
+$("#date").attr("max", d);
 
 $("#add-item-formset").click(() => {
     formsetCount += 1;
     let addFormsetBtn = $("#add-item-formset");
     let formset = `
-        <div class="form-row mb-2">
+        <div class="form-row mb-2 receipt-item">
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_name_${formsetCount}">Name</label>
-                    <input id="product_name_${formsetCount}" class="form-control" name="product_name_${formsetCount}" type="text"
+                    <input id="product_name_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_name]" type="text"
                         placeholder="Product Name" required>
                 </div>
             </div>
@@ -436,7 +474,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label for="product_description_${formsetCount}">Description</label>
-                    <input id="product_description_${formsetCount}" class="form-control" name="product_description_${formsetCount}"
+                    <input id="product_description_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_description]"
                         type="text" placeholder="Product Description">
                 </div>
             </div>
@@ -444,7 +482,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_quantity_${formsetCount}">Quantity</label>
-                    <input id="product_quantity_${formsetCount}" class="form-control" name="product_quantity_${formsetCount}" type="number"
+                    <input id="product_quantity_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_quantity]" type="number"
                         placeholder="Product Qauntity" required>
                 </div>
             </div>
@@ -452,28 +490,29 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_unit_price_${formsetCount}"">Unit Price</label>
-                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="product_unit_price_${formsetCount}"
+                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="receipt_items[${formsetCount}][product_unit_price]"
                     step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                 </div>
             </div>
             <div class="col-md-6">
-                <button type="button" onclick="removeFormset(Event, this)" class="btn btn-sm btn-danger text-small">Remove item</button>
+                <button type="button" onclick="removeFormset(Event, this, false)" 
+                class="btn btn-sm btn-danger text-small remove-item-btn">Remove item ${formsetCount}</button>            
             </div>
             <div class="col-md-12 mt-2">
-                <hr/>
+                <hr/>            
             </div>
         </div>
     `;
     $(formset).insertBefore(addFormsetBtn);
 });
 
-$("#add-sale-form").submit(function (e) {
+$("").submit(function (e) {
     e.preventDefault();
     var formData = new FormData($("#add-sale-form")[0]);
     $("#modal-success").addClass("d-none");
     $("#modal-errors").addClass("d-none");
     products = [];
-
+    
     // Extract Receipt Items
     for(var i=1; i<formsetCount + 1; i++) {
             var item_1;
@@ -492,15 +531,19 @@ $("#add-sale-form").submit(function (e) {
     }
     parsedFormdata = {};
     for (var entry of formData.entries()) {
-        parsedFormdata[entry[0]] = entry[1];
+        parsedFormdata[entry[0]] = entry[1]; 
     }
 
     $.ajax({
         type: 'POST',
-        url: "/willie-online-new/supplier/includes/add_sale.php",
+        url: "/supplier/includes/add_sale.php",
         data: {...parsedFormdata, 'receipt_products':products},
+        statusCode: {
+            401: function(response) {
+                window.location.href = '/auth/logout.php';
+            }
+        },        
         success: function (result) {
-            console.log(result);
             res = JSON.parse(result);
             if (res['success']) {
                 $("#modal-success").removeClass('d-none');
@@ -511,10 +554,10 @@ $("#add-sale-form").submit(function (e) {
             } else if(res['error']) {
                 $("#modal-success").addClass("d-none");
                 $("#modal-errors").find("span").text(res['error']);
-                $("#modal-errors").removeClass('d-none');
+                $("#modal-errors").removeClass('d-none');        
             } else {
                 $("#modal-errors").find("span").text('Server Error. Failed to prepare product.');
-                $("#modal-errors").removeClass('d-none');
+                $("#modal-errors").removeClass('d-none');                        
             }
         }
     });
@@ -527,14 +570,14 @@ $("#edit-sale-form").submit(function (e) {
     $("#modal-edit-errors").addClass("d-none");
     products = [];
     old_items = [];
-
+    
     // Extract New Receipt Items
-    for(var i=1; i<editFormsetCount; i++) {
+    for(var i=oldItemCount + 1; i< editFormsetCount + oldItemCount; i++) {
         receipt_item = {
-            name: $("#edit-sale-form").find(`#product_name_${i}`).val(),
-            description: $("#edit-sale-form").find(`#product_description_${i}`).val(),
-            quantity: $("#edit-sale-form").find(`#product_quantity_${i}`).val(),
-            unit_price: $("#edit-sale-form").find(`#product_unit_price_${i}`).val(),
+            name: $("#edit-sale-form").find(`#edit_product_name_${i}`).val(),
+            description: $("#edit-sale-form").find(`#edit_product_description_${i}`).val(),
+            quantity: $("#edit-sale-form").find(`#edit_product_quantity_${i}`).val(),
+            unit_price: $("#edit-sale-form").find(`#edit_product_unit_price_${i}`).val(),
         }
         products.push(receipt_item);
 
@@ -547,31 +590,35 @@ $("#edit-sale-form").submit(function (e) {
     // Extract existing receipt items(To be updatd only)
     for(var i=1; i < oldItemCount + 1; i++) {
         receipt_item = {
-            name: $("#edit-sale-form").find(`#new_product_name_${i}`).val(),
-            description: $("#edit-sale-form").find(`#new_product_description_${i}`).val(),
-            quantity: $("#edit-sale-form").find(`#new_product_quantity_${i}`).val(),
-            unit_price: $("#edit-sale-form").find(`#new_product_unit_price_${i}`).val(),
-            id: $("#edit-sale-form").find(`#new_product_id_${i}`).val(),
+            name: $("#edit-sale-form").find(`#old_product_name_${i}`).val(),
+            description: $("#edit-sale-form").find(`#old_product_description_${i}`).val(),
+            quantity: $("#edit-sale-form").find(`#old_product_quantity_${i}`).val(),
+            unit_price: $("#edit-sale-form").find(`#old_product_unit_price_${i}`).val(),
+            id: $("#edit-sale-form").find(`#old_product_id_${i}`).val(),
         }
         old_items.push(receipt_item);
 
-        formData.delete(`new_product_name_${i}`);
-        formData.delete(`new_product_description_${i}`);
-        formData.delete(`new_product_quantity_${i}`);
-        formData.delete(`new_product_unit_price_${i}`);
-        formData.delete(`new_product_id_${i}`);
+        formData.delete(`old_product_name_${i}`);
+        formData.delete(`old_product_description_${i}`);
+        formData.delete(`old_product_quantity_${i}`);
+        formData.delete(`old_product_unit_price_${i}`);
+        formData.delete(`old_product_id_${i}`);
     }
     parsedFormdata = {};
     for (var entry of formData.entries()) {
-        parsedFormdata[entry[0]] = entry[1];
+        parsedFormdata[entry[0]] = entry[1]; 
     }
     // console.log({...parsedFormdata, 'receipt_products':products, 'old_items': old_items});
     $.ajax({
         type: 'POST',
-        url: "/willie-online-new/supplier/includes/edit_sale.php",
+        url: "/supplier/includes/edit_sale.php",
         data: {...parsedFormdata, 'receipt_products':products, 'old_items': old_items},
+        statusCode: {
+            401: function(response) {
+                window.location.href = '/auth/logout.php';
+            }
+        },        
         success: function (result) {
-            console.log(result);
             res = JSON.parse(result);
             if (res['success']) {
                 $("#modal-edit-success").removeClass('d-none');
@@ -582,10 +629,10 @@ $("#edit-sale-form").submit(function (e) {
             } else if(res['error']) {
                 $("#modal-edit-success").addClass("d-none");
                 $("#modal-edit-errors").find("span").text(res['error']);
-                $("#modal-edit-errors").removeClass('d-none');
+                $("#modal-edit-errors").removeClass('d-none');   
             } else {
                 $("#modal-edit-errors").find("span").text('Server Error. Failed to update sale.');
-                $("#modal-edit-errors").removeClass('d-none');
+                $("#modal-edit-errors").removeClass('d-none');                    
             }
         }
     });
@@ -594,15 +641,25 @@ $("#edit-sale-form").submit(function (e) {
 function saleDetails(sale_id) {
     $.ajax({
         type: 'GET',
-        url: `/willie-online-new/supplier/includes/get_sale.php/?sale_id=${sale_id}`,
+        url: `/supplier/includes/get_sale.php/?sale_id=${sale_id}`,
+        statusCode: {
+            401: function(response) {
+                window.location.href = '/auth/logout.php';
+            }
+        },        
         success: function (result) {
             res = JSON.parse(result);
             if (res['success']) {
                 var receipt_details = res['receipt_details'];
                 var receipt_items = res['receipt_items'];
-
-                $("#receipt-details-row").html(receipt_details)
-                $("#items-details-row").html(receipt_items)
+                
+                $("#receipt-details-row").html(receipt_details);
+                if(!receipt_items) {
+                    receipt_items = `<tr><td colspan="9" class="text-center">
+                    <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
+                    </td></tr>`;
+                }
+                $("#items-details-row").html(receipt_items);
 
                 $("#saleDetailsModal").modal('show');
             } else {
@@ -616,10 +673,15 @@ function deleteSale(sale_id) {
     if(confirm("This sale receipt will be deleted permanently")) {
         $.ajax({
         type: 'POST',
-        url: "/willie-online-new/supplier/includes/delete_sale.php",
+        url: "/supplier/includes/delete_sale.php",
         data: {'sale_id': sale_id},
         // processData: false,
         // contentType: false,
+        statusCode: {
+            401: function(response) {
+                window.location.href = '/auth/logout.php';
+            }
+        },        
         success: function (result) {
             res = JSON.parse(result);
             if (res['success']) {
@@ -635,66 +697,82 @@ function deleteSale(sale_id) {
 }
 
 // Remove item formset
-function removeFormset(e, formset) {
+function removeFormset(e, formset, edit=false) {
     $(formset).parent().parent().remove();
+    if(edit) {
+        editFormsetCount -= 1;
+        listEditItems();
+    } else {
+        formsetCount -= 1;
+        listAddItems();
+    }
 }
 
 // Edit sale receipt details
 function editSale(sale_id) {
     $("#edit-receipt-items").html(
-        `<button id="add-item-formset-edit" type="button"
-        class="btn btn-block btn-sm btn-secondary add-item-formset">Add another row</button>`);
+        `<button id="edit-item-formset" type="button" 
+        class="btn btn-block btn-sm btn-secondary">Add another row</button>`);
 
-        $("#add-item-formset-edit").click(() => {
-            let addFormsetBtn = $("#add-item-formset-edit");
+        $("#edit-item-formset").click(() => {
+            let addFormsetBtn = $("#edit-item-formset");
             let formset = `
-                <div class="form-row mb-2">
+                <div class="form-row mb-2 receipt-item">
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label class="required-label" for="product_name_${editFormsetCount}">Name</label>
-                            <input id="product_name_${editFormsetCount}" class="form-control" name="product_name_${editFormsetCount}" type="text"
+                            <label class="required-label" for="edit_product_name_${editFormsetCount}">Name</label>
+                            <input id="edit_product_name_${editFormsetCount}" class="form-control" name="edit_product_name_${editFormsetCount}" type="text"
                                 placeholder="Product Name" required>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label for="product_description_${editFormsetCount}">Description</label>
-                            <input id="product_description_${editFormsetCount}" class="form-control" name="product_description_${editFormsetCount}"
+                            <label for="edit_product_description_${editFormsetCount}">Description</label>
+                            <input id="edit_product_description_${editFormsetCount}" class="form-control" name="edit_product_description_${editFormsetCount}"
                                 type="text" placeholder="Product Description">
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label class="required-label" for="product_quantity_${editFormsetCount}">Quantity</label>
-                            <input id="product_quantity_${editFormsetCount}" class="form-control" name="product_quantity_${editFormsetCount}" type="number"
+                            <label class="required-label" for="edit_product_quantity_${editFormsetCount}">Quantity</label>
+                            <input id="edit_product_quantity_${editFormsetCount}" class="form-control" name="edit_product_quantity_${editFormsetCount}" type="number"
                                 placeholder="Product Qauntity" required>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label class="required-label" for="product_unit_price_${editFormsetCount}"">Unit Price</label>
-                            <input id="product_unit_price_${editFormsetCount}"" class="form-control" name="product_unit_price_${editFormsetCount}"
+                            <label class="required-label" for="edit_product_unit_price_${editFormsetCount}"">Unit Price</label>
+                            <input id="edit_product_unit_price_${editFormsetCount}"" class="form-control" name="edit_product_unit_price_${editFormsetCount}"
                             step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" onclick="removeFormset(Event, this)" class="btn btn-sm btn-danger text-small">Remove item</button>
+                        <button type="button" onclick="removeFormset(Event, this, true)" 
+                            class="remove-item-btn btn btn-sm btn-danger text-small">
+                            Remove item ${editFormsetCount + oldItemCount}
+                        </button>            
                     </div>
                     <div class="col-md-12 mt-2">
-                        <hr/>
+                        <hr/>            
                     </div>
                 </div>
             `;
+            listEditItems();
             $(formset).insertBefore(addFormsetBtn);
             editFormsetCount += 1;
         });
 
     $.ajax({
         type: 'GET',
-        url: `/willie-online-new/supplier/includes/get_sale.php/?sale_id=${sale_id}&edit=1`,
+        url: `/supplier/includes/get_sale.php/?sale_id=${sale_id}&edit=1`,
+        statusCode: {
+            401: function(response) {
+                window.location.href = '/auth/logout.php';
+            }
+        },        
         success: function (result) {
             // console.log(result);
             res = JSON.parse(result);
@@ -704,27 +782,32 @@ function editSale(sale_id) {
                 var receipt_items = res['receipt_items'];
 
                 oldItemCount = Number(res['data']['total_items']);
-
+                
                 $("#edit-supplier-details").html(supplier_details)
                 $("#edit-receipt-details").html(receipt_details)
-                $(receipt_items).insertBefore($("#add-item-formset-edit"));
+                $(receipt_items).insertBefore($("#edit-item-formset"));
 
             } else {
                 $("#modal-edit-errors").find('span').text('Failed to fetch receipt details try again later')
                 $("#modal-edit-errors").removeClass('d-none');
             }
         }
-    });
+    });    
     $("#editSaleModal").modal("show");
 }
 
-// Delete existing receipt item and remove formset..
+// Delete existing receipt item and remove formset.. 
 function deleteItem(e, formset, item_id, receipt_id) {
     if(confirm('The item will be deleted permanently')) {
         $.ajax({
             type: 'POST',
-            url: "/willie-online-new/supplier/includes/delete_item.php",
+            url: "/supplier/includes/delete_item.php",
             data: {'item_id':item_id, 'receipt_id': receipt_id, 'receipt_type': 'sale'},
+            statusCode: {
+                401: function(response) {
+                    window.location.href = '/auth/logout.php';
+                }
+            },            
             success: function (result) {
                 res = JSON.parse(result);
                 if (res['success']) {
@@ -732,17 +815,119 @@ function deleteItem(e, formset, item_id, receipt_id) {
                     $("#modal-edit-success").find('span').text('Item deleted succesfully');
                     oldItemCount -= 1;
                     $(formset).parent().parent().remove();
+                    listEditItems();
                 } else if(res['error']) {
                     $("#modal-edit-success").addClass("d-none");
                     $("#modal-edit-errors").find("span").text(res['error']);
-                    $("#modal-edit-errors").removeClass('d-none');
+                    $("#modal-edit-errors").removeClass('d-none');        
                 } else {
                     $("#modal-edit-errors").find("span").text('Server Error. Failed to delete item.');
-                    $("#modal-edit-errors").removeClass('d-none');
+                    $("#modal-edit-errors").removeClass('d-none');                        
                 }
             }
         });
     }
 }
+
+function listAddItems(){
+    window.setTimeout(() => {
+        let items = $("#add-sale-form").find($(".receipt-item"));
+        console.log(items.length);
+        let start = 1;
+        for(const item of items) {
+            $(item).find($("input[name ^='product_name']")).attr('id', `product_name_${start}`);
+            $(item).find($("input[name ^='product_description']")).attr('id', `product_description_${start}`);
+            $(item).find($("input[name ^='product_quantity']")).attr('id', `product_quantity_${start}`);
+            $(item).find($("input[name ^='product_unit_price']")).attr('id', `product_unit_price_${start}`);
+            $(item).find($(".remove-item-btn")).text(`Remove item ${start}`);
+            start += 1;
+        }
+    }, 100);
+}
+
+function listEditItems(){
+    window.setTimeout(() => {
+        var items = $("#edit-sale-form").find($('.receipt-item'));
+        var start = 1;
+        for(var item of items) {
+            $(item).find($("input[name ^='edit_product_name']")).attr('id', `edit_product_name_${start}`);
+            $(item).find($("input[name ^='edit_product_description']")).attr('id', `edit_product_description_${start}`);
+            $(item).find($("input[name ^='edit_product_quantity']")).attr('id', `edit_product_quantity_${start}`);
+            $(item).find($("input[name ^='edit_product_unit_price']")).attr('id', `edit_product_unit_price_${start}`);
+            $(item).find($(".remove-item-btn")).text(`Remove item ${start}`);
+            start += 1;
+        }
+    }, 100);
+}
+
+// Handles next stepper form operation..
+$("#add-sale-modal-btn").click(() => {
+    $("#add-sale-form").trigger('reset');
+    $("#add-sale-form").find('input').removeClass('is-invalid');
+    // Deactivate details tabs first
+    $("#add-receipt-details-tab").attr('data-toggle', '');
+    $("#add-receipt-details-tab").css({cursor: 'not-allowed'});
+    $("#add-modal-next").attr('current-tab', 'items');
+    
+    // Cleanup after previous modal close..
+    $("#add-modal-next").removeClass('d-none');
+    $("#add-modal-prev").addClass('d-none');
+    $("#add-sale-submit").addClass('d-none');
+    $("#add-receipt-items-tab").tab("show");
+
+    $("#addSaleModal").modal("show");
+});
+
+// Handle prev tab navigation..
+$("#add-modal-prev").click(() => {
+    let targetTab = $("#add-modal-prev").attr("target_tab");
+    $(targetTab).tab("show");
+});
+
+$("#add-modal-next").click(() => {
+    var tab_valid = true;
+    var currentTab = $("#add-modal-next").attr('current-tab');
+
+    if(currentTab == 'items') {
+        tab_valid = validateFormInputs("receipt_items");
+        if(tab_valid) {
+            $("#add-receipt-details-tab").attr('data-toggle', 'tab');
+            $("#add-receipt-details-tab").css({cursor: 'pointer'});
+            $("#add-modal-next").attr('current-tab', 'details');
+            $("#add-receipt-details-tab").tab("show");
+            
+            // Control buttons changes..
+            $("#add-modal-next").addClass('d-none');
+            $("#add-modal-prev").attr('target_tab', '#add-receipt-items-tab');
+            $("#add-modal-prev").removeClass('d-none');
+            $("#add-sale-submit").removeClass("d-none");
+        }
+    }
+});
+
+// Listen to tab changes..
+$("#add-receipt-items-tab").on('show.bs.tab', function(e) {
+    $("#add-modal-next").removeClass('d-none');
+    $("#add-modal-next").attr('current-tab', 'items');
+    $("#add-sale-submit").addClass('d-none');
+    $("#add-modal-prev").addClass('d-none');
+ });
+
+
+ function validateFormInputs(form, markInvalid=true) {
+     let tabValid = true;
+     let formFields = $(`#${form}`).find('input[required]');
+     for(let i = 0; i < formFields.length; i++) {
+        if($(formFields[i]).val().length == 0) {
+            if(markInvalid) {
+                $(formFields[i]).addClass('is-invalid');
+            }
+            tabValid = false;
+        } else {
+            $(formFields[i]).removeClass('is-invalid');
+        }
+    }
+    return tabValid;  
+ }
 </script>
 @endsection

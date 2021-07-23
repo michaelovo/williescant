@@ -13,14 +13,20 @@
                 <div class="row">
                     <div class="col-md-12">
 @if(Session::has('success'))
-    <div class="alert alert-success">
+<div class="alert alert-success alert-dismissible fade show" role="alert">
         {{Session::get('success')}}
-    </div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 @endif
 @if(Session::has('fail'))
-    <div class="alert alert-danger">
-       {{Session::get('fail')}}
-    </div>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{Session::get('fail')}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 @endif
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Purchase Receipts</h1>
@@ -576,40 +582,14 @@
 
 
     <!-- Global Vendor -->
-    <link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
+
     <!-- Plugins -->
 @include('supplier.purchases._step-form')
 @include('supplier.purchases._add-new-purchase')
     <!-- Initialization  -->
     {{-- <script src="{{asset('./js/purchases.js')}}"></script> --}}
 
-<style>
-    body {
-    background-color: #eee
-}
 
-.form-control:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0rem rgba(0, 123, 255, .25)
-}
-
-.btn-secondary:focus {
-    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
-}
-
-.close:focus {
-    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
-}
-
-.mt-200 {
-    margin-top: 200px
-}
-</style>
 <script>
     $(document).ready(function(){
 
@@ -677,32 +657,40 @@ showStepURLhash: false,
          console.log($(this).parents().parents()[0].remove());
     });
 
-    // $('#add_image').on('onchange', function(){
-    //     const [file] =     $('#add_image').files
-    //     if(file){
-    //         $('#img_preview').src = URL.createObjectURL(file)
-    //     }
-    // })
-//     imgInp.onchange = evt => {
-//   const [file] = imgInp.files
-//   if (file) {
-//     blah.src = URL.createObjectURL(file)
-//   }
-// }
-        $('#kt_dropzone_2').dropzone({
-            url: "williesscant/supplier/add-product", // Set the url for your upload script location
-            paramName: "file", // The name that will be used to transfer the file
-            maxFiles: 10,
-            maxFilesize: 10, // MB
-            addRemoveLinks: true,
-            accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                    done("Naha, you don't.");
-                } else {
-                    done();
-                }
+ // file preview
+  $('#file-input').on('change', function(){ //on file input change
+    if (window.File && window.FileReader && window.FileList && window.Blob) //check File API supported browser
+    {
+         
+        var data = $(this)[0].files; //this file data
+         
+        $.each(data, function(index, file){ //loop though each file
+            if(/(\.|\/)(gif|jpe?g|png)$/i.test(file.type)){ //check supported file type
+                var fRead = new FileReader(); //new filereader
+                fRead.onload = (function(file){ //trigger function on successful read
+                return function(e) {
+                    let img = `
+                            <div class="wrapper border border-primary rounded mr-2 mt-2">
+                             <div>
+                            <img src="${e.target.result}" class="thumb">
+                            </div>
+                            <div>
+                            <a id="remove-image" class="btn btn-light-danger"><i class="fa fa-trash text-danger 2x"> REMOVE</i></a>
+                            </div>
+
+                        </div>`;
+                    // var img = $('<img/>').addClass('thumb').attr('src', e.target.result); //create image element 
+                    $('#thumb-output').append(img); //append image to output element
+                };
+                })(file);
+                fRead.readAsDataURL(file); //URL representing the file's data.
             }
         });
+         
+    }else{
+        alert("Your browser doesn't support File API!"); //if File API is absent
+    }
+ });
 });
 </script>
 @endsection
