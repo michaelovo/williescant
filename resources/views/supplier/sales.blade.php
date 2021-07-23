@@ -12,7 +12,22 @@
             <div class="u-body">
                 <div class="row">
                     <div class="col-md-12">
-
+@if(Session::has('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{Session::get('success')}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
+@if(Session::has('fail'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{Session::get('fail')}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Sales Receipts</h1>
                             <button class="btn btn-sm btn-outline-primary" id="add-sale-modal-btn" data-toggle="modal" href="#">
@@ -118,7 +133,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="mb-3" id="add-sale-form">
+                <form class="mb-3" id="add-sale-form" method="POST" action="{{route('add-sale')}}">
+                    @csrf
                     <div class="modal-body">
                     <!-- Supplier and Product details tabs -->
                     <ul class="nav nav-tabs mt-3 mb-3">
@@ -141,7 +157,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_name_1">Name</label>
-                                        <input id="product_name_1" class="form-control" name="product_name_1" type="text"
+                                        <input id="product_name_1" class="form-control" name="receipt_items[0][product_name]" type="text"
                                             placeholder="Product Name" required>
                                     </div>
                                 </div>
@@ -149,7 +165,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="product_description_1">Description</label>
-                                        <input id="product_description_1" class="form-control" name="product_description_1"
+                                        <input id="product_description_1" class="form-control" name="receipt_items[0][product_description]"
                                             type="text" placeholder="Product Description">
                                     </div>
                                 </div>
@@ -157,7 +173,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_quantity_1">Quantity</label>
-                                        <input id="product_quantity_1" class="form-control" name="product_quantity_1" type="number"
+                                        <input id="product_quantity_1" class="form-control" name="receipt_items[0][product_quantity]" type="number"
                                             placeholder="Product Qauntity" required>
                                     </div>
                                 </div>
@@ -165,7 +181,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_unit_price_1">Unit Price</label>
-                                        <input id="product_unit_price_1" class="form-control" name="product_unit_price_1"
+                                        <input id="product_unit_price_1" class="form-control" name="receipt_items[0][product_unit_price]"
                                         step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                                     </div>
                                 </div>
@@ -433,28 +449,7 @@
         </div>
     </div>
     <!-- End View Sale Details Modal -->
-</body>
-
-<!-- Global Vendor -->
-<script src=/assets/vendor/jquery-migrate/jquery-migrate.min.js></script>
-<script src=/assets/vendor/popper.js/dist/umd/popper.min.js></script>
-<script src=/assets/vendor/bootstrap/bootstrap.min.js></script>
-
-<!-- Plugins -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js" integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A==" crossorigin="anonymous"></script>
-<script src=/assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js></script>
-<script src=/assets/vendor/chart.js/dist/Chart.min.js></script>
-<script src="/assets/vendor/datatables/dataTables.min.js"></script>
-<script src=/assets/vendor/datatables/dataTables.bootstrap4.min.js></script>
-<script src="/assets/vendor/swal/swal.js"></script>
-
-
-<!-- Initialization  -->
-<script src=/assets/js/sidebar-nav.js></script>
-<script src=/assets/js/main.js></script>
-<script src=/assets/js/dashboard-page-scripts.js></script>
-
-</html><script>
+    <script>
 
 var formsetCount = 1;
 var editFormsetCount = 1;
@@ -471,7 +466,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_name_${formsetCount}">Name</label>
-                    <input id="product_name_${formsetCount}" class="form-control" name="product_name_${formsetCount}" type="text"
+                    <input id="product_name_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_name]" type="text"
                         placeholder="Product Name" required>
                 </div>
             </div>
@@ -479,7 +474,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label for="product_description_${formsetCount}">Description</label>
-                    <input id="product_description_${formsetCount}" class="form-control" name="product_description_${formsetCount}"
+                    <input id="product_description_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_description]"
                         type="text" placeholder="Product Description">
                 </div>
             </div>
@@ -487,7 +482,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_quantity_${formsetCount}">Quantity</label>
-                    <input id="product_quantity_${formsetCount}" class="form-control" name="product_quantity_${formsetCount}" type="number"
+                    <input id="product_quantity_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_quantity]" type="number"
                         placeholder="Product Qauntity" required>
                 </div>
             </div>
@@ -495,7 +490,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_unit_price_${formsetCount}"">Unit Price</label>
-                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="product_unit_price_${formsetCount}"
+                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="receipt_items[${formsetCount}][product_unit_price]"
                     step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                 </div>
             </div>
@@ -511,7 +506,7 @@ $("#add-item-formset").click(() => {
     $(formset).insertBefore(addFormsetBtn);
 });
 
-$("#add-sale-form").submit(function (e) {
+$("").submit(function (e) {
     e.preventDefault();
     var formData = new FormData($("#add-sale-form")[0]);
     $("#modal-success").addClass("d-none");

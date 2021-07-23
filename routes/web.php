@@ -32,7 +32,7 @@ Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('o
 
 // Supplier
 Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');
-Route::get('/williescant/supplier/sales', 'SaleController@index')->name('sales')->middleware('auth', 'verified');
+// Route::get('/williescant/supplier/sales', 'SaleController@index')->name('sales')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/shop', 'ProductController@index')->name('supplier-shop')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/purchases', 'PurchaseController@index')->name('purchase')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->middleware('auth', 'verified');
@@ -50,6 +50,7 @@ Route::post('/williescant/supplier/search', 'ProductController@search')->name('s
 Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');
 Route::post('williescant/supplier/add-purchase', 'PurchaseController@store')->name('add-purchase')->middleware('auth', 'verified');
 
+
 //Accountant
 Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@index')->name('get-accountants')->middleware('auth', 'verified');
 Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@search')->name('search-pin')->middleware('auth', 'verified');
@@ -61,3 +62,4 @@ Route::get('williescant/supplier/export-month', 'KraController@exportCurrentMont
 
 //Sales
 Route::get('williescant/supplier/get-sales', 'SaleController@index')->name('get-sales')->middleware('auth', 'verified');
+Route::post('williescant/supplier/add-sale', 'SaleController@store')->name('add-sale')->middleware('auth', 'verified');

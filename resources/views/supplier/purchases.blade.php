@@ -582,40 +582,14 @@
 
 
     <!-- Global Vendor -->
-    <link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
+
     <!-- Plugins -->
 @include('supplier.purchases._step-form')
 @include('supplier.purchases._add-new-purchase')
     <!-- Initialization  -->
     {{-- <script src="{{asset('./js/purchases.js')}}"></script> --}}
 
-<style>
-    body {
-    background-color: #eee
-}
 
-.form-control:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0rem rgba(0, 123, 255, .25)
-}
-
-.btn-secondary:focus {
-    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
-}
-
-.close:focus {
-    box-shadow: 0 0 0 0rem rgba(108, 117, 125, .5)
-}
-
-.mt-200 {
-    margin-top: 200px
-}
-</style>
 <script>
     $(document).ready(function(){
 
