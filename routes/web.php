@@ -63,3 +63,4 @@ Route::get('williescant/supplier/export-month', 'KraController@exportCurrentMont
 //Sales
 Route::get('williescant/supplier/get-sales', 'SaleController@index')->name('get-sales')->middleware('auth', 'verified');
 Route::post('williescant/supplier/add-sale', 'SaleController@store')->name('add-sale')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/sale/{id}', 'SaleController@show')->name('retrieve-sale')->middleware('auth', 'verified');

@@ -105,8 +105,9 @@ class SaleController extends Controller
     public function show($id)
     {
         $sale = Sale::find($id);
+        $products = SaleItem::where('sale_id', $id)->where('receipt_type', 'sale')->get();
 
-        return response()->json($sale);
+        return response()->json(['status' => 'success', 'data' => $sale, 'products' => $products]);
     }
 
     /**

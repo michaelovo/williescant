@@ -78,7 +78,7 @@
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                    href="#" onclick="saleDetails('.$sale['id'].')">
+                                                                    href="#" onclick="saleDetails('{{$sale->id}}')">
                                                                     <i class="fa fa-eye mr-2"></i> Details
                                                                 </a>
                                                             </li>
@@ -641,25 +641,122 @@ $("#edit-sale-form").submit(function (e) {
 function saleDetails(sale_id) {
     $.ajax({
         type: 'GET',
-        url: `/supplier/includes/get_sale.php/?sale_id=${sale_id}`,
+        url: `/williescant/supplier/sale/${sale_id}`,
         statusCode: {
             401: function(response) {
                 window.location.href = '/auth/logout.php';
             }
         },        
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                var receipt_details = res['receipt_details'];
-                var receipt_items = res['receipt_items'];
+
+            if (result.status = 'success') {
+                let receipt_details = `
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Receipt Number
+                    </div>
+                    <div class="details-value" id="details-receipt-number">
+                        ${result.data.receipt_number}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        KRA PIN
+                    </div>
+                    <div class="details-value" id="details-pin">
+                        ${result.data.pin }                       
+                    </div>
+                </div>
+
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Customer Name
+                    </div>
+                    <div class="details-value" id="details-customer-name">
+                        ${result.data.customer_name }                         
+                    </div>
+                </div>            
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Item Count
+                    </div>
+                    <div class="details-value" id="details-item-count">
+                       ${result.data.total_items}                        
+                    </div>
+                </div>  
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Sub Total
+                    </div>
+                    <div class="details-value" id="details-sub-total">
+                        ${result.data.sub_total}                         
+                    </div>
+                </div>
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        VAT
+                    </div>
+                    <div class="details-value" id="details-vat">
+                       ${result.data.vat}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Total
+                    </div>
+                    <div class="details-value" id="details-total">
+                        ${result.data.total_price}                          
+                    </div>
+                </div> 
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Date
+                    </div>
+                    <div class="details-value" id="details-date">
+                        ${result.data.date }                         
+                    </div>
+                </div>  
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Time
+                    </div>
+                    <div class="details-value" id="details-time">
+                        ${result.data.time }                         
+                    </div>
+                </div>                         
+            `;
+                var receipt_items = result.products;
+                console.log()
+                console.log(receipt_items);
                 
                 $("#receipt-details-row").html(receipt_details);
-                if(!receipt_items) {
-                    receipt_items = `<tr><td colspan="9" class="text-center">
+                let table_body = '';
+                if(receipt_items.length == 0) {
+                    table_body = `<tr><td colspan="9" class="text-center">
                     <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
-                    </td></tr>`;
+                    </td></tr>`
+                } else{
+                                    receipt_items.forEach(element => {
+                    table_body += `
+                    <tr>
+                        <td>${element.id}</td>
+                        <td>${element.name}</td>
+                        <td>${element.description}</td>
+                        <td>${element.quantity}</td>
+                        <td>${element.unit_price}</td>
+                    </tr>`;
+                });
                 }
-                $("#items-details-row").html(receipt_items);
+
+
+
+
+
+                $("#items-details-row").html(table_body);
 
                 $("#saleDetailsModal").modal('show');
             } else {
