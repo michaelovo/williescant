@@ -12,6 +12,12 @@
             <div class="u-body">
                 <div class="row">
                     <div class="col-md-12">
+    <div id="delete-alert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+        Deleted 
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 @if(Session::has('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{Session::get('success')}}
@@ -55,7 +61,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($sales as $sale)
-                                                <tr>
+                                                <tr id="id_{{$sale->id}}">
                                                     <td>{{$sale->id}}</td>
                                                     <td>{{$sale->pin}}</td>
                                                     <td>{{$sale->receipt_number}}</td>
@@ -78,7 +84,7 @@
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                    href="#" onclick="saleDetails('{{$sale->id}}')">
+                                                                     onclick="saleDetails('{{$sale->id}}')">
                                                                     <i class="fa fa-eye mr-2"></i> Details
                                                                 </a>
                                                             </li>
@@ -90,7 +96,7 @@
                                                                 </a>
                                                             </li>                                                              
                                                             <li>
-                                                                <a href="#" onclick="deleteSale('.$sale['id'].')"
+                                                                <a href="#" onclick="deleteSale('{{$sale->id}}')"
                                                                     class="d-flex align-items-center link-muted text-danger py-2 px-3">
                                                                     <i class="fa fa-ban mr-2"></i> Delete
                                                                 </a>
@@ -768,9 +774,10 @@ function saleDetails(sale_id) {
 
 function deleteSale(sale_id) {
     if(confirm("This sale receipt will be deleted permanently")) {
+            $('#id_'+sale_id).remove()
         $.ajax({
         type: 'POST',
-        url: "/supplier/includes/delete_sale.php",
+        url: "/williescant/supplier/sale/del/"+sale_id,
         data: {'sale_id': sale_id},
         // processData: false,
         // contentType: false,
@@ -780,11 +787,15 @@ function deleteSale(sale_id) {
             }
         },        
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+            // res = JSON.parse(result);
+            console.log(result.status)
+            if (result.success==true) {
+                $('#delete-alert').removeClass('d-none')
+                console.log($('#delete-alert'))
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
+                // location.reload();
             } else {
                 // $("#modal-errors").removeClass('d-none');
             }

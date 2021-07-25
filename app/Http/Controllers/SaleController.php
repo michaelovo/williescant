@@ -176,7 +176,6 @@ class SaleController extends Controller
     public function destroy($id)
     {
         $sale = Sale::where('id', $id)->delete();
-
-        return response()->json(['message' => 'deleted']);
+        return response()->json(['status' => true]);
     }
 }
