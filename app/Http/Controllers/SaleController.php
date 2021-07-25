@@ -119,8 +119,9 @@ class SaleController extends Controller
     public function edit($id)
     {
         $sale = Sale::find($id);
-
-        return response()->json($sale);
+        $status = 'success';
+        $items = SaleItem::where('sale_id', $id)->where('receipt_type', 'sale')->get();
+        return response()->json(['status' => $status, 'data' => $sale, 'items' => $items]);
     }
 
     /**

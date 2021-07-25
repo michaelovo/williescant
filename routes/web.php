@@ -65,3 +65,4 @@ Route::get('williescant/supplier/get-sales', 'SaleController@index')->name('get-
 Route::post('williescant/supplier/add-sale', 'SaleController@store')->name('add-sale')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/sale/{id}', 'SaleController@show')->name('retrieve-sale')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/sale/del/{id}', 'SaleController@destroy')->name('delete-sale')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/sale/edit/{id}', 'SaleController@edit')->name('edit-sale')->middleware('auth', 'verified');
