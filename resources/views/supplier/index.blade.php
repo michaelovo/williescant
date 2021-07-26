@@ -57,13 +57,47 @@
                                     @else
                                         <td class="badge rounded-pill bg-danger px-2 text-white m-2">NO</td>
                                     @endif
-                                    <td>
+                                    {{-- <td>
                                         <div class="d-flex">
                                         <a id="edit" class="btn btn-sm btn-primary text-white mr-2" data-toggle="modal" data-target="#editModal" data-id="{{$product->id}}"><span class="h3 mb-0"><i class="fas fa-pen-alt text-white"></i></a>
                                             <button class="btn btn-danger" onclick="deleteConfirmation({{$product->id}})"><i class="fa fa-trash text-white"></i></button>
                                         </div>
-{{--                                        <a id="{{"del-".$product->id}}" class="btn btn-sm btn-danger">x</a>--}}
-                                    </td>
+                                       <a id="{{"del-".$product->id}}" class="btn btn-sm btn-danger">x</a>
+                                    </td> --}}
+                                        <td class="text-center">
+                                                <a id="actions3Invoker" class="link-muted" href="#!"
+                                                   aria-haspopup="true" aria-expanded="false"
+                                                   data-toggle="dropdown">
+                                                    <i class="fa fa-sliders-h"></i>
+                                                </a>
+
+                                                <div class="dropdown-menu dropdown-menu-right dropdown"
+                                                     style="width: 150px;" aria-labelledby="actions3Invoker">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>
+                                                            <a class="d-flex align-items-center link-muted py-2 px-3"
+                                                               data-toggle="modal"
+                                                               href="#" onclick="purchaseDetails(395)">
+                                                                <i class="fa fa-eye mr-2"></i> Details
+                                                            </a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a class="d-flex align-items-center link-muted py-2 px-3"
+                                                                data-toggle="modal" href="#" onclick="editProduct('{{$product->id}}')">
+                                                                <i class="fa fa-edit mr-3"></i>Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" onclick="deletePurchase(395)"
+                                                               class="d-flex align-items-center link-muted text-danger py-2 px-3">
+                                                                <i class="fa fa-trash mr-2"></i> Delete
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -154,143 +188,138 @@
 </div>
 <!-- End View Product Modal -->
 
-<!-- Edit Product Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="editModal">Edit Product</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form class="mb-3" action="" id="edit-product" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="form-row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="name" class="required-label">Name</label>
-                                <input id="name" class="form-control" name="name" type="text"
-                                       placeholder="Product name" required>
+ <!-- Edit Product Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="editModal">Edit Product</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="mb-3" action="/" id="edit-product-form">
+                    <div class="modal-body">
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="name">Name</label>
+                                    <input id="name" class="form-control" name="name" type="text"
+                                        placeholder="Product name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="description">Description</label>
+                                    <input id="description" class="form-control" name="description" type="text"
+                                        placeholder="Description your product">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="description">Description</label>
-                                <input id="description" class="form-control" name="description" type="text"
-                                       placeholder="Description your product">
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="brand">Brand</label>
+                                    <input id="brand" class="form-control" name="brand" type="text"
+                                        placeholder="Product brand">
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="brand">Brand</label>
-                                <input id="brand" class="form-control" name="brand" type="text"
-                                       placeholder="Product brand">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="quantity" class="required-label">Quantity</label>
-                                <input id="quantity" class="form-control" name="quantity" type="number"
-                                       placeholder="Total quantity of products in stock" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="unit_description" class="required-label">Unit Description</label>
-                                <input id="unit_description" class="form-control" name="unit_description"
-                                       type="text" placeholder="Units in which the product is sold e.g Bundle/Ream"
-                                       required>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="quantity">Quantity</label>
+                                    <input id="quantity" class="form-control" name="quantity" type="number"
+                                        placeholder="Total quantity of products in stock" required>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="unit_price" class="required-label">Unit Price</label>
-                                <input id="unit_price" class="form-control" name="unit_price" type="number"
-                                       step="0.01"  placeholder="Price Per unit" required>
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="unit_description">Unit Description</label>
+                                    <input id="unit_description" class="form-control" name="unit_description"
+                                        type="text" placeholder="Units in which the product is sold e.g Bundle/Ream"
+                                        required>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="size">Size</label>
-                                <input id="size" class="form-control" name="size" type="text"
-                                       placeholder="Size/Weight Description of the product">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <span class="form-label-text">Available</span>
-                                <label class="d-flex align-items-center justify-content-between">
 
-                                    <div class="form-toggle">
-                                        <input id="available" name="available" type="checkbox">
-                                        <div class="form-toggle__item">
-                                            <i class="fa" data-check-icon="&#xf00c" data-uncheck-icon="&#xf00d"></i>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="unit_price">Unit Price</label>
+                                    <input id="unit_price" class="form-control" name="unit_price" type="number"
+                                    step="0.01"  placeholder="Price Per unit" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="sku">Product code/SKU</label>
+                                    <input id="sku" class="form-control" name="sku" type="text"
+                                        placeholder="Unique product code">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="size">Size</label>
+                                    <input id="size" class="form-control" name="size" type="text"
+                                        placeholder="Size/Weight Description of the product">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <span class="form-label-text">Available</span>
+                                    <label class="d-flex align-items-center justify-content-between">
+
+                                        <div class="form-toggle">
+                                            <input id="available" name="available" type="checkbox" checked>
+                                            <div class="form-toggle__item">
+                                                <i class="fa" data-check-icon="&#xf00c" data-uncheck-icon="&#xf00d"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12">
+                            <div class="form-group mb-2">
+                                <label for="add-image" class="required-label">Image</label>
+                                <input id="add-image" class="form-control" name="images" type="file" multuple required>
+
+                                <div class="form-row" id="add-image-preview__container">
+                                    <div class="card form-group col-md-3 mt-2 d-none">
+                                        <div class="card-body d-flex flex-column">
+                                            <img src="#" id="add-image-preview__item" alt="Product Image" height="75" width="100%">
+                                            <button class="btn btn-sm btn-outline-danger mt-1" type="button" id="add-img-remove">
+                                                Remove
+                                            </button>
                                         </div>
                                     </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="edit-image">Image</label>
-                                <input id="edit-image" class="form-control" name="images" multiple type="file">
-
-                                <div class="form-row" id="edit-image-preview__container">
-                                </div>
-                                <div class="form-row" id="edit-image-preview__container__old">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-2">
-                                <label for="color">Color</label>
-                                <input id="color" class="form-control" name="color" type="text"
-                                       placeholder="Color of the product">
-                            </div>
                         </div>
+                        <input id="id" class="form-control" name="id" type="text" hidden required>
                     </div>
-{{--                    <input id="id" class="form-control" name="id" type="text" hidden required>--}}
-                </div>
 
-                <div class="modal-footer justify-content-between">
-                    <!-- Errors -->
-                    <div>
-                        <div id="modal-edit-errors" class="alert alert-danger fade show d-none mb-0 w-100" role="alert">
-                            <i class="fa fa-minus-circle alert-icon mr-3"></i>
-                            <span>Server Error: Failed to update product. Try again later</span>
-                        </div>
-                        <div id="modal-edit-success" class="alert alert-soft-success d-none fade mb-0 w-100 show"
-                             role="alert">
-                            <i class="fa fa-check-circle alert-icon mr-3"></i>
-                            <span class="small">Successfully updated the product</span>
-                        </div>
-                    </div>
-                    <!-- End Errors -->
-                    <div>
+                    <div class="modal-footer">
                         <span data-dismiss="modal" class="mr-2" style="font-weight: 600; cursor: pointer;">Cancel</span>
-                        <input id="editBtn" type="submit" class="btn btn-primary pl-4 pr-4" value="Update Product" />
+                        <input type="submit" class="btn btn-primary pl-4 pr-4" value="Save changes" />
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<!-- End Edit Product Modal -->
+    <!-- End Edit Product Modal -->
 
 <!-- Prepare Product Modal -->
 <div class="modal fade" id="prepareModal" tabindex="-1" role="dialog" aria-labelledby="prepareModal"
@@ -618,45 +647,45 @@
         })
     }
     //edit product
-    $('body').on('click', '#edit', function (event) {
-        event.preventDefault();
-        var id = $(this).data('id');
-        console.log($('#edit-product').attr('action', '/williescant/supplier/update/'+id))
-        console.log(id)
-        $.ajax({
-            type: 'GET',
-            url: `/williescant/supplier/edit/${id}`,
-            processData: false,
-            contentType: false,
-        }).done(function(data){
-            console.log(data)
-            $('#name').val(data.name);
-            $('#description').val(data.description);
-            $('#brand').val(data.brand);
-            $('#quantity').val(data.quantity);
-            $('#unit_description').val(data.unit_description);
-            $('#unit_price').val(data.unit_price);
-            $('#size').val(data.size);
-            $('#color').val(data.color);
-            if(data.available == 1) {
-                $('#available').attr('checked', 'true')
-            }
-        })
-        {{--$.get('{{ route('edit-product', $product->id) }}', function (data) {--}}
-        {{--    console.log(data)--}}
-        {{--    $('#name').val(data.name);--}}
-        {{--    $('#description').val(data.description);--}}
-        {{--    $('#brand').val(data.brand);--}}
-        {{--    $('#quantity').val(data.quantity);--}}
-        {{--    $('#unit_description').val(data.unit_description);--}}
-        {{--    $('#unit_price').val(data.unit_price);--}}
-        {{--    $('#size').val(data.size);--}}
-        {{--    $('#color').val(data.color);--}}
-        {{--    if(data.available == 1) {--}}
-        {{--        $('#available').attr('checked', 'true')--}}
-        {{--    }--}}
-        {{--})--}}
-    });
+    // $('body').on('click', '#edit', function (event) {
+    //     event.preventDefault();
+    //     var id = $(this).data('id');
+    //     console.log($('#edit-product').attr('action', '/williescant/supplier/update/'+id))
+    //     console.log(id)
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: `/williescant/supplier/edit/${id}`,
+    //         processData: false,
+    //         contentType: false,
+    //     }).done(function(data){
+    //         console.log(data)
+    //         $('#name').val(data.name);
+    //         $('#description').val(data.description);
+    //         $('#brand').val(data.brand);
+    //         $('#quantity').val(data.quantity);
+    //         $('#unit_description').val(data.unit_description);
+    //         $('#unit_price').val(data.unit_price);
+    //         $('#size').val(data.size);
+    //         $('#color').val(data.color);
+    //         if(data.available == 1) {
+    //             $('#available').attr('checked', 'true')
+    //         }
+    //     })
+    //     {{--$.get('{{ route('edit-product', $product->id) }}', function (data) {--}}
+    //     {{--    console.log(data)--}}
+    //     {{--    $('#name').val(data.name);--}}
+    //     {{--    $('#description').val(data.description);--}}
+    //     {{--    $('#brand').val(data.brand);--}}
+    //     {{--    $('#quantity').val(data.quantity);--}}
+    //     {{--    $('#unit_description').val(data.unit_description);--}}
+    //     {{--    $('#unit_price').val(data.unit_price);--}}
+    //     {{--    $('#size').val(data.size);--}}
+    //     {{--    $('#color').val(data.color);--}}
+    //     {{--    if(data.available == 1) {--}}
+    //     {{--        $('#available').attr('checked', 'true')--}}
+    //     {{--    }--}}
+    //     {{--})--}}
+    // });
 
 
     oldImageCount = 1;
@@ -851,7 +880,7 @@
     function editProduct(product_id) {
         $.ajax({
             type: 'GET',
-            url: `/supplier/includes/get_product.php/?id=${product_id}`,
+            url: `/williescant/supplier/edit/${product_id}`,
             processData: false,
             contentType: false,
             statusCode: {
@@ -860,31 +889,31 @@
                 }
             },
             success: function (result) {
-                // console.log(result);
-                res = JSON.parse(result);
-                if (res['success']) {
-                    product = res['data'];
-                    $("#edit-product-form").find("#name").val(product['name']);
-                    $("#edit-product-form").find("#id").val(product['id']);
-                    $("#edit-product-form").find("#description").val(product['description']);
-                    $("#edit-product-form").find("#brand").val(product['brand']);
-                    $("#edit-product-form").find("#quantity").val(product['quantity']);
-                    $("#edit-product-form").find("#unit_description").val(product['unit_description']);
-                    $("#edit-product-form").find("#unit_price").val(product['unit_price']);
-                    $("#edit-product-form").find("#size").val(product['size']);
-                    $("#edit-product-form").find("#color").val(product['color']);
-                    $("#edit-product-form").find("#sku").val(product['sku']);
-                    if(product['images']) {
+                console.log(result);
+                // res = JSON.parse(result);
+                if (result) {
+                    // product = res['data'];
+                    $("#edit-product-form").find("#name").val(result.name);
+                    $("#edit-product-form").find("#id").val(result.id);
+                    $("#edit-product-form").find("#description").val(result.description);
+                    $("#edit-product-form").find("#brand").val(result.brand);
+                    $("#edit-product-form").find("#quantity").val(result.quantity);
+                    $("#edit-product-form").find("#unit_description").val(result.unit_description);
+                    $("#edit-product-form").find("#unit_price").val(result.unit_price);
+                    $("#edit-product-form").find("#size").val(result.size);
+                    $("#edit-product-form").find("#color").val(result.color);
+                    $("#edit-product-form").find("#sku").val(result.sku);
+                    if(result.image) {
                         // console.log(product['images']);
-                        var previewContainer = $("#edit-image-preview__container__old");
+                        var previewContainer = $("#add-image-preview__container");
                         previewContainer.html('');
-                        oldImageCount = product['images'].length;
-                        for(var image of product['images']) {
+                        oldImageCount = result.image.length;
+                        for(var image of result.image) {
                             previewContainer.append(
                                 `
                             <div class="card form-group col-md-5 mr-1 mt-2">
-                                <img alt="${image['image']}" src="../upload/${image['image']}" id="edit-image-preview__item" height="75" width="100%">
-                                <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image['id']}, ${product['id']})" image_name="${image['image']}" type="button">
+                                <img alt="${image.image}" src="${image.image}" id="edit-image-preview__item" height="75" width="100%">
+                                <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${result.id})" image_name="${image.image}" type="button">
                                     Remove
                                 </button>
                             </div>
@@ -893,7 +922,7 @@
                     } else {
                         $("#edit-product-form").find("#edit-img-card").addClass('d-none');
                     }
-                    if(parseInt(product['available'])) {
+                    if(parseInt(result.available)) {
                         $("#edit-product-form").find("#available").attr('checked', 'true');
                     }
 
