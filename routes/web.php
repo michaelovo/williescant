@@ -39,12 +39,15 @@ Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->mid
 Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier-home')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth', 'verified');
 
+// product
 Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
-Route::get('/williescant/supplier/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/update', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/product/remove-image', 'ProductController@deleteImage')->name('delete-image')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/product/get-product/{id}', 'ProductController@show')->name('get-product')->middleware('auth', 'verified');
 
 //purchase
 Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');
@@ -66,3 +69,6 @@ Route::post('williescant/supplier/add-sale', 'SaleController@store')->name('add-
 Route::get('/williescant/supplier/sale/{id}', 'SaleController@show')->name('retrieve-sale')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/sale/del/{id}', 'SaleController@destroy')->name('delete-sale')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/sale/edit/{id}', 'SaleController@edit')->name('edit-sale')->middleware('auth', 'verified');
+
+//prepared product
+Route::post('/williescant/supplier/prepared-product/{id}', 'ProductController@prepareProduct')->name('prepared-product')->middleware('auth', 'verified');

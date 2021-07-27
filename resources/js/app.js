@@ -6,7 +6,7 @@
 
 require('./bootstrap');
 require('chartjs');
-require('datatables');
+// require('datatables');
 require('jquery');
 require('jquery-migrate');
 require('jquery-mousewheel');
