@@ -23,6 +23,8 @@
 <link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@4.1.0/dist/file-upload-with-preview.min.css" />
+<link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -59,6 +61,10 @@
             <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
             <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+            <script src="{{asset('js/main.js')}}"></script>
+            <script src="{{asset('js/sidebar-nav.js')}}"></script>
+
+
 
 </body>
 </html>

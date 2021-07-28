@@ -92,54 +92,45 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product();
+        try {
+            //code... 
+            $product = new Product();
 
-        // if ($request->hasFile('images')) {
-        //     $imageArr = [];
-        //     foreach ($request->images as $file) {
-        //         // you can also use the original name
-        //         $image = time() . '-' . $file->getClientOriginalName();
-        //         $imageArr[] = $image;
-        //         // Upload file to public path in images directory
-        //         $file->move(public_path('images'), $image);
-        //         // Database operation
-        //     }
-        // }
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->brand = $request->brand;
+            $product->quantity = $request->quantity;
+            $product->unit_description = $request->unit_description;
+            $product->unit_price = $request->unit_price;
+            $product->color = $request->color;
+            $product->image = $request->name . 'images';
+            if ($request->available == 'on') {
+                $product->available = 1;
+            } else {
+                $product->available = 0;
+            }
+            $product->size = $request->size;
+            $product->sku = $request->sku;
+            $product->category_id = $request->category_id;
 
-        //            $path = $request->file('images')->store('uploads');
+            $product->save();
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->brand = $request->brand;
-        $product->quantity = $request->quantity;
-        $product->unit_description = $request->unit_description;
-        $product->unit_price = $request->unit_price;
-        $product->color = $request->color;
-        $product->image = $request->name . 'images';
-        if ($request->available == 'on') {
-            $product->available = 1;
-        } else {
-            $product->available = 0;
+            $product_id = Product::where('name', $request->name)->latest()->value('id');
+            foreach ($request->images as $file) {
+                $image = $file->store('uploads');
+                $product_image = new ProductImage();
+                $product_image->fill([
+                    'product_id' => $product_id,
+                    'image' => $image
+                ]);
+                $product_image->save();
+            }
+
+            return response()->json(['status' => true]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => false, 'error' => $th]);
         }
-        $product->size = $request->size;
-        $product->sku = $request->sku;
-        $product->category_id = $request->category_id;
-
-        $product->save();
-
-        $product_id = Product::where('name', $request->name)->latest()->value('id');
-        foreach ($request->images as $file) {
-            $image = $file->store('uploads');
-            $product_image = new ProductImage();
-            $product_image->fill([
-                'product_id' => $product_id,
-                'image' => $image
-            ]);
-            $product_image->save();
-        }
-
-        return redirect()->back()->withSuccess('Product Added!');
-        //        }
     }
 
     /**

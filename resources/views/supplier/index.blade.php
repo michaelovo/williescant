@@ -405,7 +405,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="mb-3" id="add-product-form" method="POST">
+                <form class="mb-3" id="add-product-form" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-row mb-2">
                             <div class="col-md-6">
@@ -497,7 +497,8 @@
                         <div class="form-row mb-2">
                             <div class="col-md-6">
                                 <div class="form-group mb-2">
-                                    <label for="add-image" class="required-label">Image</label>
+
+                                     <label for="add-image" class="required-label">Image</label>
                                     <input id="add-image" class="form-control" name="images" type="file" multiple required>
                                     
                                     <div class="form-row" id="add-image-preview__container">
@@ -509,7 +510,7 @@
                                                 </button>
                                             </div>
                                         </div>                                    
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
 
@@ -607,8 +608,7 @@
         </div>
     </div>
     <!-- End Import Purchase Modal --> 
-<script src="https://unpkg.com/file-upload-with-preview@4.1.0/dist/file-upload-with-preview.min.js"></script>
-
+    {{-- <script src="{{asset('js/main.js')}}"></script> --}}
 <script>
 
 // handle image
@@ -638,7 +638,7 @@
                 }
             }
 
-            let images = document.getElementById('add-images').files;
+            let images = document.getElementById('add-image').files;
             let filesLength = images.length;
             for (let i = 0; i < filesLength; i++) {
                if(images[i]['isvalid'] !== false) {
@@ -738,6 +738,40 @@
 
     });
 
+    // image preview
+    let imagesPreview = function (input, previewContainer, type, previewDimensions=null) {
+        $(previewContainer).html(``);
+        if(input.files){
+            let action = type == 'add'?'deleteImageBtn':'deleteEditImageBtn';
+            let filesAmount = input.files.length;
+            for(i = 0; i < filesAmount; i++){
+                let reader = new FileReader();
+                let count = 0;
+                let file = input.files[i];
+                reader.onload = function(event){
+                    let imgContainer = $($.parseHTML(`<div class="card form-group col-md-5 mr-1 mt-2"></div>`));
+                    let height = 75;
+                    let width = "100%";
+                    if(previewDimensions){
+                        width = previewDimensions.width;
+                        height = previewDimensions.height;
+                    }
+                    var image = $($.parseHTML(`<img alt="${file['name']}" id="${action}-image-preview__item" height="${height}" width="${width}">`)).attr('src', event.target.result);
+                    image.appendTo($(imgContainer));
+
+                    let deleteBtn = $($.parseHTML(
+                        `<button class="btn btn-sm btn-outline-danger mt-1 ${action}" img-name="${file['name']} type="button">Remove</button>`
+                    )).attr('data-id',count);
+                    deleteBtn.appendTo(imgContainer);
+
+                    imgContainer.appendTo(previewContainer);
+                    count += 1;
+                };
+                reader.readAsDataURL(input.files[i]);
+                input.files[i]['isvalid'] = true;
+            }
+        }
+    }
     // show product details modal
     function details(product_id) {
         $('#modal-details-errors').addClass('d-none');
