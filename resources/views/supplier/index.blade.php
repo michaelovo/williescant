@@ -783,7 +783,8 @@
         }).done(function(data) {
             let product = data.product;
             let images = data.images;
-            $('#product-details-image').attr('src', `images[0]['image']`);
+            console.log(images[0].image)
+            $('#product-details-img').attr('src', `{{asset('${images[0].image}')}}`);
             $('#product-details-header').html(`
                 ${product.name}
                 ${parseInt(product.available) ? '<span class="badge badge-soft-success ml-2">Available</span>': '<span class="badge badge-soft-danger ml-2">Not Available</span>'}
