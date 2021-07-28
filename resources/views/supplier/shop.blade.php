@@ -8,9 +8,9 @@
         <!-- Sidebar -->
 @include('menu.sidebar')
         <!-- End Sidebar -->
-        <div class="u-content">
+ <div class="u-content">
             <div class="u-body">
-                <h1 class="h2 font-weight-semibold mb-3">Prepared Products {{sizeof($products)}} </h1>
+                <h1 class="h2 font-weight-semibold mb-3">Prepared Products ({{count($prepared)}})</h1>
 
                 <div class="card mb-4">
                     <div class="card-body">
@@ -18,7 +18,7 @@
                             <div class="col-12 products">
                                 <div class="products-header row mt-3">
                                     <div class="form-group col-md-12 mb-0">
-                                    <form action="/search"
+                                    <form action="{{route('search-prepared')}}"
                                             id="search-ready-form" method="GET">
                                     <div class="input-group mb-0">
                                             <input type="text" class="form-control" name="search" id="search" placeholder="Search for a product"
@@ -34,29 +34,30 @@
                                     </div>
                                 </div>
                                 <hr class="mb-4 mt-3">
+
+
                                 <div class="products-body">
-                                    @if($products != null)
-                                        @foreach($products as $product)
-                                            <div class="product-card">
-                                                <img src="{{asset('/storage/image/uploads/'.$product->image)}}">
-                                                <div class="product-info">
-                                                    <div class="product-name"><b>{{$product->name}}</b></div>
-                                                    <div class="product-price">KSH {{$product->selling_price}}</div>
-                                                    <div class="product-quantity">Quantity {{$product->prepared_quantity}}</div>
-                                                    @if ($product->description != null)
-                                                        <div class="product-description">Description: {{$product->description}}</div>
-                                                    @endif
-                                                </div>
+                                    @foreach ($prepared as $product)
+                                        <div class="product-card">
+                                            <img src="{{asset($product->path)}}" alt="">
+                                            <div class="product-info">
+                                                <div class="product-name">Name: <b>{{$product->name}}</b></div>
+                                                <div class="product-name">Code: <b>{{$product->code}}</b></div>
+                                                <div class="product-name">Status: <b>{{$product->status}}</b></div>
+                                                <div class="product-brand">Brand: <b>{{$product->brand}}</b></div>
+                                                <div class="product-price">KSH: {{$product->selling_price}}</div>
+                                                <div class="product-quantity">QTY: {{$product->prepared_quantity}}</div>
+                                                @if ($product->description != null)
+                                                <div class="product-quantity">Description: {{$product->description}}</div>                                                    
+                                                @endif
                                                 <div class="add-to-cart">
-                                                    <a data-toggle="modal" href="#" onclick="editPreparedProduct('{{$product->id}}','{{$product->ready_sale_id}}')">
+                                                    <a href="#" data-toggle="modal" onclick="editPreparedProduct('{{$product->product_id}}','{{$product->ready_sale_id}}')">
                                                         <button class="btn btn-sm btn-block btn-primary">EDIT</button>
                                                     </a>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <div>You have not prepared products yet.</div>
-                                    @endif
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -67,8 +68,8 @@
             <!-- Footer -->
             <footer class="u-footer text-center text-muted text-muted">
                 <p class="h5 mb-0 ml-auto">
-                    &copy; <?php echo date("Y");?> <a class="link-muted" href="https://williescant.co.ke"
-                        target="_blank">WilieScant
+                    &copy; 2021 <a class="link-muted" href="https://williescant.co.ke"
+                        target="_blank">Willie Scant
                         Company</a>. All
                     Rights Reserved.
                 </p>
@@ -95,7 +96,7 @@
                                 <div class="form-group mb-4">
                                     <label for="selling_price">Selling Price</label>
                                     <input id="selling_price" class="form-control" name="selling_price" type="number"
-                                        placeholder="Selling Price" required>
+                                    step="0.01"  placeholder="Selling Price" required>
                                 </div>
                             </div>
 
@@ -112,12 +113,12 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer justify-content-between">
                         <!-- Errors -->
                         <div>
                             <div id="modal-edit-errors" class="alert alert-danger fade show d-none mb-0 w-100" role="alert">
                                 <i class="fa fa-minus-circle alert-icon mr-3"></i>
-                                <span></span>
+                                <span>Error: Failed to update prepared product. Try again later</span>
                             </div>
                             <div id="modal-edit-success" class="alert alert-soft-success d-none fade mb-0 w-100 show"
                                 role="alert">
@@ -129,7 +130,7 @@
                         <div>
                             <span data-dismiss="modal" class="mr-2" style="font-weight: 600; cursor: pointer;">Cancel</span>
                             <input type="submit" class="btn btn-primary pl-4 pr-4" value="Save Changes" />
-                        </div>
+                        </div>                        
                     </div>
                 </form>
             </div>
@@ -137,42 +138,65 @@
     </div>
     <!-- End Edit Prepared Product Modal -->
 
+<!-- Initialization  -->
+
+
+
 <script>
-    $("#edit-ready-form").submit(function(e) {
+    $('#edit-ready-form').submit(function(e){
         e.preventDefault();
-        console.log($("#edit-ready-form")[0]);
-        var formData = new FormData($("#edit-ready-form")[0]);
+        let formData = new FormData($("#edit-ready-form")[0]);
         $("#modal-edit-success").addClass("d-none");
         $("#modal-edit-errors").addClass("d-none");
+
         $.ajax({
-        type: 'POST',
-        url: "/willie-online-new/supplier/includes/edit_prepared_product.php",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            type: "POST",
+            url: "{{route('add-product')}}",
+            data: formData,
+            processData: false,
+            contentType: false,
+    }).done(function(data){
+            if(data.status){
                 $("#modal-edit-success").removeClass("d-none");
-                setTimeout(() => {
+                setTimeout(()=>{
                     window.location.reload();
                 }, 1000);
-            } else if(res['error']) {
+            } else {
                 $("#modal-edit-success").addClass("d-none");
-                $("#modal-edit-errors").find("span").text(res['error']);
-                $("#modal-edit-errors").removeClass('d-none');
-                // $("#modal-prepare-errors").removeClass('d-none');
-            }else {
-                $("#modal-edit-errors").find("span").text('Server Error. Failed to prepare product.');
-                $("#modal-edit-errors").removeClass('d-none');
+                $("#modal-edit-errors").fine("span").text(data.error);
+                $("#modal-edit-success").addClass("d-none");
             }
-        }
-        });
+        }).fail(function(e){
+            $("#modal-edit-errors").find("span").text("ServerError. Fail to prepare product.");
+            $("#modal-edit-errors").removeClass("d-none");
+        })
     })
-    function editPreparedProduct(product_id, ready_product_id) {
+
+    function editPreparedProduct(product_id,ready_product_id){
         $("#modal-edit-success").addClass("d-none");
         $("#modal-edit-errors").addClass("d-none");
         $("#edit-ready-form")[0].reset();
+
+        $.ajax({
+            type: 'GET',
+            url: ``,
+            data: {'id': ready_product_id},
+            processData: false,
+            contentType: false
+        }).done(function(data){
+            if(data.status) {
+                let item = data.item;
+                $("#edit-ready-form").find("#selling_price").val(item.selling_price);
+                $("#edit-ready-form").find("#quantity").val(item.quantity);
+            } else {
+                $('#modal-edit-success').addClass('d-none');
+                $('#modal-edit-errors').find('span').text(data.error);
+                $('#modal-edit-errors').removeClass('d-none');
+            }
+        }).fail(function(data){
+            $("#modal-edit-errors").find("span").text('Server Error.Failedto prepare product.');
+            $("#modal-edit-errors").removeClass("d-none");
+        });
         $("#edit-ready-form").find("#product_id").val(product_id);
         $("#edit-ready-form").find("#prepared_product_id").val(ready_product_id);
         $("#editPreparedProductModal").modal("show");

@@ -31,9 +31,9 @@ Route::post('/williescant/profile/update-password', 'ProfileController@updatePas
 Route::get('/williescant/home/order', 'IndexController@customerOrders')->name('orders')->middleware('auth', 'verified');
 
 // Supplier
-Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/search', 'ProductController@search')->name('search')->middleware('auth', 'verified');
 // Route::get('/williescant/supplier/sales', 'SaleController@index')->name('sales')->middleware('auth', 'verified');
-Route::get('/williescant/supplier/shop', 'ProductController@index')->name('supplier-shop')->middleware('auth', 'verified');
+// Route::get('/williescant/supplier/shop', 'ProductController@index')->name('supplier-shop')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/purchases', 'PurchaseController@index')->name('purchase')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/kra', 'IndexController@kra')->name('kra')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier-home')->middleware('auth', 'verified');
@@ -45,7 +45,7 @@ Route::get('/williescant/supplier/get-category', 'IndexController@returnControll
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
-Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/product/remove-image', 'ProductController@deleteImage')->name('delete-image')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/product/get-product/{id}', 'ProductController@show')->name('get-product')->middleware('auth', 'verified');
 
@@ -57,7 +57,7 @@ Route::get('williescant/supplier/import-purchase', 'PurchaseController@importPur
 
 //Accountant
 Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@index')->name('get-accountants')->middleware('auth', 'verified');
-Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@search')->name('search-pin')->middleware('auth', 'verified');
+// Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@search')->name('search-pin')->middleware('auth', 'verified');
 
 // Export
 Route::get('williescant/supplier/exports', 'KraController@index')->name('get-export')->middleware('auth', 'verified');
@@ -73,3 +73,5 @@ Route::get('/williescant/supplier/sale/edit/{id}', 'SaleController@edit')->name(
 
 //prepared product
 Route::post('/williescant/supplier/prepared-product/{id}', 'ProductController@prepareProduct')->name('prepared-product')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/prepared', 'ProductController@prepared')->name('get-prepared')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/search', 'ProductController@search')->name('search-prepared')->middleware('auth', 'verified');

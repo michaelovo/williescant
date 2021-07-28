@@ -19,7 +19,7 @@
                     <ul id="shop" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
                         <!-- Display -->
                         <li class="u-sidebar-nav-menu__item ml-md-3">
-                            <a class="u-sidebar-nav-menu__link " href="{{route('supplier-shop')}}">
+                            <a class="u-sidebar-nav-menu__link " href="{{route('get-prepared')}}">
                                 <i class="fas fa-store-alt u-sidebar-nav-menu__item-icon"></i>
                                 <span class="u-sidebar-nav-menu__item-title">Display</span>
                             </a>

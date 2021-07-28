@@ -34,40 +34,6 @@ class ProductController extends Controller
         return view('supplier.shop', compact('products', 'curr_page'));
     }
 
-    public function search(Request $request)
-    {
-        // Get the search value from the request
-        $search = $request->input('search');
-
-        // Search in the title and body columns from the posts table
-        $products = Product::query()
-            ->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->get();
-
-        // Return the search view with the resluts compacted
-        return response()->json($products);
-    }
-    // public function search(Request $request)
-    // {
-    //     $search = $request->pin;
-
-    //     $pin = Product::query()->where('pin', 'LIKE', '%{$search}%')->get();
-    //     return response()->json($pin);
-
-
-    //     // $prepared = $prepared . " AND p.name LIKE '%$search%' OR p.description LIKE '%$search%'";
-    //     // $products = Product::where('name', 'LIKE', '%' . $request->search . '%')->get();
-    //     // return view('supplier.shop', compact('products'));
-    // }
-
-    // public function productStore()
-    // {
-    //     $sql = "SELECT id, name, quantity, unit_price, available, sku, date_created
-    // FROM products
-    // WHERE supplier_id = '$supplier_id'
-    // ORDER BY date_created DESC";
-    // }
     /**
      * Show the form for creating a new resource.
      *
@@ -266,6 +232,55 @@ class ProductController extends Controller
                 'status' => 'error',
                 'message' => "Server Error: Failed to retrieve product details. Try again later"
             ]);
+        }
+    }
+
+    /**
+     * Get Prepared products
+     */
+    public function prepared()
+    {
+        try {
+            $prepared = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
+                ->join('product_images', 'products.id', 'product_images.product_id')
+                ->join('product_categories', 'products.category_id', 'product_categories.id')
+                ->where('products.supplier_id', Auth::user()->id)
+                ->get([
+                    'products.id as product_id',
+                    'ready_sales.id as ready_sale_id',
+                    'product_categories.name as code',
+                    'products.state as status',
+                    'products.brand as brand',
+                    'products.name as name',
+                    'products.description as description',
+                    'ready_sales.selling_price as selling_price',
+                    'ready_sales.quantity as prepared_quantity',
+                    'product_images.image as path',
+                ]);
+            $curr_page = 'shop';
+            // return $prepared;
+            return view('supplier.shop', compact('prepared', 'curr_page'));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+    /**
+     * Search for product
+     */
+    public function search(Request $request)
+    {
+        try {
+            $prepared = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
+                ->join('product_images', 'products.id', 'product_images.product_id')
+                ->where('products.supplier_id', Auth::user()->id)
+                ->where('name', 'LIKE', "%{$request->search}%")
+                ->orWhere('description', 'LIKE', "%{$request->search}")
+                ->get();
+            $curr_page = 'shop';
+            return view('supplier.shop', compact('prepared', 'curr_page'));
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }
