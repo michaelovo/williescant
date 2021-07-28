@@ -35,7 +35,14 @@ class PurchaseController extends Controller
     {
         //
     }
-
+    /**
+     * Import purchase for inventory page
+     */
+    public function importPurchase()
+    {
+        $purchase = Purchase::all();
+        return response()->json($purchase);
+    }
 
     /**
      * Show tsearch results

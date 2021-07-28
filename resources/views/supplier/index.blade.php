@@ -910,8 +910,9 @@ function deleteProduct(product_id){
 function openImportPurchaseModal(){
     $.ajax({
         type: 'GET',
-        url: "{{route('add-product')}}",
+        url: "{{route('import-purchase')}}",
     }).done(function(data){
+        console.log(data);
         $('#items-table-body').html(data.markup);
         $('#items-table').DataTable();
         $('#importProductModal').modal('show');
