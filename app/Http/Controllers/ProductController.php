@@ -197,30 +197,6 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['status' => false,  'error' => $th]);
         }
-        // try {
-        //     //code... 
-        //     $available = $request->available == 'on' ?  1 :  0;
-        //     $product = Product::find($id);
-        //     ->update([
-        //         'name' => $request->name,
-        //         'description' => $request->description,
-        //         'brand' => $request->brand,
-        //         'quantity' => $request->quantity,
-        //         'unit_description' => $request->unit_description,
-        //         'unit_price' => $request->unit_price,
-        //         'color' => $request->color,
-        //         'available' => $available,
-        //         'size' => $request->size
-        //     ]);
-
-
-        //     // $product->save();
-
-        //     return response()->json(['status' => true]);
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        //     return response()->json(['status' => false, 'product' => $product, 'request' => $request->all(), 'error' => $th]);
-        // }
     }
 
     /**
