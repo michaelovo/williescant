@@ -166,34 +166,61 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        // $product = Product::find($id);
+        try {
+            $product = Product::find($id);
 
-        // if ($request->hasFile('images')) {
-        //     $imageArr = [];
-        //     foreach ($request->images as $file) {
-        //         // you can also use the original name
-        //         $image = time() . '-' . $file->getClientOriginalName();
-        //         $imageArr[] = $image;
-        //         // Upload file to public path in images directory
-        //         $file->move(public_path('images'), $image);
-        //         // Database operation
-        //     }
-        //     $product->image = $imageArr;
+            $available = $request->available == 'on' ? 1 : 0;
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'brand' => $request->brand,
+                'quantity' => $request->quantity,
+                'unit_description' => $request->unit_description,
+                'unit_price' => $request->unit_price,
+                'color' => $request->color,
+                'available' => $available,
+            ]);
+            if ($request->hasFile('images')) {
+                foreach ($request->images as $file) {
+                    $image = $file->store('uploads');
+                    $product_image = new ProductImage();
+                    $product_image->fill([
+                        'product_id' => $request->id,
+                        'image' => $image
+                    ]);
+                    $product_image->save();
+                }
+            }
+            return response()->json(['status' => true]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false,  'error' => $th]);
+        }
+        // try {
+        //     //code... 
+        //     $available = $request->available == 'on' ?  1 :  0;
+        //     $product = Product::find($id);
+        //     ->update([
+        //         'name' => $request->name,
+        //         'description' => $request->description,
+        //         'brand' => $request->brand,
+        //         'quantity' => $request->quantity,
+        //         'unit_description' => $request->unit_description,
+        //         'unit_price' => $request->unit_price,
+        //         'color' => $request->color,
+        //         'available' => $available,
+        //         'size' => $request->size
+        //     ]);
+
+
+        //     // $product->save();
+
+        //     return response()->json(['status' => true]);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     return response()->json(['status' => false, 'product' => $product, 'request' => $request->all(), 'error' => $th]);
         // }
-        // $product->name = $request->name;
-        // $product->description = $request->description;
-        // $product->brand = $request->brand;
-        // $product->quantity = $request->quantity;
-        // $product->unit_description = $request->unit_description;
-        // $product->unit_price = $request->unit_price;
-        // $product->size = $request->size;
-        // $product->color = $request->color;
-
-        // $product->update();
-
-        // return redirect()->back();
     }
 
     /**
@@ -214,7 +241,7 @@ class ProductController extends Controller
      */
     public function deleteImage(Request $request)
     {
-        $image = ProductImage::where('product_id', $request->id)->where('id', $request->immage_id)->delete();
+        $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
         return response()->json(['message' => true]);
     }
 

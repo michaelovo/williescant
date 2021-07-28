@@ -677,7 +677,8 @@
             }
 
             let images = document.getElementById('edit-image').files;
-
+            let id = $('#id').val();
+            console.log(images)
             let filesLength = images.length;
             for (let i = 0; i < filesLength; i++) {
                 if(images[i]['isvalid'] !== false) {
@@ -687,16 +688,23 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/williescant/supplier/update',
+                url: `/williescant/supplier/product/update/${id}`,
                 data: formData,
                 processData: false,
                 contentType: false,
             }).done(function(data){
+                console.log(data)
+                if(data.status){
                 $('#modal-edit-success').removeClass('d-none');
                 $('#edit-product-form')[0].reset();
                 setTimeout(()=> {
                     window.location.reload();
-                }, 1000);
+                }, 1000);  
+                }else {
+                $('#modal-edit-errors').find('span').text("Error: Failed to update product. Try again later");
+                $('#modal-edit-errors').removeClass('d-none');
+                }
+
             }).fail(function(data){
                 $('#modal-edit-errors').find('span').text(data);
                 $('#modal-edit-errors').removeClass('d-none');
@@ -835,9 +843,10 @@
                 previewContainer.html('');
                 oldImageCount  = images.length;
                 for (const image of images) {
+                    console.log(image)
                     previewContainer.append(`
                         <div class="card form-group col-md-5 mr-1 mt-2">
-                            <img alt="${product.name}" src="image.image" id="edit-preview__item" height="75" width="100%">
+                            <img alt="${product.name}" src="{{asset('${image.image}')}}" id="edit-preview__item" height="75" width="100%">
                             <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${product.id})" image_name="${image.image}" type="button">
                                 REMOVE
                             </button>
@@ -927,7 +936,7 @@ function importPurchase(item_id) {
 }
 
 // delete image
-function deleteImage(image, image_id,product_id){
+function deleteImage(image, image_id, product_id){
     let imageName = $(image).attr('image_name')
     if(oldImageCount <= 1) {
         alert("Fail: Save atleast one other product image to delete this image. A product cannot have zero images")
@@ -935,7 +944,7 @@ function deleteImage(image, image_id,product_id){
         if(confirm("This image will be deleted permanently")) {
             $.ajax({
                 type: 'POST',
-                url: "{{route('add-purchase')}}",
+                url: "{{route('delete-image')}}",
                 data: {
                     'id': product_id,
                     'delete_image': true,
@@ -945,9 +954,10 @@ function deleteImage(image, image_id,product_id){
             }).done(function(data){
                 oldImageCount -= 1;
                 $('#edit-image').attr('oldImgCount', oldImageCount);
-                setTimeout(()=>{
-                    window.location.reload();
-                }, 500);
+                $(image).parent().remove();
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // }, 500);
             }).fail(function(data){
                 alert(data)
             })

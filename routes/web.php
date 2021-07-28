@@ -43,7 +43,7 @@ Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('s
 Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
-Route::get('/williescant/supplier/update', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
+Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/product/remove-image', 'ProductController@deleteImage')->name('delete-image')->middleware('auth', 'verified');
