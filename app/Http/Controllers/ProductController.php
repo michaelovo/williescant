@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\ProductCategory;
+use App\ProductImage;
+use App\ReadySale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -90,42 +92,45 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product();
+        try {
+            //code... 
+            $product = new Product();
 
-        if ($request->hasFile('images')) {
-            $imageArr = [];
-            foreach ($request->images as $file) {
-                // you can also use the original name
-                $image = time() . '-' . $file->getClientOriginalName();
-                $imageArr[] = $image;
-                // Upload file to public path in images directory
-                $file->move(public_path('images'), $image);
-                // Database operation
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->brand = $request->brand;
+            $product->quantity = $request->quantity;
+            $product->unit_description = $request->unit_description;
+            $product->unit_price = $request->unit_price;
+            $product->color = $request->color;
+            $product->image = $request->name . 'images';
+            if ($request->available == 'on') {
+                $product->available = 1;
+            } else {
+                $product->available = 0;
             }
+            $product->size = $request->size;
+            $product->sku = $request->sku;
+            $product->category_id = $request->category_id;
+
+            $product->save();
+
+            $product_id = Product::where('name', $request->name)->latest()->value('id');
+            foreach ($request->images as $file) {
+                $image = $file->store('uploads');
+                $product_image = new ProductImage();
+                $product_image->fill([
+                    'product_id' => $product_id,
+                    'image' => $image
+                ]);
+                $product_image->save();
+            }
+
+            return response()->json(['status' => true]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => false, 'error' => $th]);
         }
-
-        //            $path = $request->file('images')->store('uploads');
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->brand = $request->brand;
-        $product->quantity = $request->quantity;
-        $product->unit_description = $request->unit_description;
-        $product->unit_price = $request->unit_price;
-        $product->color = $request->color;
-        $product->image = json_encode($imageArr);
-        if ($request->available == 'on') {
-            $product->available = 1;
-        } else {
-            $product->available = 0;
-        }
-        $product->size = $request->size;
-        $product->sku = $request->sku;
-        $product->category_id = $request->category_id;
-
-        $product->save();
-
-        return redirect()->back();
-        //        }
     }
 
     /**
@@ -136,7 +141,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        $images = ProductImage::where('product_id', $id)->get();
+        return response()->json(['product' => $product, 'images' => $images]);
     }
 
     /**
@@ -148,7 +155,8 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        return response()->json($product);
+        $images = ProductImage::where('product_id', $id)->get();
+        return response()->json(['product' => $product, 'images' => $images]);
     }
 
     /**
@@ -160,32 +168,35 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        try {
+            $product = Product::find($id);
 
-        if ($request->hasFile('images')) {
-            $imageArr = [];
-            foreach ($request->images as $file) {
-                // you can also use the original name
-                $image = time() . '-' . $file->getClientOriginalName();
-                $imageArr[] = $image;
-                // Upload file to public path in images directory
-                $file->move(public_path('images'), $image);
-                // Database operation
+            $available = $request->available == 'on' ? 1 : 0;
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'brand' => $request->brand,
+                'quantity' => $request->quantity,
+                'unit_description' => $request->unit_description,
+                'unit_price' => $request->unit_price,
+                'color' => $request->color,
+                'available' => $available,
+            ]);
+            if ($request->hasFile('images')) {
+                foreach ($request->images as $file) {
+                    $image = $file->store('uploads');
+                    $product_image = new ProductImage();
+                    $product_image->fill([
+                        'product_id' => $request->id,
+                        'image' => $image
+                    ]);
+                    $product_image->save();
+                }
             }
-            $product->image = $imageArr;
+            return response()->json(['status' => true]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false,  'error' => $th]);
         }
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->brand = $request->brand;
-        $product->quantity = $request->quantity;
-        $product->unit_description = $request->unit_description;
-        $product->unit_price = $request->unit_price;
-        $product->size = $request->size;
-        $product->color = $request->color;
-
-        $product->update();
-
-        return redirect()->back();
     }
 
     /**
@@ -198,5 +209,63 @@ class ProductController extends Controller
     {
         $product = Product::where('id', $id)->delete();
         return response()->json(['message' => true]);
+    }
+
+    /**
+     * Delete Image from ProductImage
+     * 
+     */
+    public function deleteImage(Request $request)
+    {
+        $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
+        return response()->json(['message' => true]);
+    }
+
+    /**
+     * Prepare Product
+     */
+    public function prepareProduct(Request $request, $id)
+    {
+        try {
+            $product = Product::where('id', $id)->first();
+            $product_quantity = $product->quantity;
+            $buying_price = $product->unit_price;
+
+            if ($product_quantity >= $request->quantity) {
+                $selling_price = $buying_price + $request->profit  + $request->expenses;
+                $ready_sale = new ReadySale();
+                $ready_sale->fill([
+                    'quantity'      => $request->quantity,
+                    'selling_price' => $selling_price,
+                    'buying_price'  => $buying_price,
+                    'sku'           => $product->sku,
+                    'product_id'    => $id
+                ]);
+                $ready_sale->save();
+
+                $new_quantity = $product_quantity - $request->quantity;
+                $product->quantity = $new_quantity;
+                $product->update();
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Prepared quantity is greater than available quantity in store. The quantity in store is: " . $product_quantity,
+                    'sale' => [$request->quantity, $request->profit, $request->expenses]
+                ]);
+            }
+            return response()->json([
+                'status' => 'success',
+                'quantity' => $product_quantity,
+                'price' => $buying_price
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'error' => $th,
+                'status' => 'error',
+                'message' => "Server Error: Failed to retrieve product details. Try again later"
+            ]);
+        }
     }
 }
