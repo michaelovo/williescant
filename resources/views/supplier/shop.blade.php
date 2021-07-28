@@ -51,7 +51,7 @@
                                                 <div class="product-quantity">Description: {{$product->description}}</div>                                                    
                                                 @endif
                                                 <div class="add-to-cart">
-                                                    <a href="#" data-toggle="modal" onclick="editPreparedProduct('{{$product->product_id}}','{{$product->ready_sale_id}}')">
+                                                    <a href="#" data-toggle="modal" onclick="editPreparedProduct({{$product->product_id}} , {{$product->ready_sale_id}})">
                                                         <button class="btn btn-sm btn-block btn-primary">EDIT</button>
                                                     </a>
                                                 </div>
@@ -148,14 +148,16 @@
         let formData = new FormData($("#edit-ready-form")[0]);
         $("#modal-edit-success").addClass("d-none");
         $("#modal-edit-errors").addClass("d-none");
+        let id = $("#prepared_product_id").val();
 
         $.ajax({
             type: "POST",
-            url: "{{route('add-product')}}",
+            url: "/williescant/supplier/update-prepared/"+id,
             data: formData,
             processData: false,
             contentType: false,
     }).done(function(data){
+        // console.log(data);
             if(data.status){
                 $("#modal-edit-success").removeClass("d-none");
                 setTimeout(()=>{
@@ -163,7 +165,7 @@
                 }, 1000);
             } else {
                 $("#modal-edit-success").addClass("d-none");
-                $("#modal-edit-errors").fine("span").text(data.error);
+                $("#modal-edit-errors").find("span").text(data);
                 $("#modal-edit-success").addClass("d-none");
             }
         }).fail(function(e){
@@ -179,13 +181,15 @@
 
         $.ajax({
             type: 'GET',
-            url: ``,
+            url: `/williescant/supplier/get-single-product/${ready_product_id}`,
             data: {'id': ready_product_id},
             processData: false,
             contentType: false
         }).done(function(data){
             if(data.status) {
-                let item = data.item;
+                console.log(ready_product_id)
+                console.log(data)
+                let item = data.data;
                 $("#edit-ready-form").find("#selling_price").val(item.selling_price);
                 $("#edit-ready-form").find("#quantity").val(item.quantity);
             } else {

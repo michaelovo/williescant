@@ -283,4 +283,33 @@ class ProductController extends Controller
             //throw $th;
         }
     }
+
+    /**
+     * Get single prepared product
+     */
+    public function getPreparedProduct($id)
+    {
+        $ready_sale = ReadySale::find($id);
+        return response()->json(['status' => true, 'data' => $ready_sale]);
+    }
+
+    /**
+     * update ready sale
+     */
+
+    public function updateReadySale(Request $request, $id)
+    {
+        // try {
+        $ready_sale = ReadySale::find($id);
+        $ready_sale->update([
+            'selling_price' => $request->selling_price,
+            'quantity' => $request->quantity
+        ]);
+
+        return response()->json(['status' => true, 'request' => $request->all(), 'data' => $ready_sale]);
+        // } catch (\Throwable $th) {
+        //throw $th;
+        // return response()->json(['status' => true, 'error' => $th]);
+        // }
+    }
 }
