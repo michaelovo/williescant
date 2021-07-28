@@ -6,7 +6,6 @@
 
 require('./bootstrap');
 require('chartjs');
-require('datatables');
 require('jquery');
 require('jquery-migrate');
 require('jquery-mousewheel');
@@ -16,11 +15,8 @@ require('@popperjs/core');
 require('./update');
 require('./editproduct');
 require('./custom-select');
-require('./dashboard-page-scripts.js');
-require('./font-controller.js');
-require('./main.js');
-require('./sidebar-nav');
-require('./dropzone');
+require('./dashboard-page-scripts');
+require('./font-controller');
 
 window.Vue = require('vue');
 

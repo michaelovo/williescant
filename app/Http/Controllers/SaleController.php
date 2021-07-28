@@ -119,8 +119,9 @@ class SaleController extends Controller
     public function edit($id)
     {
         $sale = Sale::find($id);
-
-        return response()->json($sale);
+        $status = 'success';
+        $items = SaleItem::where('sale_id', $id)->where('receipt_type', 'sale')->get();
+        return response()->json(['status' => $status, 'data' => $sale, 'items' => $items]);
     }
 
     /**
@@ -176,7 +177,6 @@ class SaleController extends Controller
     public function destroy($id)
     {
         $sale = Sale::where('id', $id)->delete();
-
-        return response()->json(['message' => 'deleted']);
+        return response()->json(['status' => true]);
     }
 }

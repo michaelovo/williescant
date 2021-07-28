@@ -3,6 +3,9 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/dropzone.js": "/js/dropzone.js",
+    "/js/main.js": "/js/main.js",
     "/js/purchases.js": "/js/purchases.js",
-    "/js/scripts.js": "/js/scripts.js"
+    "/js/sales.js": "/js/sales.js",
+    "/js/scripts.js": "/js/scripts.js",
+    "/js/sidebar-nav.js": "/js/sidebar-nav.js"
 }
