@@ -77,3 +77,6 @@ Route::get('/williescant/supplier/prepared', 'ProductController@prepared')->name
 Route::get('/williescant/supplier/search', 'ProductController@search')->name('search-prepared')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-single-product/{id}', 'ProductController@getPreparedProduct')->name('get-single-prepared')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/update-prepared/{id}', 'ProductController@updateReadySale')->name('update-prepared')->middleware('auth', 'verified');
+
+// Orders
+Route::get('/williescant/supplier/get-orders', 'OrderController@index')->name('get-orders')->middleware('auth', 'verified');

@@ -1,6 +1,6 @@
+@extends('layouts.app', ["page_title" => "Orders - WillieScant"])
 
-$page_title = "Orders - WillieScant";
-
+@section('content')
     <!-- Header (Topbar) -->
 @include('menu.supplier_nav')
     <!-- End Header (Topbar) -->
@@ -109,7 +109,7 @@ $page_title = "Orders - WillieScant";
                                                         </ul>
                                                     </div>
                                                 </td>
-                                            </tr>
+                                            </tr> 
                                         </tbody>
                                     </table>
                                 </div>
@@ -122,8 +122,8 @@ $page_title = "Orders - WillieScant";
             <!-- Footer -->
             <footer class="u-footer text-center text-muted text-muted">
                 <p class="h5 mb-0 ml-auto">
-                    &copy; <?php echo date("Y");?> <a class="link-muted" href="https://williescant.co.ke"
-                        target="_blank">WilieScant
+                    &copy; 2021 <a class="link-muted" href="https://williescant.co.ke"
+                        target="_blank">Willie Scant
                         Company</a>. All
                     Rights Reserved.
                 </p>
@@ -271,3 +271,9 @@ $page_title = "Orders - WillieScant";
         </div>
     </div>
     <!-- End Order Details Modal -->
+
+
+
+<!-- Initialization  -->
+
+@endsection()
