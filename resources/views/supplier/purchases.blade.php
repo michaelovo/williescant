@@ -748,6 +748,7 @@ $("#add-purchase-form").submit(function (e) {
     }  
 
     var images = document.getElementById('add-image').files;
+    console.log(images)
     var filesLength = images.length;
     for (var i = 0; i < filesLength; i++) {
         if (images[i]['isvalid'] !== false) {
@@ -766,15 +767,16 @@ $("#add-purchase-form").submit(function (e) {
         processData: false,
         contentType: false,
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            console.log(result)
+            if (result.status) {
                 $("#modal-success").removeClass('d-none');
                 $("#add-purchase-form")[0].reset();
                 $(".loading").addClass("d-none");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-                Toast.fire({
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
+                Swal.fire({
                     'icon': 'success',
                     'text': 'Receipt added',
                     'timer': 1000
@@ -784,14 +786,14 @@ $("#add-purchase-form").submit(function (e) {
                 $("#modal-errors").find("span").text(res['error']);
                 $("#modal-errors").removeClass('d-none');
                 $(".loading").addClass("d-none");
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': res['error'],
                     'timer': 1000
                 });
             } else {
                 $(".loading").addClass("d-none");
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': ' Server Error. Failed to add receipt',
                     'timer': 1000
@@ -802,7 +804,7 @@ $("#add-purchase-form").submit(function (e) {
         },
         error: function(err){
             $(".loading").addClass("d-none");
-            Toast.fire({
+            Swal.fire({
                 'icon': 'error',
                 'text': ' Error: Could not search for existing supplier details',
                 'timer': 1000
@@ -812,6 +814,7 @@ $("#add-purchase-form").submit(function (e) {
 });
 
 function searchPin(pin, target) {
+    console.log(pin)
     $.ajax({
         type: 'GET',
         url: `/williescant/supplier/get-pin/${pin}`,
@@ -819,6 +822,7 @@ function searchPin(pin, target) {
             // res = JSON.parse(result);
             if (result.status) {
                 var data = result.data;
+                console.log(data)
                 if(target == 'add') {
                     Swal.fire({
                         title: `Existing details for supplier with that pin found.`,
@@ -862,7 +866,7 @@ function searchPin(pin, target) {
             }
         }, 
         error: function(err) {
-            Toast.fire({
+            Swal.fire({
                 'icon': 'error',
                 'text': ' Error: Could not search for existing supplier details',
                 'timer': 5000 
@@ -1133,14 +1137,14 @@ function deleteImage(image, image_id, product_id) {
             success: function (result) {
                 res = JSON.parse(result);
                 if (res['success']) {
-                    Toast.fire({
+                    Swal.fire({
                         'icon': 'success',
                         'text': 'Image removed successfully',
                         'timer': 2000
                     });                    
                     window.location.reload();
                 } else {
-                    Toast.fire({
+                    Swal.fire({
                         'icon': 'error',
                         'text': res['error'],
                         'timer': 2000 
@@ -1148,7 +1152,7 @@ function deleteImage(image, image_id, product_id) {
                 }
             },
             error: function(res) {
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': ' Error: Could not delete image. Try again later',
                     'timer': 2000 

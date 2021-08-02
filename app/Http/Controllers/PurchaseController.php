@@ -119,32 +119,30 @@ class PurchaseController extends Controller
             $receipt_item = new ReceiptItem();
             $receipt_id = Purchase::where('receipt_number', $request->receipt_number)->latest()->value('id');
             foreach ($receipt_products as $receipt_product) {
+                $item = json_decode($receipt_product);
                 $receipt_item->fill([
-                    'name' => $receipt_product['product_name'],
-                    'description' => $receipt_product['product_description'],
-                    'quantity' => $receipt_product['product_quantity'],
-                    'unit_price' => $receipt_product['unit_price'],
+                    'name' => $item->name,
+                    'description' => $item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
                     'purchase_id' => $receipt_id,
                 ]);
                 $receipt_item->save();
             }
 
-            foreach ($request->receipts_images as $key => $file) {
-                // you can also use the original name
+            foreach ($request->images as $file) {
                 $name = $file->getClientOriginalName();
                 $path = $file->store('uploads');
-
                 $receipt_image = new ReceiptImage();
                 $receipt_image->fill([
                     'purchase_id' => $receipt_id,
                     'name' => $name,
                     'path' => $path
                 ]);
-
                 $receipt_image->save();
             }
-            // dd($name, $path);
-            return redirect()->back()->withSuccess('Purchase Added!');
+
+            return response()->json(['status' => true, 'data' => $request->all()]);
         }
     }
 
@@ -225,7 +223,7 @@ class PurchaseController extends Controller
      */
 
      public function search($id){
-        $purchase = Purchase::where('id', $id)->first();
+        $purchase = Purchase::where('pin', $id)->first();
         return response()->json(['status' => true, 'data' => $purchase]);
      }
 }
