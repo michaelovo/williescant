@@ -53,7 +53,7 @@ Route::get('/williescant/supplier/product/get-product/{id}', 'ProductController@
 Route::get('/wiiliescant/supplier/purchase', 'PurchaseController@index')->name('get-purchase')->middleware('auth', 'verified');
 Route::post('williescant/supplier/add-purchase', 'PurchaseController@store')->name('add-purchase')->middleware('auth', 'verified');
 Route::get('williescant/supplier/import-purchase', 'PurchaseController@importPurchase')->name('import-purchase')->middleware('auth', 'verified');
-
+Route::get('/williescant/supplier/get-pin/{id}', 'PurchaseController@search')->name('get-pin')->middleware('auth', 'verified');
 
 //Accountant
 Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@index')->name('get-accountants')->middleware('auth', 'verified');

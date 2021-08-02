@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $curr_page = 'store';
+        $curr_page = 'shop';
         return view('supplier.index', compact('curr_page'));
     }
 
