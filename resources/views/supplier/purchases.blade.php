@@ -41,18 +41,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                @foreach ($purchases as $purchase)
                                                     <tr>
-                                                    <td>1</td>
-                                                    <td>ESKAR SUPERMARKET</td>
-                                                    <td>P051774133F</td>
-                                                    <td>P051774133F</td>
-                                                    <td>5438</td>
-                                                    <td>4</td>
-                                                    <td>327.59</td>
-                                                    <td>16</td>
-                                                    <td>380</td>
-                                                    <td>2021-05-02</td>
+                                                    <td>{{ $purchase->id }}</td>
+                                                    <td>{{ $purchase->supplier_name }}</td>
+                                                    <td>{{ $purchase->pin }}</td>
+                                                    <td>{{ $purchase->etr }}</td>
+                                                    <td>{{ $purchase->receipt_number }}</td>
+                                                    <td>{{ $purchase->total_items }}</td>
+                                                    <td>{{ $purchase->sub_total }}</td>
+                                                    <td>{{ $purchase->vat }}</td>
+                                                    <td>{{ $purchase->total_price }}</td>
+                                                    <td>{{ $purchase->date }}</td>
                                                     <td class="text-center">
                                                         <a id="actions3Invoker" class="link-muted" href="#!"
                                                             aria-haspopup="true" aria-expanded="false"
@@ -66,7 +66,7 @@
                                                                 <li>
                                                                     <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                         data-toggle="modal"
-                                                                        href="#" onclick="purchaseDetails(395)">
+                                                                        href="#" onclick="purchaseDetails({{ $purchase->id }})">
                                                                         <i class="fa fa-eye mr-2"></i> Details
                                                                     </a>
                                                                 </li>
@@ -74,12 +74,12 @@
                                                         <li>
                                                             <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                 data-toggle="modal"
-                                                                href="#" onclick="editPurchase(395)">
+                                                                href="#" onclick="editPurchase({{ $purchase->id }})">
                                                                 <i class="fa fa-edit mr-2"></i> Edit
                                                             </a>
                                                         </li>                                                                
                                                         <li>
-                                                            <a href="#" onclick="deletePurchase(395)"
+                                                            <a href="#" onclick="deletePurchase({{ $purchase->id }})"
                                                                 class="d-flex align-items-center link-muted text-danger py-2 px-3">
                                                                 <i class="fa fa-trash mr-2"></i> Delete
                                                             </a>
@@ -88,8 +88,9 @@
                                                             </ul>
                                                         </div>
                                                     </td>
-                                                    </tr>
-                                                                                                </tbody>
+                                                    </tr>                                                    
+                                                @endforeach
+                                                </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -882,34 +883,160 @@ $("#pin").on('focusout', () => {
 function purchaseDetails(purchase_id) {
     $.ajax({
         type: 'GET',
-        url: `/supplier/includes/get_purchase.php/?purchase_id=${purchase_id}`,
+        url: `/williescant/supplier/get-purchase/${purchase_id}`,
         statusCode: {
             401: function(response) {
                 window.location.href = '/auth/logout.php';
             }
         },
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                var receipt_details = res['receipt_details'];
-                var supplier_details = res['supplier_details'];
-                var receipt_items = res['receipt_items'];
-                var receipt_images = res['images'];
+            if (result.status) {
+                var purchase = result.purchase;
+                var items = result.items;
+                var images = result.images;
+                $supplier_details = `
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        KRA PIN
+                    </div>
+                    <div class="details-value" id="details-pin">
+                        ${purchase.pin}                          
+                    </div>
+                </div>
 
-                $("#supplier-details-row").html(supplier_details)
-                $("#receipt-details-row").html(receipt_details)
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Supplier Name
+                    </div>
+                    <div class="details-value" id="details-supplier-name">
+                        ${purchase.supplier_name}                        
+                    </div>
+                </div>
 
-                if(!receipt_items) {
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Phone
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.phone}                          
+                    </div>
+                </div> 
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Email
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.email}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Website
+                    </div>
+                    <div class="details-value" id="details-website">
+                        ${purchase.website}                         
+                    </div>
+                </div>
+                
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Location
+                    </div>
+                    <div class="details-value" id="details-location">
+                        ${purchase.location}                          
+                    </div>
+                </div>                
+            `;
+
+                var receipt_items = '';
+                items.map((item)=>{
+                    var desc = item.description != null? '<td>'+item.description+'</td>': '';
+                    receipt_items += `
+                    <tr>
+                        <td>${result.items_count}</td>
+                        <td>${item.name}</td>
+                        ${desc}
+                        <td>${item.quantity}</td>
+                        <td>${item.unit_price}</td>
+                    </tr>`; 
+                })
+            $receipt_details = `
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Receipt Number
+                    </div>
+                    <div class="details-value" id="details-receipt-number">
+                        ${purchase.id}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Item Count
+                    </div>
+                    <div class="details-value" id="details-item-count">
+                        ${purchase.total_items}                         
+                    </div>
+                </div>  
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Sub Total
+                    </div>
+                    <div class="details-value" id="details-sub-total">
+                        ${purchase.sub_total}                          
+                    </div>
+                </div>
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        VAT
+                    </div>
+                    <div class="details-value" id="details-vat">
+                        ${purchase.vat}                         
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Total
+                    </div>
+                    <div class="details-value" id="details-total">
+                        ${purchase.total_price}                          
+                    </div>
+                </div> 
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Date
+                    </div>
+                    <div class="details-value" id="details-date">
+                       ${purchase.date}                         
+                    </div>
+                </div>  
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Time
+                    </div>
+                    <div class="details-value" id="details-time">
+                        ${purchase.time}                          
+                    </div>
+                </div>                         
+            `;
+                // $("#supplier-details-row").html(supplier_details)
+                // $("#receipt-details-row").html(receipt_details)
+
+                if(!result.status) {
                     receipt_items = `<tr><td colspan="9" class="text-center">
                     <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
                     </td></tr>`;
                 }
-                $("#items-details-row").html(receipt_items)
+                // $("#items-details-row").html(receipt_items)
 
-                if(!receipt_images) {
-                    receipt_images = `<div class="alert mx-4 text-center w-100 alert-warning">No receipt images found!</div>`;
+                if(!images.length) {
+                    // receipt_images = `<div class="alert mx-4 text-center w-100 alert-warning">No receipt images found!</div>`;
                 }
-                $("#receipt_images_container").html(receipt_images)
+                // $("#receipt_images_container").html(receipt_images)
 
                 $("#purchaseDetailsModal").modal('show');
             } else {

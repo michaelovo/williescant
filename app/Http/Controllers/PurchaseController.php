@@ -21,7 +21,7 @@ class PurchaseController extends Controller
     public function index()
     {
         $curr_page = 'purchases';
-        $purchases = [];
+        $purchases = Purchase::where('purchased_by', Auth::user()->username)->get();
         //        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
         return view('supplier.purchases', compact('curr_page', 'purchases'));
     }
@@ -155,8 +155,16 @@ class PurchaseController extends Controller
     public function show($id)
     {
         $purchase = Purchase::find($id);
+        $receipt_items = ReceiptItem::where('purchase_id', $id)->get();
+        $receipt_images = ReceiptImage::where('purchase_id', $id)->get();
 
-        return response()->json($purchase);
+        return response()->json([
+            'status' => true, 
+            'purchase' => $purchase, 
+            'items' => $receipt_items,
+            'images' => $receipt_images,
+            'item_count' => count($receipt_items)
+        ]);
     }
 
     /**
