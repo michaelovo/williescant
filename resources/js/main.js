@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 (function ($) {
   $(document).on('ready', function () {
     // Tooltips & Popovers

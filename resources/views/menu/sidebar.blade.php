@@ -106,7 +106,7 @@
 
                 <!-- Orders -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link " href="/supplier/orders.php">
+                    <a class="u-sidebar-nav-menu__link " href="{{ route('get-orders') }}">
                         <i class="fas fa-shopping-cart u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Orders</span>
                     </a>

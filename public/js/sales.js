@@ -562,7 +562,7 @@ function validateFormInputs(form) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\williescant\resources\js\sales.js */"./resources/js/sales.js");
+module.exports = __webpack_require__(/*! /var/www/williescant/resources/js/sales.js */"./resources/js/sales.js");
 
 
 /***/ })

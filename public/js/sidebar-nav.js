@@ -223,7 +223,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\williescant\resources\js\sidebar-nav.js */"./resources/js/sidebar-nav.js");
+module.exports = __webpack_require__(/*! /var/www/williescant/resources/js/sidebar-nav.js */"./resources/js/sidebar-nav.js");
 
 
 /***/ })

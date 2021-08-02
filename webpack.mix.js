@@ -19,4 +19,5 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/sales.js', 'public/js')
     .js('resources/js/main.js', 'public/js')
     .js('resources/js/sidebar-nav.js', 'public/js')
+    .js('resources/js/dashboard-page-scripts.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');

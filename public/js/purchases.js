@@ -768,7 +768,7 @@ $(document).ready(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\williescant\resources\js\purchases.js */"./resources/js/purchases.js");
+module.exports = __webpack_require__(/*! /var/www/williescant/resources/js/purchases.js */"./resources/js/purchases.js");
 
 
 /***/ })

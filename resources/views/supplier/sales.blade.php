@@ -455,6 +455,9 @@
         </div>
     </div>
     <!-- End View Sale Details Modal -->
+    <script src="{{asset('js/main.js')}}"></script>
+    <script src="{{asset('js/sidebar-nav.js')}}"></script>
+    <script src="{{ asset('js/dashboard-page-scripts.js') }}"></script>
     <script>
 
 var formsetCount = 1;

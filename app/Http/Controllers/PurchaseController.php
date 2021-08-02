@@ -44,18 +44,18 @@ class PurchaseController extends Controller
         return response()->json($purchase);
     }
 
-    /**
-     * Show tsearch results
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function search(Request $request)
-    {
-        $search = $request->pin;
+    // /**
+    //  * Show tsearch results
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function search(Request $request)
+    // {
+    //     $search = $request->pin;
 
-        $pin = Purchase::query()->where('pin', 'LIKE', '%{$search}%')->get();
-        return response()->json($pin);
-    }
+    //     $pin = Purchase::query()->where('pin', 'LIKE', '%{$search}%')->get();
+    //     return response()->json($pin);
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -218,4 +218,14 @@ class PurchaseController extends Controller
         $purchase = Purchase::where('id', $id)->delete();
         return redirect()->back();
     }
+
+    /**
+     * Search for purchase KRA-PIN
+     * 
+     */
+
+     public function search($id){
+        $purchase = Purchase::where('id', $id)->first();
+        return response()->json(['status' => true, 'data' => $purchase]);
+     }
 }
