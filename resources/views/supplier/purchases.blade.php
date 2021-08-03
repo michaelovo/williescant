@@ -41,18 +41,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                @foreach ($purchases as $purchase)
                                                     <tr>
-                                                    <td>1</td>
-                                                    <td>ESKAR SUPERMARKET</td>
-                                                    <td>P051774133F</td>
-                                                    <td>P051774133F</td>
-                                                    <td>5438</td>
-                                                    <td>4</td>
-                                                    <td>327.59</td>
-                                                    <td>16</td>
-                                                    <td>380</td>
-                                                    <td>2021-05-02</td>
+                                                    <td>{{ $purchase->id }}</td>
+                                                    <td>{{ $purchase->supplier_name }}</td>
+                                                    <td>{{ $purchase->pin }}</td>
+                                                    <td>{{ $purchase->etr }}</td>
+                                                    <td>{{ $purchase->receipt_number }}</td>
+                                                    <td>{{ $purchase->total_items }}</td>
+                                                    <td>{{ $purchase->sub_total }}</td>
+                                                    <td>{{ $purchase->vat }}</td>
+                                                    <td>{{ $purchase->total_price }}</td>
+                                                    <td>{{ $purchase->date }}</td>
                                                     <td class="text-center">
                                                         <a id="actions3Invoker" class="link-muted" href="#!"
                                                             aria-haspopup="true" aria-expanded="false"
@@ -66,7 +66,7 @@
                                                                 <li>
                                                                     <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                         data-toggle="modal"
-                                                                        href="#" onclick="purchaseDetails(395)">
+                                                                        href="#" onclick="purchaseDetails({{ $purchase->id }})">
                                                                         <i class="fa fa-eye mr-2"></i> Details
                                                                     </a>
                                                                 </li>
@@ -74,12 +74,12 @@
                                                         <li>
                                                             <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                 data-toggle="modal"
-                                                                href="#" onclick="editPurchase(395)">
+                                                                href="#" onclick="editPurchase({{ $purchase->id }})">
                                                                 <i class="fa fa-edit mr-2"></i> Edit
                                                             </a>
                                                         </li>                                                                
                                                         <li>
-                                                            <a href="#" onclick="deletePurchase(395)"
+                                                            <a href="#" onclick="deletePurchase({{ $purchase->id }})"
                                                                 class="d-flex align-items-center link-muted text-danger py-2 px-3">
                                                                 <i class="fa fa-trash mr-2"></i> Delete
                                                             </a>
@@ -88,8 +88,9 @@
                                                             </ul>
                                                         </div>
                                                     </td>
-                                                    </tr>
-                                                                                                </tbody>
+                                                    </tr>                                                    
+                                                @endforeach
+                                                </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -748,6 +749,7 @@ $("#add-purchase-form").submit(function (e) {
     }  
 
     var images = document.getElementById('add-image').files;
+    console.log(images)
     var filesLength = images.length;
     for (var i = 0; i < filesLength; i++) {
         if (images[i]['isvalid'] !== false) {
@@ -766,15 +768,16 @@ $("#add-purchase-form").submit(function (e) {
         processData: false,
         contentType: false,
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            console.log(result)
+            if (result.status) {
                 $("#modal-success").removeClass('d-none');
                 $("#add-purchase-form")[0].reset();
                 $(".loading").addClass("d-none");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-                Toast.fire({
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
+                Swal.fire({
                     'icon': 'success',
                     'text': 'Receipt added',
                     'timer': 1000
@@ -784,14 +787,14 @@ $("#add-purchase-form").submit(function (e) {
                 $("#modal-errors").find("span").text(res['error']);
                 $("#modal-errors").removeClass('d-none');
                 $(".loading").addClass("d-none");
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': res['error'],
                     'timer': 1000
                 });
             } else {
                 $(".loading").addClass("d-none");
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': ' Server Error. Failed to add receipt',
                     'timer': 1000
@@ -802,7 +805,7 @@ $("#add-purchase-form").submit(function (e) {
         },
         error: function(err){
             $(".loading").addClass("d-none");
-            Toast.fire({
+            Swal.fire({
                 'icon': 'error',
                 'text': ' Error: Could not search for existing supplier details',
                 'timer': 1000
@@ -812,6 +815,7 @@ $("#add-purchase-form").submit(function (e) {
 });
 
 function searchPin(pin, target) {
+    console.log(pin)
     $.ajax({
         type: 'GET',
         url: `/williescant/supplier/get-pin/${pin}`,
@@ -819,6 +823,7 @@ function searchPin(pin, target) {
             // res = JSON.parse(result);
             if (result.status) {
                 var data = result.data;
+                console.log(data)
                 if(target == 'add') {
                     Swal.fire({
                         title: `Existing details for supplier with that pin found.`,
@@ -862,7 +867,7 @@ function searchPin(pin, target) {
             }
         }, 
         error: function(err) {
-            Toast.fire({
+            Swal.fire({
                 'icon': 'error',
                 'text': ' Error: Could not search for existing supplier details',
                 'timer': 5000 
@@ -878,34 +883,286 @@ $("#pin").on('focusout', () => {
 function purchaseDetails(purchase_id) {
     $.ajax({
         type: 'GET',
-        url: `/supplier/includes/get_purchase.php/?purchase_id=${purchase_id}`,
+        url: `/williescant/supplier/get-purchase/${purchase_id}`,
         statusCode: {
             401: function(response) {
                 window.location.href = '/auth/logout.php';
             }
         },
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                var receipt_details = res['receipt_details'];
-                var supplier_details = res['supplier_details'];
-                var receipt_items = res['receipt_items'];
-                var receipt_images = res['images'];
+            if (result.status) {
+                var purchase = result.purchase;
+                var items = result.items;
+                var images = result.images;
+                $supplier_details = `
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        KRA PIN
+                    </div>
+                    <div class="details-value" id="details-pin">
+                        ${purchase.pin}                          
+                    </div>
+                </div>
 
-                $("#supplier-details-row").html(supplier_details)
-                $("#receipt-details-row").html(receipt_details)
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Supplier Name
+                    </div>
+                    <div class="details-value" id="details-supplier-name">
+                        ${purchase.supplier_name}                        
+                    </div>
+                </div>
 
-                if(!receipt_items) {
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Phone
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.phone}                          
+                    </div>
+                </div> 
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Email
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.email}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Website
+                    </div>
+                    <div class="details-value" id="details-website">
+                        ${purchase.website}                         
+                    </div>
+                </div>
+                
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Location
+                    </div>
+                    <div class="details-value" id="details-location">
+                        ${purchase.location}                          
+                    </div>
+                </div>                
+            `;
+
+                var receipt_items = '';
+                items.map((item)=>{
+                    var desc = item.description != null? '<td>'+item.description+'</td>': '';
+                    receipt_items += `
+                    <tr>
+                        <td>${result.items_count}</td>
+                        <td>${item.name}</td>
+                        ${desc}
+                        <td>${item.quantity}</td>
+                        <td>${item.unit_price}</td>
+                    </tr>`; 
+                })
+
+                var receipt_images = '';
+                images.map((image) => {
+                    receipt_images += `
+                    <div class="card form-group col-md-5 mr-1 mt-2">
+                            <img alt="${purchase.name}" src="{{asset('storage/${image.path}')}}" id="edit-preview__item" height="75" width="100%">
+                            <!--<button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${purchase.id})" image_name="${image.name}" type="button">
+                                REMOVE
+                            </button>-->
+                        </div>
+                    `;
+                })
+            $receipt_details = `
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Receipt Number
+                    </div>
+                    <div class="details-value" id="details-receipt-number">
+                        ${purchase.id}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Item Count
+                    </div>
+                    <div class="details-value" id="details-item-count">
+                        ${purchase.total_items}                         
+                    </div>
+                </div>  
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Sub Total
+                    </div>
+                    <div class="details-value" id="details-sub-total">
+                        ${purchase.sub_total}                          
+                    </div>
+                </div>
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        VAT
+                    </div>
+                    <div class="details-value" id="details-vat">
+                        ${purchase.vat}                         
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Total
+                    </div>
+                    <div class="details-value" id="details-total">
+                        ${purchase.total_price}                          
+                    </div>
+                </div> 
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Date
+                    </div>
+                    <div class="details-value" id="details-date">
+                       ${purchase.date}                         
+                    </div>
+                </div>  
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Time
+                    </div>
+                    <div class="details-value" id="details-time">
+                        ${purchase.time}                          
+                    </div>
+                </div>                         
+            `;
+                $("#supplier-details-row").html(`
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        KRA PIN
+                    </div>
+                    <div class="details-value" id="details-pin">
+                        ${purchase.pin}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Supplier Name
+                    </div>
+                    <div class="details-value" id="details-supplier-name">
+                        ${purchase.supplier_name}                        
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Phone
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.phone}                          
+                    </div>
+                </div> 
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Email
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.email}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Website
+                    </div>
+                    <div class="details-value" id="details-website">
+                        ${purchase.website}                         
+                    </div>
+                </div>
+                
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Location
+                    </div>
+                    <div class="details-value" id="details-location">
+                        ${purchase.location}                          
+                    </div>
+                </div>                
+            `)
+                $("#receipt-details-row").html(`
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Receipt Number
+                    </div>
+                    <div class="details-value" id="details-receipt-number">
+                        ${purchase.id}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Item Count
+                    </div>
+                    <div class="details-value" id="details-item-count">
+                        ${purchase.total_items}                         
+                    </div>
+                </div>  
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Sub Total
+                    </div>
+                    <div class="details-value" id="details-sub-total">
+                        ${purchase.sub_total}                          
+                    </div>
+                </div>
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        VAT
+                    </div>
+                    <div class="details-value" id="details-vat">
+                        ${purchase.vat}                         
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Total
+                    </div>
+                    <div class="details-value" id="details-total">
+                        ${purchase.total_price}                          
+                    </div>
+                </div> 
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Date
+                    </div>
+                    <div class="details-value" id="details-date">
+                       ${purchase.date}                         
+                    </div>
+                </div>  
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Time
+                    </div>
+                    <div class="details-value" id="details-time">
+                        ${purchase.time}                          
+                    </div>
+                </div>                         
+            `)
+
+                if(!result.status) {
                     receipt_items = `<tr><td colspan="9" class="text-center">
                     <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
                     </td></tr>`;
                 }
                 $("#items-details-row").html(receipt_items)
 
-                if(!receipt_images) {
+                if(!images.length) {
                     receipt_images = `<div class="alert mx-4 text-center w-100 alert-warning">No receipt images found!</div>`;
                 }
-                $("#receipt_images_container").html(receipt_images)
+                $("#receipt_images_container").html(receipt_images).addClass('d-flex')
 
                 $("#purchaseDetailsModal").modal('show');
             } else {
@@ -954,36 +1211,198 @@ function removeFormset(e, formset, edit=false) {
     }
 }
 
-function editPurchase(purchase_id, ) {
+function editPurchase(purchase_id) {
     $.ajax({
         type: 'GET',
-        url: `/supplier/includes/get_purchase.php/?purchase_id=${purchase_id}&edit=1`,
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },
+        url: `/williescant/supplier/edit-purchase/${purchase_id}`,
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                var receipt_details = res['receipt_details'];
-                var supplier_details = res['supplier_details'];
-                var receipt_items = res['receipt_items'];
-                var images = res['images'] 
+            // res = JSON.parse(result);
+            console.log(result);
+            if (result.status) {
+                var purchase = result.purchase;
+                var items = result.receipt_items;
+                var images = result.receipt_images;
 
-                oldItemCount = Number(res['data']['total_items']);
+                // oldItemCount = Number(res['data']['total_items']);
+                oldItemCount = purchase.total_items;
                 
-                $("#edit-supplier-details").html(supplier_details)
-                $("#edit-receipt-details").html(receipt_details)
+                $("#edit-supplier-details").html(`
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-pin">KRA PIN</label>
+                        <input id="edit-pin" class="form-control" name="pin" type="text"
+                          value="${purchase.pin}"  placeholder="KRA PIN" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-supplier_name">Supplier Name</label>
+                        <input id="edit-supplier_name" class="form-control" name="supplier_name"
+                        value="${purchase.supplier_name}" type="text" placeholder="Enter Supplier Name" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-phone">Phone</label>
+                        <input id="edit-phone" class="form-control" name="phone" type="text"
+                        value="${purchase.phone}"  placeholder="Supplier Phone Number">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-email">Email</label>
+                        <input id="edit-email" class="form-control" name="email"
+                        value="${purchase.email}" type="email" placeholder="Enter Supplier Email">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-website">Wesbite</label>
+                        <input id="edit-website" class="form-control" name="website" type="text"
+                        value="${purchase.website}"  placeholder="Supplier Website">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-location">Location</label>
+                        <input id="edit-location" class="form-control" name="location"
+                        value="${purchase.location}"  type="text" placeholder="Enter Supplier Location">
+                    </div>
+                </div>
+            </div>            
+            `)
+                $("#edit-receipt-details").html(`
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-receipt_number">Receipt Number</label>
+                        <input id="edit-receipt_number" class="form-control" name="receipt_number"
+                        value="${purchase.receipt_number}" type="text" placeholder="Enter Receipt Number" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-vat">VAT</label>
+                        <input id="edit-vat" class="form-control" name="vat" type="number"
+                        step="0.01" value="${purchase.vat}"  placeholder="Total incurred VAT" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-sub_total">Sub Total</label>
+                        <input id="edit-sub_total" class="form-control" name="sub_total"
+                        step="0.01" value="${purchase.sub_total}" type="number" placeholder="Sub Total" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-total_price">Total Price</label>
+                        <input id="edit-total_price" class="form-control" name="total_price"
+                        step="0.01" value="${purchase.total_price}" type="number" placeholder="Total Price" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-date">Date</label>
+                        <input type="edit-date" name="date" value="${purchase.date}" id="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-time">Time</label>
+                        <input type="time" name="time"value="${purchase.time}" id="edit-time" class="form-control">
+                    </div>
+                </div>
+
+                <input type="text" name="purchase_id" value="${purchase.id}" hidden></input>
+            </div>            
+            `)
+
+            var receipt_items = '';
+            items.map((item, index) => {
+                receipt_items += `
+                        <div class="form-row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_name_'.$item_count.'">Name</label>
+                                <input id="new_product_name_${index}" class="form-control" name="new_product_name_${index}" type="text"
+                                    placeholder="Product Name" value="${item.name}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label for="new_product_description_${index}">Description</label>
+                                <input id="new_product_description_${index}" class="form-control" name="new_product_description_${index}"
+                                    type="text" value="${item.description}" placeholder="Product Description">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_quantity_'.$item_count.'">Quantity</label>
+                                <input id="new_product_quantity_${index}" class="form-control" name="new_product_quantity_${index}" type="number"
+                                  value="${item.quantity}"  placeholder="Product Qauntity" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_unit_price_'.$item_count.'">Unit Price</label>
+                                <input id="new_product_unit_price_${index}" class="form-control" name="new_product_unit_price_${index}"
+                                step="0.01" value="${item.unit_price}" type="number" placeholder="Unit Price(Price of a single item)" required>
+                            </div>
+                        </div>
+                        <input value="${item.id}"  id="new_product_id_${index}"  name="id" hidden>
+                        <div class="col-md-6">
+                            <button type="button" onclick="deleteItem(Event, this, ${item.id}, ${purchase.id})" class="btn btn-sm btn-danger text-small">Remove item</button>            
+                        </div>                        
+                        <div class="col-md-12 mt-2">
+                            <hr/>
+                        </div>
+                    </div>`
+            })
                 $(receipt_items).insertBefore($("#add-item-formset-edit"));
                 $("#edit-pin").on('focusout', () => {
                     searchPin($('#edit-pin').val(), 'edit');
                 });
 
-                if(images) {
+                var receipt_images = '';
+                images.map((image) => {
+                    receipt_images += `
+                    <div class="card form-group col-md-5 mr-1 mt-2">
+                            <img alt="${purchase.name}" src="{{asset('storage/${image.path}')}}" id="edit-preview__item" height="75" width="100%">
+                            <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${purchase.id})" image_name="${image.name}" type="button">
+                                REMOVE
+                            </button>
+                        </div>
+                    `;
+                })
+
+
+                if(images.length !== 0) {
                     // console.log(product['images']);
                     var previewContainer = $("#edit-image-preview__container__old");
-                    previewContainer.html(images);
+                    previewContainer.html(receipt_images);
                 } else {
                     $("#edit-product-form").find("#edit-img-card").addClass('d-none');
                 }
@@ -994,6 +1413,7 @@ function editPurchase(purchase_id, ) {
             }
         }
     }); 
+
     $("#edit-receipt-items").html(
         `<button id="add-item-formset-edit" type="button" 
         class="btn btn-block btn-sm btn-secondary add-item-formset">Add another row</button>`);
@@ -1113,34 +1533,31 @@ function listEditItems(){
     }, 100);
 }
 
-function deleteImage(image, image_id, product_id) {
+function deleteImage(image, image_id, purchase_id) {
     var imageName = $(image).attr("image_name")
     if(confirm("This image will be deleted permanently")) {
         $.ajax({
             type: 'POST',
-            url: "/supplier/includes/edit_purchase.php",
+            url: `/williescant/supplier/delete-image/${image_id}`,
             data: {
-                'purchase_id': product_id,
+                'purchase_id': purchase_id,
                 'delete_image': true,
                 'image_id': image_id,
                 'image_name': imageName
-            },
-            statusCode: {
-            401: function(response) {
-                    window.location.href = '/auth/logout.php';
-                }
-            },            
+            },           
             success: function (result) {
-                res = JSON.parse(result);
-                if (res['success']) {
-                    Toast.fire({
+                // res = JSON.parse(result);
+                if (result.status) {
+                    Swal.fire({
                         'icon': 'success',
                         'text': 'Image removed successfully',
                         'timer': 2000
-                    });                    
-                    window.location.reload();
+                    });       
+                $(image).parent().remove();
+                    // console.log(imageName.parents());           
+                    // window.location.reload();
                 } else {
-                    Toast.fire({
+                    Swal.fire({
                         'icon': 'error',
                         'text': res['error'],
                         'timer': 2000 
@@ -1148,7 +1565,7 @@ function deleteImage(image, image_id, product_id) {
                 }
             },
             error: function(res) {
-                Toast.fire({
+                Swal.fire({
                     'icon': 'error',
                     'text': ' Error: Could not delete image. Try again later',
                     'timer': 2000 

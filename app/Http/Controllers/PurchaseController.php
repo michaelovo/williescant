@@ -21,7 +21,7 @@ class PurchaseController extends Controller
     public function index()
     {
         $curr_page = 'purchases';
-        $purchases = [];
+        $purchases = Purchase::where('purchased_by', Auth::user()->username)->get();
         //        $all_purchases = "SELECT * FROM purchases WHERE purchased_by='$supplier_id'";
         return view('supplier.purchases', compact('curr_page', 'purchases'));
     }
@@ -119,32 +119,30 @@ class PurchaseController extends Controller
             $receipt_item = new ReceiptItem();
             $receipt_id = Purchase::where('receipt_number', $request->receipt_number)->latest()->value('id');
             foreach ($receipt_products as $receipt_product) {
+                $item = json_decode($receipt_product);
                 $receipt_item->fill([
-                    'name' => $receipt_product['product_name'],
-                    'description' => $receipt_product['product_description'],
-                    'quantity' => $receipt_product['product_quantity'],
-                    'unit_price' => $receipt_product['unit_price'],
+                    'name' => $item->name,
+                    'description' => $item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
                     'purchase_id' => $receipt_id,
                 ]);
                 $receipt_item->save();
             }
 
-            foreach ($request->receipts_images as $key => $file) {
-                // you can also use the original name
+            foreach ($request->images as $file) {
                 $name = $file->getClientOriginalName();
                 $path = $file->store('uploads');
-
                 $receipt_image = new ReceiptImage();
                 $receipt_image->fill([
                     'purchase_id' => $receipt_id,
                     'name' => $name,
                     'path' => $path
                 ]);
-
                 $receipt_image->save();
             }
-            // dd($name, $path);
-            return redirect()->back()->withSuccess('Purchase Added!');
+
+            return response()->json(['status' => true, 'data' => $request->all()]);
         }
     }
 
@@ -157,8 +155,16 @@ class PurchaseController extends Controller
     public function show($id)
     {
         $purchase = Purchase::find($id);
+        $receipt_items = ReceiptItem::where('purchase_id', $id)->get();
+        $receipt_images = ReceiptImage::where('purchase_id', $id)->get();
 
-        return response()->json($purchase);
+        return response()->json([
+            'status' => true, 
+            'purchase' => $purchase, 
+            'items' => $receipt_items,
+            'images' => $receipt_images,
+            'item_count' => count($receipt_items)
+        ]);
     }
 
     /**
@@ -170,8 +176,15 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $purchase = Purchase::find($id);
+        $receipt_items = ReceiptItem::where('purchase_id', $id)->get();
+        $receipt_images = ReceiptImage::where('purchase_id', $id)->get();
 
-        return response()->json($purchase);
+        return response()->json([
+            'status' => true,
+            'purchase' => $purchase, 
+            'receipt_items' => $receipt_items,
+            'receipt_images' => $receipt_images
+        ]);
     }
 
     /**
@@ -220,12 +233,20 @@ class PurchaseController extends Controller
     }
 
     /**
+     * Remove the purchase receipt image
+     */
+    public function delete(Request $request, $id){
+        $image = ReceiptImage::where('id', $id)->where('purchase_id', $request->purchase_id)->delete();
+        return response()->json(['status' => true]);
+    }
+
+    /**
      * Search for purchase KRA-PIN
      * 
      */
 
      public function search($id){
-        $purchase = Purchase::where('id', $id)->first();
+        $purchase = Purchase::where('pin', $id)->first();
         return response()->json(['status' => true, 'data' => $purchase]);
      }
 }
