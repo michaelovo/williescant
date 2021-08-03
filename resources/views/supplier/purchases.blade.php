@@ -962,6 +962,13 @@ function purchaseDetails(purchase_id) {
                         <td>${item.unit_price}</td>
                     </tr>`; 
                 })
+
+                var receipt_images = '';
+                images.map((image) => {
+                    receipt_images += `
+                        <div width="100px" height="75px"><img src="${image.path}"></div>
+                    `;
+                })
             $receipt_details = `
                 <div class="col-3 mb-3 details-item">
                     <div class="details-title">
@@ -1023,20 +1030,134 @@ function purchaseDetails(purchase_id) {
                     </div>
                 </div>                         
             `;
-                // $("#supplier-details-row").html(supplier_details)
-                // $("#receipt-details-row").html(receipt_details)
+                $("#supplier-details-row").html(`
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        KRA PIN
+                    </div>
+                    <div class="details-value" id="details-pin">
+                        ${purchase.pin}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Supplier Name
+                    </div>
+                    <div class="details-value" id="details-supplier-name">
+                        ${purchase.supplier_name}                        
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Phone
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.phone}                          
+                    </div>
+                </div> 
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Email
+                    </div>
+                    <div class="details-value" id="">
+                        ${purchase.email}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Website
+                    </div>
+                    <div class="details-value" id="details-website">
+                        ${purchase.website}                         
+                    </div>
+                </div>
+                
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Location
+                    </div>
+                    <div class="details-value" id="details-location">
+                        ${purchase.location}                          
+                    </div>
+                </div>                
+            `)
+                $("#receipt-details-row").html(`
+                <div class="col-3 mb-3 details-item">
+                    <div class="details-title">
+                        Receipt Number
+                    </div>
+                    <div class="details-value" id="details-receipt-number">
+                        ${purchase.id}                          
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Item Count
+                    </div>
+                    <div class="details-value" id="details-item-count">
+                        ${purchase.total_items}                         
+                    </div>
+                </div>  
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Sub Total
+                    </div>
+                    <div class="details-value" id="details-sub-total">
+                        ${purchase.sub_total}                          
+                    </div>
+                </div>
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        VAT
+                    </div>
+                    <div class="details-value" id="details-vat">
+                        ${purchase.vat}                         
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Total
+                    </div>
+                    <div class="details-value" id="details-total">
+                        ${purchase.total_price}                          
+                    </div>
+                </div> 
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Date
+                    </div>
+                    <div class="details-value" id="details-date">
+                       ${purchase.date}                         
+                    </div>
+                </div>  
+                <div class="col-3 mb-4 details-item">
+                    <div class="details-title">
+                        Time
+                    </div>
+                    <div class="details-value" id="details-time">
+                        ${purchase.time}                          
+                    </div>
+                </div>                         
+            `)
 
                 if(!result.status) {
                     receipt_items = `<tr><td colspan="9" class="text-center">
                     <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
                     </td></tr>`;
                 }
-                // $("#items-details-row").html(receipt_items)
+                $("#items-details-row").html(receipt_items)
 
                 if(!images.length) {
-                    // receipt_images = `<div class="alert mx-4 text-center w-100 alert-warning">No receipt images found!</div>`;
+                    receipt_images = `<div class="alert mx-4 text-center w-100 alert-warning">No receipt images found!</div>`;
                 }
-                // $("#receipt_images_container").html(receipt_images)
+                $("#receipt_images_container").html(receipt_images).addClass('d-flex')
 
                 $("#purchaseDetailsModal").modal('show');
             } else {
