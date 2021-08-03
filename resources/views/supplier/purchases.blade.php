@@ -966,7 +966,12 @@ function purchaseDetails(purchase_id) {
                 var receipt_images = '';
                 images.map((image) => {
                     receipt_images += `
-                        <div width="100px" height="75px"><img src="${image.path}"></div>
+                    <div class="card form-group col-md-5 mr-1 mt-2">
+                            <img alt="${purchase.name}" src="{{asset('storage/${image.path}')}}" id="edit-preview__item" height="75" width="100%">
+                            <!--<button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${purchase.id})" image_name="${image.name}" type="button">
+                                REMOVE
+                            </button>-->
+                        </div>
                     `;
                 })
             $receipt_details = `
@@ -1206,36 +1211,198 @@ function removeFormset(e, formset, edit=false) {
     }
 }
 
-function editPurchase(purchase_id, ) {
+function editPurchase(purchase_id) {
     $.ajax({
         type: 'GET',
-        url: `/supplier/includes/get_purchase.php/?purchase_id=${purchase_id}&edit=1`,
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },
+        url: `/williescant/supplier/edit-purchase/${purchase_id}`,
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
-                var receipt_details = res['receipt_details'];
-                var supplier_details = res['supplier_details'];
-                var receipt_items = res['receipt_items'];
-                var images = res['images'] 
+            // res = JSON.parse(result);
+            console.log(result);
+            if (result.status) {
+                var purchase = result.purchase;
+                var items = result.receipt_items;
+                var images = result.receipt_images;
 
-                oldItemCount = Number(res['data']['total_items']);
+                // oldItemCount = Number(res['data']['total_items']);
+                oldItemCount = purchase.total_items;
                 
-                $("#edit-supplier-details").html(supplier_details)
-                $("#edit-receipt-details").html(receipt_details)
+                $("#edit-supplier-details").html(`
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-pin">KRA PIN</label>
+                        <input id="edit-pin" class="form-control" name="pin" type="text"
+                          value="${purchase.pin}"  placeholder="KRA PIN" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-supplier_name">Supplier Name</label>
+                        <input id="edit-supplier_name" class="form-control" name="supplier_name"
+                        value="${purchase.supplier_name}" type="text" placeholder="Enter Supplier Name" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-phone">Phone</label>
+                        <input id="edit-phone" class="form-control" name="phone" type="text"
+                        value="${purchase.phone}"  placeholder="Supplier Phone Number">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-email">Email</label>
+                        <input id="edit-email" class="form-control" name="email"
+                        value="${purchase.email}" type="email" placeholder="Enter Supplier Email">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-website">Wesbite</label>
+                        <input id="edit-website" class="form-control" name="website" type="text"
+                        value="${purchase.website}"  placeholder="Supplier Website">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-location">Location</label>
+                        <input id="edit-location" class="form-control" name="location"
+                        value="${purchase.location}"  type="text" placeholder="Enter Supplier Location">
+                    </div>
+                </div>
+            </div>            
+            `)
+                $("#edit-receipt-details").html(`
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-receipt_number">Receipt Number</label>
+                        <input id="edit-receipt_number" class="form-control" name="receipt_number"
+                        value="${purchase.receipt_number}" type="text" placeholder="Enter Receipt Number" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-vat">VAT</label>
+                        <input id="edit-vat" class="form-control" name="vat" type="number"
+                        step="0.01" value="${purchase.vat}"  placeholder="Total incurred VAT" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-sub_total">Sub Total</label>
+                        <input id="edit-sub_total" class="form-control" name="sub_total"
+                        step="0.01" value="${purchase.sub_total}" type="number" placeholder="Sub Total" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-total_price">Total Price</label>
+                        <input id="edit-total_price" class="form-control" name="total_price"
+                        step="0.01" value="${purchase.total_price}" type="number" placeholder="Total Price" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="required-label" for="edit-date">Date</label>
+                        <input type="edit-date" name="date" value="${purchase.date}" id="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label for="edit-time">Time</label>
+                        <input type="time" name="time"value="${purchase.time}" id="edit-time" class="form-control">
+                    </div>
+                </div>
+
+                <input type="text" name="purchase_id" value="${purchase.id}" hidden></input>
+            </div>            
+            `)
+
+            var receipt_items = '';
+            items.map((item, index) => {
+                receipt_items += `
+                        <div class="form-row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_name_'.$item_count.'">Name</label>
+                                <input id="new_product_name_${index}" class="form-control" name="new_product_name_${index}" type="text"
+                                    placeholder="Product Name" value="${item.name}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label for="new_product_description_${index}">Description</label>
+                                <input id="new_product_description_${index}" class="form-control" name="new_product_description_${index}"
+                                    type="text" value="${item.description}" placeholder="Product Description">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_quantity_'.$item_count.'">Quantity</label>
+                                <input id="new_product_quantity_${index}" class="form-control" name="new_product_quantity_${index}" type="number"
+                                  value="${item.quantity}"  placeholder="Product Qauntity" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_unit_price_'.$item_count.'">Unit Price</label>
+                                <input id="new_product_unit_price_${index}" class="form-control" name="new_product_unit_price_${index}"
+                                step="0.01" value="${item.unit_price}" type="number" placeholder="Unit Price(Price of a single item)" required>
+                            </div>
+                        </div>
+                        <input value="${item.id}"  id="new_product_id_${index}"  name="id" hidden>
+                        <div class="col-md-6">
+                            <button type="button" onclick="deleteItem(Event, this, ${item.id}, ${purchase.id})" class="btn btn-sm btn-danger text-small">Remove item</button>            
+                        </div>                        
+                        <div class="col-md-12 mt-2">
+                            <hr/>
+                        </div>
+                    </div>`
+            })
                 $(receipt_items).insertBefore($("#add-item-formset-edit"));
                 $("#edit-pin").on('focusout', () => {
                     searchPin($('#edit-pin').val(), 'edit');
                 });
 
-                if(images) {
+                var receipt_images = '';
+                images.map((image) => {
+                    receipt_images += `
+                    <div class="card form-group col-md-5 mr-1 mt-2">
+                            <img alt="${purchase.name}" src="{{asset('storage/${image.path}')}}" id="edit-preview__item" height="75" width="100%">
+                            <button class="btn btn-sm btn-outline-danger mt-1" onclick="deleteImage(this, ${image.id}, ${purchase.id})" image_name="${image.name}" type="button">
+                                REMOVE
+                            </button>
+                        </div>
+                    `;
+                })
+
+
+                if(images.length !== 0) {
                     // console.log(product['images']);
                     var previewContainer = $("#edit-image-preview__container__old");
-                    previewContainer.html(images);
+                    previewContainer.html(receipt_images);
                 } else {
                     $("#edit-product-form").find("#edit-img-card").addClass('d-none');
                 }
@@ -1246,6 +1413,7 @@ function editPurchase(purchase_id, ) {
             }
         }
     }); 
+
     $("#edit-receipt-items").html(
         `<button id="add-item-formset-edit" type="button" 
         class="btn btn-block btn-sm btn-secondary add-item-formset">Add another row</button>`);
@@ -1365,32 +1533,29 @@ function listEditItems(){
     }, 100);
 }
 
-function deleteImage(image, image_id, product_id) {
+function deleteImage(image, image_id, purchase_id) {
     var imageName = $(image).attr("image_name")
     if(confirm("This image will be deleted permanently")) {
         $.ajax({
             type: 'POST',
-            url: "/supplier/includes/edit_purchase.php",
+            url: `/williescant/supplier/delete-image/${image_id}`,
             data: {
-                'purchase_id': product_id,
+                'purchase_id': purchase_id,
                 'delete_image': true,
                 'image_id': image_id,
                 'image_name': imageName
-            },
-            statusCode: {
-            401: function(response) {
-                    window.location.href = '/auth/logout.php';
-                }
-            },            
+            },           
             success: function (result) {
-                res = JSON.parse(result);
-                if (res['success']) {
+                // res = JSON.parse(result);
+                if (result.status) {
                     Swal.fire({
                         'icon': 'success',
                         'text': 'Image removed successfully',
                         'timer': 2000
-                    });                    
-                    window.location.reload();
+                    });       
+                $(image).parent().remove();
+                    // console.log(imageName.parents());           
+                    // window.location.reload();
                 } else {
                     Swal.fire({
                         'icon': 'error',

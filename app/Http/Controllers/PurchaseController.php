@@ -176,8 +176,15 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $purchase = Purchase::find($id);
+        $receipt_items = ReceiptItem::where('purchase_id', $id)->get();
+        $receipt_images = ReceiptImage::where('purchase_id', $id)->get();
 
-        return response()->json($purchase);
+        return response()->json([
+            'status' => true,
+            'purchase' => $purchase, 
+            'receipt_items' => $receipt_items,
+            'receipt_images' => $receipt_images
+        ]);
     }
 
     /**
@@ -223,6 +230,14 @@ class PurchaseController extends Controller
     {
         $purchase = Purchase::where('id', $id)->delete();
         return redirect()->back();
+    }
+
+    /**
+     * Remove the purchase receipt image
+     */
+    public function delete(Request $request, $id){
+        $image = ReceiptImage::where('id', $id)->where('purchase_id', $request->purchase_id)->delete();
+        return response()->json(['status' => true]);
     }
 
     /**
