@@ -42,12 +42,14 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+        try {
+
         $sale = new Sale();
 
         // validation goes here
 
         // receipt products
-        $receipt_items = $request->receipt_items;
+        $receipt_items = $request->receipt_products;
 
         // customer details
         $name = $request->customer_name;
@@ -82,10 +84,10 @@ class SaleController extends Controller
         foreach ($receipt_items as $item) {
             $saleItem = new SaleItem();
             $saleItem->fill([
-                'name' => $item['product_name'],
-                'description' => $item['product_description'],
-                'quantity' => $item['product_quantity'],
-                'unit_price' => $item['product_unit_price'],
+                'name' => $item['name'],
+                'description' => $item['description'],
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['unit_price'],
                 'sale_id' => $sale_id,
             ]);
             $saleItem->save();
@@ -93,7 +95,11 @@ class SaleController extends Controller
 
         // dd($receipt_items);
 
-        return redirect()->back()->withSuccess('Purchase Added!');
+        return response()->json(['status' => true]);
+    } catch (\Throwable $th) {
+        //throw $th;
+        return response()->json(['status' => false, 'data'=> $th, 'data' => $request->all()]);
+    }
     }
 
     /**
