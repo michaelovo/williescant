@@ -1176,18 +1176,13 @@ function deletePurchase(purchase_id) {
     if(confirm("This purchase receipt will be deleted permanently")) {
         $.ajax({
         type: 'POST',
-        url: "/supplier/includes/delete_purchase.php",
+        url: `/williescant/supplier/delete-purchase/${purchase_id}`,
         data: {'purchase_id': purchase_id},
         // processData: false,
         // contentType: false,
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            if (result.status) {
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
