@@ -454,7 +454,7 @@
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/dashboard-page-scripts.js') }}"></script>
 
-</html><script>
+<script>
 
 var formsetCount = 1;
 var editFormsetCount = 1;
@@ -604,32 +604,33 @@ $("#edit-sale-form").submit(function (e) {
         formData.delete(`old_product_quantity_${i}`);
         formData.delete(`old_product_unit_price_${i}`);
         formData.delete(`old_product_id_${i}`);
+        console.log(receipt_item)
     }
     parsedFormdata = {};
     for (var entry of formData.entries()) {
         parsedFormdata[entry[0]] = entry[1]; 
     }
+    var id = $("[name='sale_id']").val();
     // console.log({...parsedFormdata, 'receipt_products':products, 'old_items': old_items});
+    console.log(old_items)
+    console.log(products)
     $.ajax({
         type: 'POST',
-        url: "/supplier/includes/edit_sale.php",
-        data: {...parsedFormdata, 'receipt_products':products, 'old_items': old_items},
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },        
+        url: `/williescant/supplier/sale/update/${id}`,
+        data: {...parsedFormdata, 'receipt_products':products, 'old_items': old_items},     
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            console.log(result);
+            if (result.status) {
                 $("#modal-edit-success").removeClass('d-none');
                 $("#edit-sale-form")[0].reset();
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else if(res['error']) {
+            } else if(!result.status) {
+                console.log(result.error)
                 $("#modal-edit-success").addClass("d-none");
-                $("#modal-edit-errors").find("span").text(res['error']);
+                $("#modal-edit-errors").find("span").text(result.error);
                 $("#modal-edit-errors").removeClass('d-none');   
             } else {
                 $("#modal-edit-errors").find("span").text('Server Error. Failed to update sale.');
@@ -937,7 +938,7 @@ function editSale(sale_id) {
                         <div class="col-md-6">
                             <div class="form-group mb-2">
                                 <label class="required-label" for="new_product_name_${index}">Name</label>
-                                <input id="new_product_name_${index}" class="form-control" name="new_product_name_${index}" type="text"
+                                <input id="old_product_name_${index}" class="form-control" name="old_product_name_${index}" type="text"
                                     placeholder="Product Name" value="${item.name}" required>
                             </div>
                         </div>
@@ -945,7 +946,7 @@ function editSale(sale_id) {
                         <div class="col-md-6">
                             <div class="form-group mb-2">
                                 <label for="new_product_description_${index}">Description</label>
-                                <input id="new_product_description_${index}" class="form-control" name="new_product_description_${index}"
+                                <input id="old_product_description_${index}" class="form-control" name="old_product_description_${index}"
                                     type="text" value="${item.description}" placeholder="Product Description">
                             </div>
                         </div>
@@ -953,7 +954,7 @@ function editSale(sale_id) {
                         <div class="col-md-6">
                             <div class="form-group mb-2">
                                 <label class="required-label" for="new_product_quantity_${index}">Quantity</label>
-                                <input id="new_product_quantity_${index}" class="form-control" name="new_product_quantity_${index}" type="number"
+                                <input id="old_product_quantity_${index}" class="form-control" name="old_product_quantity_${index}" type="number"
                                   value="${item.quantity}"  placeholder="Product Qauntity" required>
                             </div>
                         </div>
@@ -961,11 +962,11 @@ function editSale(sale_id) {
                         <div class="col-md-6">
                             <div class="form-group mb-2">
                                 <label class="required-label" for="new_product_unit_price_${index}">Unit Price</label>
-                                <input id="new_product_unit_price_${index}" class="form-control" name="new_product_unit_price_${index}"
+                                <input id="old_product_unit_price_${index}" class="form-control" name="old_product_unit_price_${index}"
                                 step="0.01" value="${item.unit_price}" type="number" placeholder="Unit Price(Price of a single item)" required>
                             </div>
                         </div>
-                        <input value="${item.id}"  id="new_product_id_${index}"  name="id" hidden>
+                        <input value="${item.id}"  id="old_product_id_${index}"  name="id" hidden>
                         <div class="col-md-6">
                             <button type="button" onclick="deleteItem(Event, this, ${item.id}, '.$receipt_id.')" class="btn btn-sm btn-danger text-small">Remove item</button>            
                         </div>                        
