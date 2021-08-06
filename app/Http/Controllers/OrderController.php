@@ -14,4 +14,9 @@ class OrderController extends Controller
         $curr_page = 'order';
         return view('supplier.orders');
     }
+
+    public function cart() {
+        $curr_page = 'cart';
+        return view('shop.cart', compact('curr_page'));
+    }
 }

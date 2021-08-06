@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes(['verify' => true]);
 
 // Home Route - logged out / unregistered users
-Route::get('/', 'IndexController@index')->name('home')->middleware('auth', 'verified');
+Route::get('/', 'IndexController@index')->name('home');
 
 //Home Route - Logged in customer
 Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth', 'verified');
@@ -85,3 +85,6 @@ Route::post('/williescant/supplier/update-prepared/{id}', 'ProductController@upd
 
 // Orders
 Route::get('/williescant/supplier/get-orders', 'OrderController@index')->name('get-orders')->middleware('auth', 'verified');
+
+// Route end poinst for shopping cart
+Route::get('/williescant/shop/cart', 'OrderController@cart')->name('cart')->middleware('auth', 'verified');

@@ -11,9 +11,9 @@
         <!-- End Shop -->
 
         <!-- Shopping Cart -->
-        <a class="link-muted nav-link @if($curr_page=='cart')active @else '' @endif" href="/shop/cart">
+        <a class="link-muted nav-link @if($curr_page=='cart')active @else '' @endif" href="{{ route('cart') }}">
             <span class="h3">
-                <i class="fas fa-shopping-cart"></i>
+                <i class="fas fa-shopping-cart">Cart</i>
             </span>
         </a>
         <!-- End Shopping Cart -->
