@@ -88,3 +88,4 @@ Route::get('/williescant/supplier/get-orders', 'OrderController@index')->name('g
 
 // Route end poinst for shopping cart
 Route::get('/williescant/shop/cart', 'OrderController@cart')->name('cart')->middleware('auth', 'verified');
+Route::get('/williescant/shop/index', 'OrderController@customerOrders')->name('customer-shop')->middleware('auth','verified');
