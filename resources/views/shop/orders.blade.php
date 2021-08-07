@@ -1,6 +1,6 @@
+@extends('layouts.app', ['page_title' => 'Orders - Williescant'])
 
-$page_title = "Orders - WillieScant";
-
+@section('content')
     <!-- Header (Topbar) -->
 @include('menu.customer_nav')
     <!-- End Header (Topbar) -->
@@ -128,5 +128,4 @@ $page_title = "Orders - WillieScant";
             <!-- End Footer -->
         </div>
     </main>
-
-
+@endsection

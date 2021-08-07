@@ -7,19 +7,19 @@
 
     <div class="u-header-right">
         <!-- Shop -->
-        <a href="/shop/index.php" class="link-muted nav-link @if($curr_page=='shop')active @else '' @endif">Shop</a>
+        <a href="{{ route('customer-shop') }}" class="link-muted nav-link @if($curr_page=='shop')active @else '' @endif">Shop</a>
         <!-- End Shop -->
 
         <!-- Shopping Cart -->
-        <a class="link-muted nav-link @if($curr_page=='cart')active @else '' @endif" href="/shop/cart">
-            <span class="h3">
-                <i class="fas fa-shopping-cart"></i>
+        <a class="link-muted nav-link @if($curr_page=='cart')active @else '' @endif" href="{{ route('cart') }}">
+            <span class="">
+                <i class="fas fa-shopping-cart"></i> Cart
             </span>
         </a>
         <!-- End Shopping Cart -->
 
         <!-- Orders -->
-        <a href="/shop/orders" class="link-muted nav-link @if($curr_page=='orders')active @else '' @endif">Orders</a>
+        <a href="{{ route('orders') }}" class="link-muted nav-link @if($curr_page=='orders')active @else '' @endif">Orders</a>
         <!-- End Orders -->
 
         <!-- User Profile -->

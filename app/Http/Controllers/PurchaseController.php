@@ -229,7 +229,7 @@ class PurchaseController extends Controller
     public function destroy($id)
     {
         $purchase = Purchase::where('id', $id)->delete();
-        return redirect()->back();
+        return response()->json(['status' => true]);
     }
 
     /**

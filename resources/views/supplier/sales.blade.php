@@ -12,28 +12,7 @@
             <div class="u-body">
                 <div class="row">
                     <div class="col-md-12">
-    <div id="delete-alert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
-        Deleted 
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@if(Session::has('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{Session::get('success')}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@endif
-@if(Session::has('fail'))
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{Session::get('fail')}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@endif
+
                         <div class="d-flex justify-content-between mb-3">
                             <h1 class="h2 font-wight-semibold">Sales Receipts</h1>
                             <button class="btn btn-sm btn-outline-primary" id="add-sale-modal-btn" data-toggle="modal" href="#">
@@ -60,18 +39,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($sales as $sale)
-                                                <tr id="id_{{$sale->id}}">
-                                                    <td>{{$sale->id}}</td>
-                                                    <td>{{$sale->pin}}</td>
-                                                    <td>{{$sale->receipt_number}}</td>
-                                                    <td>{{$sale->etr}}</td>
-                                                    <td>{{$sale->total_items}}</td>
-                                                    <td>{{$sale->sub_total}}</td>
-                                                    <td>{{$sale->total_price}}</td>
-                                                    <td>{{$sale->vat}}</td>
-                                                    <td>{{$sale->date}}</td>
-                                                    <td class="text-center">
+                                            @foreach ($sales as $key => $sale)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $sale->pin }}</td>
+                                                <td>{{ $sale->receipt_number }}</td>
+                                                <td>{{ $sale->etr }}</td>
+                                                <td>{{ $sale->total_items }}</td>
+                                                <td>{{ $sale->sub_total }}</td>
+                                                <td>{{ $sale->total_price }}</td>
+                                                <td>{{ $sale->vat }}</td>
+                                                <td>{{ $sale->date }}</td>
+                                                <td class="text-center">
                                                     <a id="actions3Invoker" class="link-muted" href="#!"
                                                         aria-haspopup="true" aria-expanded="false"
                                                         data-toggle="dropdown">
@@ -84,19 +63,19 @@
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                     onclick="saleDetails('{{$sale->id}}')">
+                                                                    href="#" onclick="saleDetails({{ $sale->id }})">
                                                                     <i class="fa fa-eye mr-2"></i> Details
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a class="d-flex align-items-center link-muted py-2 px-3"
                                                                     data-toggle="modal"
-                                                                    href="#" onclick="editSale('{{$sale->id}}')">
+                                                                    href="#" onclick="editSale({{ $sale->id }})">
                                                                     <i class="fa fa-edit mr-2"></i> Edit
                                                                 </a>
                                                             </li>                                                              
                                                             <li>
-                                                                <a href="#" onclick="deleteSale('{{$sale->id}}')"
+                                                                <a href="#" onclick="deleteSale({{ $sale->id }})"
                                                                     class="d-flex align-items-center link-muted text-danger py-2 px-3">
                                                                     <i class="fa fa-ban mr-2"></i> Delete
                                                                 </a>
@@ -139,8 +118,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="mb-3" id="add-sale-form" method="POST" action="{{route('add-sale')}}">
-                    @csrf
+                <form class="mb-3" id="add-sale-form">
                     <div class="modal-body">
                     <!-- Supplier and Product details tabs -->
                     <ul class="nav nav-tabs mt-3 mb-3">
@@ -163,7 +141,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_name_1">Name</label>
-                                        <input id="product_name_1" class="form-control" name="receipt_items[0][product_name]" type="text"
+                                        <input id="product_name_1" class="form-control" name="product_name_1" type="text"
                                             placeholder="Product Name" required>
                                     </div>
                                 </div>
@@ -171,7 +149,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="product_description_1">Description</label>
-                                        <input id="product_description_1" class="form-control" name="receipt_items[0][product_description]"
+                                        <input id="product_description_1" class="form-control" name="product_description_1"
                                             type="text" placeholder="Product Description">
                                     </div>
                                 </div>
@@ -179,7 +157,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_quantity_1">Quantity</label>
-                                        <input id="product_quantity_1" class="form-control" name="receipt_items[0][product_quantity]" type="number"
+                                        <input id="product_quantity_1" class="form-control" name="product_quantity_1" type="number"
                                             placeholder="Product Qauntity" required>
                                     </div>
                                 </div>
@@ -187,7 +165,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label class="required-label" for="product_unit_price_1">Unit Price</label>
-                                        <input id="product_unit_price_1" class="form-control" name="receipt_items[0][product_unit_price]"
+                                        <input id="product_unit_price_1" class="form-control" name="product_unit_price_1"
                                         step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                                     </div>
                                 </div>
@@ -455,10 +433,28 @@
         </div>
     </div>
     <!-- End View Sale Details Modal -->
-    <script src="{{asset('js/main.js')}}"></script>
-    <script src="{{asset('js/sidebar-nav.js')}}"></script>
-    <script src="{{ asset('js/dashboard-page-scripts.js') }}"></script>
-    <script>
+
+
+{{-- <!-- Global Vendor -->
+<script src=/assets/vendor/jquery-migrate/jquery-migrate.min.js></script>
+<script src=/assets/vendor/popper.js/dist/umd/popper.min.js></script>
+<script src=/assets/vendor/bootstrap/bootstrap.min.js></script>
+
+<!-- Plugins -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js" integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A==" crossorigin="anonymous"></script>
+<script src=/assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js></script>
+<script src=/assets/vendor/chart.js/dist/Chart.min.js></script>
+<script src="/assets/vendor/datatables/dataTables.min.js"></script>
+<script src=/assets/vendor/datatables/dataTables.bootstrap4.min.js></script>
+<script src="/assets/vendor/swal/swal.js"></script> --}}
+
+
+<!-- Initialization  -->
+<script src="{{ asset('js/sidebar-nav.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/dashboard-page-scripts.js') }}"></script>
+
+<script>
 
 var formsetCount = 1;
 var editFormsetCount = 1;
@@ -475,7 +471,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_name_${formsetCount}">Name</label>
-                    <input id="product_name_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_name]" type="text"
+                    <input id="product_name_${formsetCount}" class="form-control" name="product_name_${formsetCount}" type="text"
                         placeholder="Product Name" required>
                 </div>
             </div>
@@ -483,7 +479,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label for="product_description_${formsetCount}">Description</label>
-                    <input id="product_description_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_description]"
+                    <input id="product_description_${formsetCount}" class="form-control" name="product_description_${formsetCount}"
                         type="text" placeholder="Product Description">
                 </div>
             </div>
@@ -491,7 +487,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_quantity_${formsetCount}">Quantity</label>
-                    <input id="product_quantity_${formsetCount}" class="form-control" name="receipt_items[${formsetCount}][product_quantity]" type="number"
+                    <input id="product_quantity_${formsetCount}" class="form-control" name="product_quantity_${formsetCount}" type="number"
                         placeholder="Product Qauntity" required>
                 </div>
             </div>
@@ -499,7 +495,7 @@ $("#add-item-formset").click(() => {
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label class="required-label" for="product_unit_price_${formsetCount}"">Unit Price</label>
-                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="receipt_items[${formsetCount}][product_unit_price]"
+                    <input id="product_unit_price_${formsetCount}"" class="form-control" name="product_unit_price_${formsetCount}"
                     step="0.01" type="number" placeholder="Unit Price(Price of a single item)" required>
                 </div>
             </div>
@@ -515,7 +511,7 @@ $("#add-item-formset").click(() => {
     $(formset).insertBefore(addFormsetBtn);
 });
 
-$("").submit(function (e) {
+$("#add-sale-form").submit(function (e) {
     e.preventDefault();
     var formData = new FormData($("#add-sale-form")[0]);
     $("#modal-success").addClass("d-none");
@@ -545,24 +541,20 @@ $("").submit(function (e) {
 
     $.ajax({
         type: 'POST',
-        url: "/supplier/includes/add_sale.php",
-        data: {...parsedFormdata, 'receipt_products':products},
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },        
+        url: "{{ route('add-sale') }}",
+        data: {...parsedFormdata, 'receipt_products':products},     
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            console.log(result)
+            if (result.status) {
                 $("#modal-success").removeClass('d-none');
                 $("#add-sale-form")[0].reset();
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else if(res['error']) {
+            } else if(!result.status) {
                 $("#modal-success").addClass("d-none");
-                $("#modal-errors").find("span").text(res['error']);
+                $("#modal-errors").find("span").text("Something is not right! Please Try again");
                 $("#modal-errors").removeClass('d-none');        
             } else {
                 $("#modal-errors").find("span").text('Server Error. Failed to prepare product.');
@@ -612,32 +604,33 @@ $("#edit-sale-form").submit(function (e) {
         formData.delete(`old_product_quantity_${i}`);
         formData.delete(`old_product_unit_price_${i}`);
         formData.delete(`old_product_id_${i}`);
+        console.log(receipt_item)
     }
     parsedFormdata = {};
     for (var entry of formData.entries()) {
         parsedFormdata[entry[0]] = entry[1]; 
     }
+    var id = $("[name='sale_id']").val();
     // console.log({...parsedFormdata, 'receipt_products':products, 'old_items': old_items});
+    console.log(old_items)
+    console.log(products)
     $.ajax({
         type: 'POST',
-        url: "/supplier/includes/edit_sale.php",
-        data: {...parsedFormdata, 'receipt_products':products, 'old_items': old_items},
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },        
+        url: `/williescant/supplier/sale/update/${id}`,
+        data: {...parsedFormdata, 'receipt_products':products, 'old_items': old_items},     
         success: function (result) {
-            res = JSON.parse(result);
-            if (res['success']) {
+            // res = JSON.parse(result);
+            console.log(result);
+            if (result.status) {
                 $("#modal-edit-success").removeClass('d-none');
                 $("#edit-sale-form")[0].reset();
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else if(res['error']) {
+            } else if(!result.status) {
+                console.log(result.error)
                 $("#modal-edit-success").addClass("d-none");
-                $("#modal-edit-errors").find("span").text(res['error']);
+                $("#modal-edit-errors").find("span").text(result.error);
                 $("#modal-edit-errors").removeClass('d-none');   
             } else {
                 $("#modal-edit-errors").find("span").text('Server Error. Failed to update sale.');
@@ -650,22 +643,17 @@ $("#edit-sale-form").submit(function (e) {
 function saleDetails(sale_id) {
     $.ajax({
         type: 'GET',
-        url: `/williescant/supplier/sale/${sale_id}`,
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },        
+        url: `/williescant/supplier/sale/${sale_id}`,       
         success: function (result) {
-
-            if (result.status = 'success') {
-                let receipt_details = `
+            // res = JSON.parse(result);
+            if (result.status) {
+                var receipt_details = `
                 <div class="col-3 mb-3 details-item">
                     <div class="details-title">
                         Receipt Number
                     </div>
                     <div class="details-value" id="details-receipt-number">
-                        ${result.data.receipt_number}                          
+                        ${result.data.receipt_number}                      
                     </div>
                 </div>
 
@@ -674,7 +662,7 @@ function saleDetails(sale_id) {
                         KRA PIN
                     </div>
                     <div class="details-value" id="details-pin">
-                        ${result.data.pin }                       
+                        ${result.data.pin}                         
                     </div>
                 </div>
 
@@ -683,7 +671,7 @@ function saleDetails(sale_id) {
                         Customer Name
                     </div>
                     <div class="details-value" id="details-customer-name">
-                        ${result.data.customer_name }                         
+                        ${result.data.customer_name}                         
                     </div>
                 </div>            
 
@@ -692,7 +680,7 @@ function saleDetails(sale_id) {
                         Item Count
                     </div>
                     <div class="details-value" id="details-item-count">
-                       ${result.data.total_items}                        
+                        ${result.data.total_items}                         
                     </div>
                 </div>  
 
@@ -701,7 +689,7 @@ function saleDetails(sale_id) {
                         Sub Total
                     </div>
                     <div class="details-value" id="details-sub-total">
-                        ${result.data.sub_total}                         
+                        ${result.data.sub_total}                       
                     </div>
                 </div>
                 <div class="col-3 mb-4 details-item">
@@ -709,7 +697,7 @@ function saleDetails(sale_id) {
                         VAT
                     </div>
                     <div class="details-value" id="details-vat">
-                       ${result.data.vat}                          
+                        ${result.data.vat}                          
                     </div>
                 </div>
 
@@ -718,7 +706,7 @@ function saleDetails(sale_id) {
                         Total
                     </div>
                     <div class="details-value" id="details-total">
-                        ${result.data.total_price}                          
+                        ${result.data.total_price}                         
                     </div>
                 </div> 
                 <div class="col-3 mb-4 details-item">
@@ -726,7 +714,7 @@ function saleDetails(sale_id) {
                         Date
                     </div>
                     <div class="details-value" id="details-date">
-                        ${result.data.date }                         
+                        ${result.data.date}                         
                     </div>
                 </div>  
                 <div class="col-3 mb-4 details-item">
@@ -734,38 +722,30 @@ function saleDetails(sale_id) {
                         Time
                     </div>
                     <div class="details-value" id="details-time">
-                        ${result.data.time }                         
+                        ${result.data.time}                       
                     </div>
                 </div>                         
             `;
-                var receipt_items = result.products;
-                console.log()
-                console.log(receipt_items);
-                
-                $("#receipt-details-row").html(receipt_details);
-                let table_body = '';
-                if(receipt_items.length == 0) {
-                    table_body = `<tr><td colspan="9" class="text-center">
-                    <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
-                    </td></tr>`
-                } else{
-                                    receipt_items.forEach(element => {
-                    table_body += `
+                var receipt_items = '';
+                result.products.map((item, index) =>{
+                    var desc = item.description.length !== 0? item.description: '';
+                    receipt_items = `
                     <tr>
-                        <td>${element.id}</td>
-                        <td>${element.name}</td>
-                        <td>${element.description}</td>
-                        <td>${element.quantity}</td>
-                        <td>${element.unit_price}</td>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${desc}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.unit_price}</td>
                     </tr>`;
                 });
+                
+                $("#receipt-details-row").html(receipt_details);
+                if(result.products.length == 0) {
+                    receipt_items = `<tr><td colspan="9" class="text-center">
+                    <div class="alert alert-soft-secondary justify-content-center">No receipt items found!</div>
+                    </td></tr>`;
                 }
-
-
-
-
-
-                $("#items-details-row").html(table_body);
+                $("#items-details-row").html(receipt_items);
 
                 $("#saleDetailsModal").modal('show');
             } else {
@@ -777,10 +757,9 @@ function saleDetails(sale_id) {
 
 function deleteSale(sale_id) {
     if(confirm("This sale receipt will be deleted permanently")) {
-            $('#id_'+sale_id).remove()
         $.ajax({
         type: 'POST',
-        url: "/williescant/supplier/sale/del/"+sale_id,
+        url: "/supplier/includes/delete_sale.php",
         data: {'sale_id': sale_id},
         // processData: false,
         // contentType: false,
@@ -790,15 +769,11 @@ function deleteSale(sale_id) {
             }
         },        
         success: function (result) {
-            // res = JSON.parse(result);
-            console.log(result.status)
-            if (result.success==true) {
-                $('#delete-alert').removeClass('d-none')
-                console.log($('#delete-alert'))
-                // setTimeout(() => {
-                //     window.location.reload();
-                // }, 1000);
-                // location.reload();
+            res = JSON.parse(result);
+            if (res['success']) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
                 // $("#modal-errors").removeClass('d-none');
             }
@@ -878,17 +853,12 @@ function editSale(sale_id) {
 
     $.ajax({
         type: 'GET',
-        url: `/williescant/supplier/sale/edit/${sale_id}`,
-        statusCode: {
-            401: function(response) {
-                window.location.href = '/auth/logout.php';
-            }
-        },        
+        url: `/williescant/supplier/sale/edit/${sale_id}`,    
         success: function (result) {
-            console.log(result);
+            // console.log(result);
             // res = JSON.parse(result);
-
-            let details = `
+            if (result.status) {
+                var receipt_details = `
                 <div class="form-row mb-2">
                     <div class="col-md-6">
                         <div class="form-group mb-2">
@@ -958,60 +928,60 @@ function editSale(sale_id) {
 
                     <input type="text" name="sale_id" value="${result.data.id}" hidden></input>
                 </div>            
-                `;   
-                
-                // let items = '
-                //         <div class="form-row mb-2">
-                //         <div class="col-md-6">
-                //             <div class="form-group mb-2">
-                //                 <label class="required-label" for="new_product_name_'.$item_count.'">Name</label>
-                //                 <input id="new_product_name_'.$item_count.'" class="form-control" name="new_product_name_'.$item_count.'" type="text"
-                //                     placeholder="Product Name" value="'.$row['name'].'" required>
-                //             </div>
-                //         </div>
-
-                //         <div class="col-md-6">
-                //             <div class="form-group mb-2">
-                //                 <label for="new_product_description_'.$item_count.'">Description</label>
-                //                 <input id="new_product_description_'.$item_count.'" class="form-control" name="new_product_description_'.$item_count.'"
-                //                     type="text" value="'.$row['description'].'" placeholder="Product Description">
-                //             </div>
-                //         </div>
-
-                //         <div class="col-md-6">
-                //             <div class="form-group mb-2">
-                //                 <label class="required-label" for="new_product_quantity_'.$item_count.'">Quantity</label>
-                //                 <input id="new_product_quantity_'.$item_count.'" class="form-control" name="new_product_quantity_'.$item_count.'" type="number"
-                //                   value="'.$row['quantity'].'"  placeholder="Product Qauntity" required>
-                //             </div>
-                //         </div>
-
-                //         <div class="col-md-6">
-                //             <div class="form-group mb-2">
-                //                 <label class="required-label" for="new_product_unit_price_'.$item_count.'">Unit Price</label>
-                //                 <input id="new_product_unit_price_'.$item_count.'" class="form-control" name="new_product_unit_price_'.$item_count.'"
-                //                 step="0.01" value="'.$row['unit_price'].'" type="number" placeholder="Unit Price(Price of a single item)" required>
-                //             </div>
-                //         </div>
-                //         <input value="'.$row['id'].'"  id="new_product_id_'.$item_count.'"  name="id" hidden>
-                //         <div class="col-md-6">
-                //             <button type="button" onclick="deleteItem(Event, this, '.$row['id'].', '.$receipt_id.')" class="btn btn-sm btn-danger text-small">Remove item</button>            
-                //         </div>                        
-                //         <div class="col-md-12 mt-2">
-                //             <hr/>
-                //         </div>
-                //     </div>';         
-            if (result.status  == 'success') {
-                var receipt_details = details;
-                console.log(result.items)
+                `;  
                 // var supplier_details = res['supplier_details'];
-                // var receipt_items = res['receipt_items'];
 
-                // oldItemCount = Number(res['data']['total_items']);
+                var receipt_items = '';
+                result.items.map((item, index) => {
+                    receipt_items +=`
+                        <div class="form-row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_name_${index}">Name</label>
+                                <input id="old_product_name_${index}" class="form-control" name="old_product_name_${index}" type="text"
+                                    placeholder="Product Name" value="${item.name}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label for="new_product_description_${index}">Description</label>
+                                <input id="old_product_description_${index}" class="form-control" name="old_product_description_${index}"
+                                    type="text" value="${item.description}" placeholder="Product Description">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_quantity_${index}">Quantity</label>
+                                <input id="old_product_quantity_${index}" class="form-control" name="old_product_quantity_${index}" type="number"
+                                  value="${item.quantity}"  placeholder="Product Qauntity" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label class="required-label" for="new_product_unit_price_${index}">Unit Price</label>
+                                <input id="old_product_unit_price_${index}" class="form-control" name="old_product_unit_price_${index}"
+                                step="0.01" value="${item.unit_price}" type="number" placeholder="Unit Price(Price of a single item)" required>
+                            </div>
+                        </div>
+                        <input value="${item.id}"  id="old_product_id_${index}"  name="id" hidden>
+                        <div class="col-md-6">
+                            <button type="button" onclick="deleteItem(Event, this, ${item.id}, '.$receipt_id.')" class="btn btn-sm btn-danger text-small">Remove item</button>            
+                        </div>                        
+                        <div class="col-md-12 mt-2">
+                            <hr/>
+                        </div>
+                    </div>`;                    
+                })
+ 
+
+                oldItemCount = result.data.total_items;
                 
                 // $("#edit-supplier-details").html(supplier_details)
                 $("#edit-receipt-details").html(receipt_details)
-                // $(receipt_items).insertBefore($("#edit-item-formset"));
+                $(receipt_items).insertBefore($("#edit-item-formset"));
 
             } else {
                 $("#modal-edit-errors").find('span').text('Failed to fetch receipt details try again later')
