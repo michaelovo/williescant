@@ -205,8 +205,12 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('id', $id)->delete();
-        return response()->json(['message' => "deleted"], 200);
+        try {
+            $product = Product::where('id', $id)->delete();
+            return response()->json(['message' => "deleted"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => "Failed to delete. Try again"]);
+        }
     }
 
     /**
@@ -215,8 +219,13 @@ class ProductController extends Controller
      */
     public function deleteImage(Request $request)
     {
-        $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
-        return response()->json(['message' => true]);
+        try {
+            $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
+            return response()->json(['message' => "Image Deleted"]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => "Fail. Try Again"]);
+        }
+
     }
 
     /**
