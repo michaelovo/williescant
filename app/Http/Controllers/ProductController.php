@@ -71,6 +71,15 @@ class ProductController extends Controller
     {
         try {
             //code... 
+            $validated = $request->validate(([
+                'name' => 'required',
+                'quantity' => 'required',
+                'unit_description' => 'required',
+                'unit_price' => 'required',
+                'category' => 'required',
+                'images' => 'required'
+            ]));
+
             $product = new Product();
 
             $product->name = $request->name;
@@ -103,10 +112,10 @@ class ProductController extends Controller
                 $product_image->save();
             }
 
-            return response()->json(['status' => true]);
+            return response()->json(['message' => "Product Saved"], 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['status' => false, 'error' => $th]);
+            return response()->json(['message' => "Failed. Try again"]);
         }
     }
 
