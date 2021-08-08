@@ -29,7 +29,8 @@ Route::get('williescant/product/prepared', 'ProductController@prepared');
 Route::get('williescant/product/all-products', 'ProductController@index');
 
 // Get single product
-Route::get('williescant/product/{id}', 'ProductController@show');
+Route::get('williescant/product/show/{id}', 'ProductController@show'); // Show single item
+Route::get('williescant/product/edit/{id}', 'ProductController@edit'); // Edit single item
 
 // Get Categories
 Route::get('williescant/product/get-category', 'ProductController@getCategory');

@@ -134,7 +134,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $images = ProductImage::where('product_id', $id)->get();
-        return response()->json(['product' => $product, 'images' => $images]);
+        $product['images'] = $images;
+        return response()->json($product, 200);
     }
 
     /**
