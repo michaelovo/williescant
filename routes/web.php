@@ -32,6 +32,12 @@ Route::get('williescant/product/all-products', 'ProductController@index');
 Route::get('williescant/product/show/{id}', 'ProductController@show'); // Show single item
 Route::get('williescant/product/edit/{id}', 'ProductController@edit'); // Edit single item
 
+// Add new product end point
+Route::post('williescant/product/add-new', 'ProductController@store');
+
+// Update product end point
+Route::post('williescant/product/update/{id}', 'ProductController@update');
+
 // Get Categories
 Route::get('williescant/product/get-category', 'ProductController@getCategory');
 
@@ -58,10 +64,10 @@ Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier
 Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth', 'verified');
 
 // product
-Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
+// Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
-Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
 // Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/product/remove-image', 'ProductController@deleteImage')->name('delete-image')->middleware('auth', 'verified');

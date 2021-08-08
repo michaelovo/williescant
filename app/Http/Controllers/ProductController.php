@@ -112,7 +112,7 @@ class ProductController extends Controller
                 $product_image->save();
             }
 
-            return response()->json(['message' => "Product Saved"], 200);
+            return response()->json(['message' => "Product created"], 201);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['message' => "Failed. Try again"]);
@@ -157,6 +157,15 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $validated = $request->validate(([
+                'name' => 'required',
+                'quantity' => 'required',
+                'unit_description' => 'required',
+                'unit_price' => 'required',
+                'category' => 'required',
+                'images' => 'required'
+            ]));
+
             $product = Product::find($id);
 
             $available = $request->available == 'on' ? 1 : 0;
@@ -170,6 +179,7 @@ class ProductController extends Controller
                 'color' => $request->color,
                 'available' => $available,
             ]);
+
             if ($request->hasFile('images')) {
                 foreach ($request->images as $file) {
                     $image = $file->store('uploads');
@@ -181,9 +191,9 @@ class ProductController extends Controller
                     $product_image->save();
                 }
             }
-            return response()->json(['status' => true]);
+            return response()->json(['message' => "Product updated"], 200);
         } catch (\Throwable $th) {
-            return response()->json(['status' => false,  'error' => $th]);
+            return response()->json(['message' => "Failed. Try again"]);
         }
     }
 
