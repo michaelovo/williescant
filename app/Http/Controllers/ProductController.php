@@ -31,7 +31,7 @@ class ProductController extends Controller
                 'ready_sales.quantity as prepared_quantity'
             ])->toJson(JSON_PRETTY_PRINT);
 
-            dd($products);
+            return response($products, 200);
     }
 
     /**

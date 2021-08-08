@@ -34,3 +34,31 @@ $factory->define(\App\ProductCategory::class, function ( Faker $faker) {
         'active' => $faker->boolean(50),
     ];
 });
+
+$factory->define(\App\Product::class, function (Faker $faker) {
+    return [
+        'category_id' => $faker->numberBetween(1, 10),
+        'name' => $faker->words(2,true),
+        'description' => $faker->sentence(),
+        'brand' => $faker->word(),
+        'color' => $faker->hexColor(),
+        'unit_price' => $faker->randomFloat(2),
+        'quantity' =>$faker->numberBetween(1, 100),
+        'unit_description' => $faker->words(2, true),
+        'sku' => $faker->uuid(),
+        'size' => $faker->numberBetween(1, 5),
+        'available' => $faker->numberBetween(0, 1),
+        'image' => $faker->numberBetween(1, 10)
+    ];
+});
+
+$factory->define(\App\ReadySale::class, function (Faker $faker) {
+    return [
+        'fraction' => $faker->randomFloat(2),
+        'quantity' =>$faker->numberBetween(1, 100),
+        'selling_price' => $faker->randomFloat(),
+        'buying_price' => $faker->randomFloat(),
+        'sku' => $faker->uuid(),
+        'product_id' => $faker->numberBetween(23, 32),
+    ];
+});

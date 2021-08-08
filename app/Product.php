@@ -29,8 +29,7 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $product->supplier_id = Auth::user()->id;
-            $product->sku = 'kta-xxx';
+            $product->supplier_id = "6a1e2797-9337-49c9-bf16-5cb71eb67ea1";
         });
     }
 }
