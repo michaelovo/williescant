@@ -10,7 +10,8 @@ class IndexController extends Controller
 {
     //
     public function index() {
-        $curr_page = '';
+        $curr_page = 'display';
+
         return view('index', compact('curr_page'));
     }
 

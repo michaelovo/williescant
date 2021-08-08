@@ -9,6 +9,7 @@ use App\ReadySale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -19,7 +20,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $curr_page = 'shop';
         $products = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
             ->where('products.supplier_id', Auth::user()->id)
             ->get([
@@ -30,8 +30,19 @@ class ProductController extends Controller
                 'ready_sales.id as ready_sale_id',
                 'ready_sales.selling_price',
                 'ready_sales.quantity as prepared_quantity'
-            ]);
-        return view('supplier.shop', compact('products', 'curr_page'));
+            ])->toJson(JSON_PRETTY_PRINT);
+
+            return response($products, 200);
+    }
+
+    /**
+     * Return all categories as a json object
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getCategory(){
+        $categories = ProductCategory::get()->toJson(JSON_PRETTY_PRINT);
+        return response($categories, 200);
     }
 
     /**
@@ -60,6 +71,15 @@ class ProductController extends Controller
     {
         try {
             //code... 
+            $validated = $request->validate(([
+                'name' => 'required',
+                'quantity' => 'required',
+                'unit_description' => 'required',
+                'unit_price' => 'required',
+                'category' => 'required',
+                'images' => 'required'
+            ]));
+
             $product = new Product();
 
             $product->name = $request->name;
@@ -92,10 +112,10 @@ class ProductController extends Controller
                 $product_image->save();
             }
 
-            return response()->json(['status' => true]);
+            return response()->json(['message' => "Product created"], 201);
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['status' => false, 'error' => $th]);
+            return response()->json(['message' => "Failed. Try again"]);
         }
     }
 
@@ -109,7 +129,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $images = ProductImage::where('product_id', $id)->get();
-        return response()->json(['product' => $product, 'images' => $images]);
+        $product['images'] = $images;
+        return response()->json($product, 200);
     }
 
     /**
@@ -122,7 +143,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $images = ProductImage::where('product_id', $id)->get();
-        return response()->json(['product' => $product, 'images' => $images]);
+        $product['images'] = $images;
+        return response()->json($product, 200);
     }
 
     /**
@@ -135,6 +157,15 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $validated = $request->validate(([
+                'name' => 'required',
+                'quantity' => 'required',
+                'unit_description' => 'required',
+                'unit_price' => 'required',
+                'category' => 'required',
+                'images' => 'required'
+            ]));
+
             $product = Product::find($id);
 
             $available = $request->available == 'on' ? 1 : 0;
@@ -148,6 +179,7 @@ class ProductController extends Controller
                 'color' => $request->color,
                 'available' => $available,
             ]);
+
             if ($request->hasFile('images')) {
                 foreach ($request->images as $file) {
                     $image = $file->store('uploads');
@@ -159,9 +191,9 @@ class ProductController extends Controller
                     $product_image->save();
                 }
             }
-            return response()->json(['status' => true]);
+            return response()->json(['message' => "Product updated"], 200);
         } catch (\Throwable $th) {
-            return response()->json(['status' => false,  'error' => $th]);
+            return response()->json(['message' => "Failed. Try again"]);
         }
     }
 
@@ -173,8 +205,12 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('id', $id)->delete();
-        return response()->json(['message' => true]);
+        try {
+            $product = Product::where('id', $id)->delete();
+            return response()->json(['message' => "deleted"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => "Failed to delete. Try again"]);
+        }
     }
 
     /**
@@ -183,8 +219,13 @@ class ProductController extends Controller
      */
     public function deleteImage(Request $request)
     {
-        $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
-        return response()->json(['message' => true]);
+        try {
+            $image = ProductImage::where('product_id', $request->id)->where('id', $request->image_id)->delete();
+            return response()->json(['message' => "Image Deleted"]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => "Fail. Try Again"]);
+        }
+
     }
 
     /**
@@ -240,7 +281,7 @@ class ProductController extends Controller
      */
     public function prepared()
     {
-        try {
+
             $prepared = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
                 ->join('product_images', 'products.id', 'product_images.product_id')
                 ->join('product_categories', 'products.category_id', 'product_categories.id')
@@ -256,13 +297,10 @@ class ProductController extends Controller
                     'ready_sales.selling_price as selling_price',
                     'ready_sales.quantity as prepared_quantity',
                     'product_images.image as path',
-                ]);
-            $curr_page = 'shop';
-            // return $prepared;
-            return view('supplier.shop', compact('prepared', 'curr_page'));
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+                ])->toJson(JSON_PRETTY_PRINT);
+
+                dd($prepared);
+            // return response($prepared, 200);
     }
 
     /**

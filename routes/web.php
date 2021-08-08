@@ -16,9 +16,36 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['verify' => true]);
 
-// Home Route - logged out / unregistered users
+// Home page for both logged in and logged out users
 Route::get('/', 'IndexController@index')->name('home');
 
+/**
+ * API Endpoint for Products
+ */
+// Prepared Product
+Route::get('williescant/product/prepared', 'ProductController@prepared');
+
+// Get all products
+Route::get('williescant/product/all-products', 'ProductController@index');
+
+// Get single product
+Route::get('williescant/product/show/{id}', 'ProductController@show'); // Show single item
+Route::get('williescant/product/edit/{id}', 'ProductController@edit')->middleware('auth', 'verified'); // Edit single item
+
+// Add new product end point
+Route::post('williescant/product/add-new', 'ProductController@store')->middleware('auth', 'verified');
+
+// Update product end point
+Route::post('williescant/product/update/{id}', 'ProductController@update')->middleware('auth', 'verified');
+
+// Delete a product
+Route::post('williescant/product/delete/{id}', 'ProductController@destroy')->middleware('auth', 'verified');
+
+// Get Categories
+Route::get('williescant/product/get-category', 'ProductController@getCategory')->middleware('auth', 'verified');
+
+
+// Old Route URLs
 //Home Route - Logged in customer
 Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth', 'verified');
 
@@ -40,11 +67,11 @@ Route::get('/williescant/supplier/home', 'IndexController@home')->name('supplier
 Route::post('/williescant/supplier/switch', 'ProfileController@switch')->name('switch')->middleware('auth', 'verified');
 
 // product
-Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
+// Route::post('williesscant/supplier/add-product', 'ProductController@store')->name('add-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-category', 'IndexController@returnController')->name('get-category')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/edit/{id}', 'ProductController@edit')->name('edit-product')->middleware('auth', 'verified');
-Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
-Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/product/update/{id}', 'ProductController@update')->name('update-product')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/delete/{id}', 'ProductController@destroy')->name('delete-product')->middleware('auth', 'verified');
 // Route::post('/williescant/supplier/search', 'ProductController@search')->name('search-product')->middleware('auth', 'verified');
 Route::post('/williescant/supplier/product/remove-image', 'ProductController@deleteImage')->name('delete-image')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/product/get-product/{id}', 'ProductController@show')->name('get-product')->middleware('auth', 'verified');
@@ -64,9 +91,9 @@ Route::get('/wiilliescant/supplier/accountants', 'SupplierAccountantController@i
 // Route::get('williescant/supplier/purchase/search/{pin}', 'ProductController@search')->name('search-pin')->middleware('auth', 'verified');
 
 // Export
-Route::get('williescant/supplier/exports', 'KraController@index')->name('get-export')->middleware('auth', 'verified');
-Route::get('williescant/supplier/export-all', 'KraController@exportPurchase')->name('export-all')->middleware('auth', 'verified');
-Route::get('williescant/supplier/export-month', 'KraController@exportCurrentMonth')->name('export-month')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/exports', 'KraController@index')->name('get-export')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/export-all', 'KraController@exportPurchase')->name('export-all')->middleware('auth', 'verified');
+Route::get('/williescant/supplier/export-month', 'KraController@exportCurrentMonth')->name('export-month')->middleware('auth', 'verified');
 
 //Sales
 Route::get('williescant/supplier/get-sales', 'SaleController@index')->name('get-sales')->middleware('auth', 'verified');

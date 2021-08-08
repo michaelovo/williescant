@@ -62,6 +62,9 @@
             <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
 
+            <script src="{{asset('js/main.js')}}"></script>
+            <script src="{{asset('js/sidebar-nav.js')}}"></script>
+            <script src="{{ asset('js/dashboard-page-scripts.js') }}"></script>
 
 
 </body>
