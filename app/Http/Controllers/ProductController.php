@@ -19,7 +19,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $curr_page = 'shop';
         $products = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
             ->where('products.supplier_id', Auth::user()->id)
             ->get([
@@ -30,8 +29,19 @@ class ProductController extends Controller
                 'ready_sales.id as ready_sale_id',
                 'ready_sales.selling_price',
                 'ready_sales.quantity as prepared_quantity'
-            ]);
-        return view('supplier.shop', compact('products', 'curr_page'));
+            ])->toJson(JSON_PRETTY_PRINT);
+
+            dd($products);
+    }
+
+    /**
+     * Return all categories as a json object
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getCategory(){
+        $categories = ProductCategory::get()->toJson(JSON_PRETTY_PRINT);
+        return response($categories, 200);
     }
 
     /**
@@ -240,7 +250,7 @@ class ProductController extends Controller
      */
     public function prepared()
     {
-        try {
+
             $prepared = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
                 ->join('product_images', 'products.id', 'product_images.product_id')
                 ->join('product_categories', 'products.category_id', 'product_categories.id')
@@ -256,13 +266,10 @@ class ProductController extends Controller
                     'ready_sales.selling_price as selling_price',
                     'ready_sales.quantity as prepared_quantity',
                     'product_images.image as path',
-                ]);
-            $curr_page = 'shop';
-            // return $prepared;
-            return view('supplier.shop', compact('prepared', 'curr_page'));
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+                ])->toJson(JSON_PRETTY_PRINT);
+
+                dd($prepared);
+            // return response($prepared, 200);
     }
 
     /**

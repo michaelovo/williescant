@@ -16,9 +16,20 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['verify' => true]);
 
-// Home Route - logged out / unregistered users
+// Home page for both logged in and logged out users
 Route::get('/', 'IndexController@index')->name('home');
 
+/**
+ * API Endpoint for Products
+ */
+// Prepared Product
+Route::get('williescant/product/prepared', 'ProductController@prepared');
+
+// Get all products
+Route::get('williescant/product/all-products', 'ProductController@index');
+
+// Get Categories
+Route::get('williescant/product/get-category', 'ProductController@getCategory');
 //Home Route - Logged in customer
 Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth', 'verified');
 
