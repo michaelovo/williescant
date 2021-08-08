@@ -62,3 +62,11 @@ $factory->define(\App\ReadySale::class, function (Faker $faker) {
         'product_id' => $faker->numberBetween(23, 32),
     ];
 });
+
+$factory->define(\App\ProductImage::class, function (Faker $faker) {
+    return [
+        'product_id' => $faker->numberBetween(23, 32),
+        'image' => $faker->imageUrl(640, 480, 'animals', true),
+        'active' => $faker->numberBetween(0, 1)
+    ];
+});

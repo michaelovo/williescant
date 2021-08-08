@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\ProductImage;
 
 class Product extends Model
 {
@@ -31,5 +32,9 @@ class Product extends Model
         static::creating(function ($product) {
             $product->supplier_id = "6a1e2797-9337-49c9-bf16-5cb71eb67ea1";
         });
+    }
+
+    public function images(){
+        return $this->hasMany(ProductImage::class);
     }
 }

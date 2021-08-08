@@ -28,8 +28,14 @@ Route::get('williescant/product/prepared', 'ProductController@prepared');
 // Get all products
 Route::get('williescant/product/all-products', 'ProductController@index');
 
+// Get single product
+Route::get('williescant/product/{id}', 'ProductController@show');
+
 // Get Categories
 Route::get('williescant/product/get-category', 'ProductController@getCategory');
+
+
+// Old Route URLs
 //Home Route - Logged in customer
 Route::get('/williescant/customer/home', 'HomeController@customerIndex')->name('customer-home')->middleware('auth', 'verified');
 

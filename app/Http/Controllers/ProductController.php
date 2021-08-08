@@ -9,6 +9,7 @@ use App\ReadySale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -119,7 +120,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $images = ProductImage::where('product_id', $id)->get();
-        return response()->json(['product' => $product, 'images' => $images]);
+        $product['images'] = $images;
+        return response()->json($product, 200);
     }
 
     /**
