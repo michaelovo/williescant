@@ -38,6 +38,9 @@ Route::post('williescant/product/add-new', 'ProductController@store');
 // Update product end point
 Route::post('williescant/product/update/{id}', 'ProductController@update');
 
+// Delete a product
+Route::post('williescant/product/delete/{id}', 'ProductController@destroy');
+
 // Get Categories
 Route::get('williescant/product/get-category', 'ProductController@getCategory');
 
