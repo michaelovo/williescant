@@ -234,6 +234,13 @@ class ProductController extends Controller
     public function prepareProduct(Request $request, $id)
     {
         try {
+            $validated = $request->validate([
+                'profit' => 'required',
+                'expenses' => 'required',
+                'quantity' => 'required'
+            ]);
+
+
             $product = Product::where('id', $id)->first();
             $product_quantity = $product->quantity;
             $buying_price = $product->unit_price;
@@ -253,24 +260,19 @@ class ProductController extends Controller
                 $new_quantity = $product_quantity - $request->quantity;
                 $product->quantity = $new_quantity;
                 $product->update();
-                return response()->json(['success' => true]);
+                return response()->json(['message' => 'product updated']);
             } else {
                 return response()->json([
                     'status' => false,
-                    'message' => "Prepared quantity is greater than available quantity in store. The quantity in store is: " . $product_quantity,
-                    'sale' => [$request->quantity, $request->profit, $request->expenses]
+                    'message' => "Prepared quantity is greater than available quantity in store. The quantity in store is: " . $product_quantity
                 ]);
             }
             return response()->json([
-                'status' => 'success',
-                'quantity' => $product_quantity,
-                'price' => $buying_price
+                'message' => 'product prepared'
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'error' => $th,
-                'status' => 'error',
                 'message' => "Server Error: Failed to retrieve product details. Try again later"
             ]);
         }

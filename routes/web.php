@@ -44,6 +44,9 @@ Route::post('williescant/product/delete/{id}', 'ProductController@destroy')->mid
 // Get Categories
 Route::get('williescant/product/get-category', 'ProductController@getCategory')->middleware('auth', 'verified');
 
+// Prepare product route
+Route::post('/williescant/product/prepare-product', 'ProductController@prepareProduct');
+
 
 // Old Route URLs
 //Home Route - Logged in customer
@@ -104,7 +107,7 @@ Route::get('/williescant/supplier/sale/edit/{id}', 'SaleController@edit')->name(
 Route::post('/williescant/supplier/sale/update/{id}', 'SaleController@update')->name('update-sale')->middleware('auth', 'verified');
 
 //prepared product
-Route::post('/williescant/supplier/prepared-product/{id}', 'ProductController@prepareProduct')->name('prepared-product')->middleware('auth', 'verified');
+// Route::post('/williescant/supplier/prepared-product/{id}', 'ProductController@prepareProduct')->name('prepared-product')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/prepared', 'ProductController@prepared')->name('get-prepared')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/search', 'ProductController@search')->name('search-prepared')->middleware('auth', 'verified');
 Route::get('/williescant/supplier/get-single-product/{id}', 'ProductController@getPreparedProduct')->name('get-single-prepared')->middleware('auth', 'verified');
