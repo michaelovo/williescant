@@ -45,7 +45,13 @@ Route::post('williescant/product/delete/{id}', 'ProductController@destroy')->mid
 Route::get('williescant/product/get-category', 'ProductController@getCategory')->middleware('auth', 'verified');
 
 // Prepare product route
-Route::post('/williescant/product/prepare-product', 'ProductController@prepareProduct');
+Route::post('williescant/product/prepare-product', 'ProductController@prepareProduct');
+
+// Route get prepared route
+Route::get('williescant/product/get-prepared', 'ProductController@prepared');
+
+// Route end point for search
+Route::post('williescant/product/search', 'ProductController@search');
 
 
 // Old Route URLs

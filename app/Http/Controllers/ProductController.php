@@ -301,8 +301,8 @@ class ProductController extends Controller
                     'product_images.image as path',
                 ])->toJson(JSON_PRETTY_PRINT);
 
-                dd($prepared);
-            // return response($prepared, 200);
+                // dd($prepared);
+            return response($prepared, 200);
     }
 
     /**
@@ -311,16 +311,21 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'search' => 'required'
+            ]);
+
             $prepared = Product::join('ready_sales', 'products.id', 'ready_sales.product_id')
                 ->join('product_images', 'products.id', 'product_images.product_id')
                 ->where('products.supplier_id', Auth::user()->id)
                 ->where('name', 'LIKE', "%{$request->search}%")
                 ->orWhere('description', 'LIKE', "%{$request->search}")
-                ->get();
-            $curr_page = 'shop';
-            return view('supplier.shop', compact('prepared', 'curr_page'));
+                ->get()->toJson(JSON_PRETTY_PRINT);
+            return response($prepared, 200);
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'message' => "Server Error: Failed to retrieve product details. Try again later"
+            ]);
         }
     }
 
