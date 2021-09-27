@@ -7,7 +7,7 @@
   You can use XAMPP for a one off install
 
 ## Installation
-1. Clone the project repository
+1. Fork the project repository
 2. Create a database for the project
 3. copy .env.example to .env
 4. Enter the database connection configurations in the .env file
